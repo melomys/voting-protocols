@@ -104,7 +104,7 @@ function model_step!(model)
     if rand() < model.properties[:new_content_probability]
         add_agent!(model, rand(quality_distribution), 0, model.properties[:time], 0)
     end
-    posts = collect(values(models.agents))
+    posts = collect(values(model.agents))
 
     votes_idx = partialsortperm(posts, 1:model.properties[:frontpagesize], by= x-> x.score)
     window = posts[votes_idx]
@@ -112,9 +112,9 @@ function model_step!(model)
         if rand() < model.properties[:vote_probability][i]
 
 
-            idx = Int64(ceil(rand(rng,select_distribution) * frontpagesize))
+            idx = Int64(ceil(rand(select_distribution) * model.properties[:frontpagesize]))
             view_post = window[idx]
-            if sum(view_post.quality .* user.quality_perception) < 0
+            if sum(view_post.quality .* model.properties[:quality_perception][i]) < 0
                view_post.votes += 1
            end
        end
@@ -122,14 +122,11 @@ function model_step!(model)
     model.properties[:time] += 1
 end
 
-function model_step2!(model)
-    println("model_step2")
-    println("model_step222")
-end
+
 
 params = create_params()
 model = model_initiation(;params...)
 
-properties = [:votes]
-data = step!(model, agent_step!,model_step!,1,properties)
+properties = Dict(:votes => [median, mean])
+data = step!(model, agent_step!,model_step!,30,properties)
 println(data)
