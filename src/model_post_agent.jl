@@ -100,7 +100,6 @@ function agent_step!(agent, model)
 end
 
 function model_step!(model)
-    println("MODEL_STEP_ANFANG")
     if rand() < model.properties[:new_content_probability]
         add_agent!(model, rand(quality_distribution), 0, model.properties[:time], 0)
     end

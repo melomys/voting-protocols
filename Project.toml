@@ -1,10 +1,9 @@
 name = "voting-protocols"
 
 [deps]
-Agents = "46ada45e-f475-11e8-01d0-f70cc89e6671"
-AgentsPlots = "7820620d-95fb-4739-93b3-b0a14dd83f9a"
 DrWatson = "634d3b9d-ee7a-5ddf-bec9-22491ea816e1"
 LightGraphs = "093fc24a-ae57-5d10-9952-331d41423f4d"
+#Agents = "9c770888-85c9-4deb-8a6c-0f5e07044025"
 
 [compat]
 julia = "1.4.0"
