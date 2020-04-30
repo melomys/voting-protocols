@@ -45,8 +45,14 @@ function User(id::Int, quality_perception::Array{Float64}, vote_probability::Flo
 end
 
 function scoring(votes, timestamp, time)
-    (votes + 1) / (time - timestamp)
+    (votes + 1)^2 / (time - timestamp)
 end
+
+
+function hacker_news_scoring(votes, timestamp, time)
+    (votes - 1)^8/(time-timestamp)^1.8
+end
+
 
 function user_rating(post_quality, user_quality_perception)
     sum(post_quality .* user_quality_perception)/sum(user_quality_perception)
@@ -94,7 +100,7 @@ function model_initiation(;
 end
 
 function agent_step!(user, model)
-    for i in 1:rand(1:model.n)
+    for i in 1:10
         post = model.posts[model.ranking[i]]
         if user_rating(post.quality, user.quality_perception) > user.vote_probability && !in(post, user.voted_on)
             push!(user.voted_on,post)
@@ -122,7 +128,7 @@ function model_step!(model)
 
     for i = 1:model.properties[:n]
         model.posts[i].score =
-            scoring(model.posts[i].votes, model.posts[i].timestamp, model.time)
+            hacker_news_scoring(model.posts[i].votes, model.posts[i].timestamp, model.time)
     end
 
     votes_idx =

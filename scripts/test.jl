@@ -7,7 +7,7 @@ include("../src/model.jl")
 
 model = model_initiation()
 
-model_properties = [@get_post_data(:votes, maximum),@get_post_data(:score, identity),@get_post_data(:votes,identity)]
+model_properties = [:ranking,@get_post_data(:score, identity),@get_post_data(:votes,identity)]
 agent_properties = [:vote_probability]
 
 default(legend = false)
@@ -21,7 +21,7 @@ agent_df, model_df = run!(
     model_properties = model_properties,
 )
 p = plot()
-scores = create_plot_data_score(model_df)
+scores = unpack_data(model_df[!,:identity_score])
 for i in 1:ncol(scores)
     p = plot!(scores[!,i], linewidth = user_rating(model.posts[i].quality,ones(quality_dimensions))*5)
 end
