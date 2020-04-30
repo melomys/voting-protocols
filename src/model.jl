@@ -65,6 +65,7 @@ function model_initiation(;
     vote_probability_scale = 1,
     frontpagesize = 10,
     new_posts_per_step = 3,
+    scoring_function=scoring,
     seed = 0,
 )
     Random.seed!(seed)
@@ -85,6 +86,7 @@ function model_initiation(;
         new_posts_per_step,
         frontpagesize,
         ranking,
+        scoring_function,
         time
     )
     model = ABM(User; properties = properties)
@@ -128,7 +130,7 @@ function model_step!(model)
 
     for i = 1:model.properties[:n]
         model.posts[i].score =
-            hacker_news_scoring(model.posts[i].votes, model.posts[i].timestamp, model.time)
+            model.scoring_function(model.posts[i].votes, model.posts[i].timestamp, model.time)
     end
 
     votes_idx =
