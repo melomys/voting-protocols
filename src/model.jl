@@ -45,18 +45,27 @@ function User(id::Int, quality_perception::Array{Float64}, vote_probability::Flo
 end
 
 function scoring(votes, timestamp, time)
-    (votes + 1)^2 / (time - timestamp)
+    (votes + 1)^2 / (time - timestamp)^(0.1)
 end
 
 
-function hacker_news_scoring(votes, timestamp, time)
+function scoring_hacker_news(votes, timestamp, time)
     (votes - 1)^8/(time-timestamp)^1.8
+end
+
+function scoring_brrt(votes, timestamp, time)
+    ((votes + 1) + (time-timestamp)^(0.5))/(votes/(time-timestamp))
 end
 
 
 function user_rating(post_quality, user_quality_perception)
     sum(post_quality .* user_quality_perception)/sum(user_quality_perception)
 end
+
+function user_rating_exp(post_quality,user_quality_perception)
+    sum(post_quality .^ user_quality_perception)
+end
+
 
 function model_initiation(;
     start_posts = 100,
@@ -66,6 +75,7 @@ function model_initiation(;
     frontpagesize = 10,
     new_posts_per_step = 3,
     scoring_function=scoring,
+    user_rating_function=user_rating,
     seed = 0,
 )
     Random.seed!(seed)
@@ -87,6 +97,7 @@ function model_initiation(;
         frontpagesize,
         ranking,
         scoring_function,
+        user_rating_function,
         time
     )
     model = ABM(User; properties = properties)
@@ -104,7 +115,7 @@ end
 function agent_step!(user, model)
     for i in 1:10
         post = model.posts[model.ranking[i]]
-        if user_rating(post.quality, user.quality_perception) > user.vote_probability && !in(post, user.voted_on)
+        if model.user_rating_function(post.quality, user.quality_perception) > user.vote_probability && !in(post, user.voted_on)
             push!(user.voted_on,post)
             post.votes += 1
         end
