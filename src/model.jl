@@ -44,22 +44,29 @@ function User(id::Int, quality_perception::Array{Float64}, vote_probability::Flo
     User(id, quality_perception,vote_probability, concentration, Post[])
 end
 
-function scoring(votes, timestamp, time)
-    (votes + 1)^2 / (time - timestamp)^(0.1)
+function scoring(post, time)
+    (post.votes + 1)^2 / (time - post.timestamp)^(0.1)
 end
 
 
-function scoring_hacker_news(votes, timestamp, time)
-    (votes - 1)^8/(time-timestamp)^1.8
+function scoring_hacker_news(post, time)
+    (post.votes - 1)^8/(post.time-timestamp)^1.8
 end
 
-function scoring_brrt(votes, timestamp, time)
-    ((votes + 1) + (time-timestamp)^(0.5))/(votes/(time-timestamp))
+function scoring_brrt(post, time)
+    (time-post.timestamp)/(post.votes -1)
 end
 
+function scoring_random(post, time)
+    rand()
+end
+
+function scoring_best(post, time)
+    user_rating(post.quality, ones(quality_dimensions))
+end
 
 function user_rating(post_quality, user_quality_perception)
-    sum(post_quality .* user_quality_perception)/sum(user_quality_perception)
+    sum(post_quality .* user_quality_perception)
 end
 
 function user_rating_exp(post_quality,user_quality_perception)
@@ -98,7 +105,7 @@ function model_initiation(;
         ranking,
         scoring_function,
         user_rating_function,
-        time
+        time,
     )
     model = ABM(User; properties = properties)
     for i = 1:start_users
@@ -113,7 +120,7 @@ function model_initiation(;
 end
 
 function agent_step!(user, model)
-    for i in 1:10
+    for i in 1:rand(1:model.n)
         post = model.posts[model.ranking[i]]
         if model.user_rating_function(post.quality, user.quality_perception) > user.vote_probability && !in(post, user.voted_on)
             push!(user.voted_on,post)
@@ -139,16 +146,13 @@ function model_step!(model)
 
     model.time += 1
 
-    for i = 1:model.properties[:n]
+    for i = 1:model.n
         model.posts[i].score =
-            model.scoring_function(model.posts[i].votes, model.posts[i].timestamp, model.time)
+            model.scoring_function(model.posts[i], model.time)
     end
 
-    votes_idx =
-        sortperm(map(x -> x.score, model.posts))
-    model.ranking = votes_idx
+    model.ranking = sortperm(map(x -> -x.score , model.posts))
 end
-
 
 macro get_post_data(s, f)
     name = Symbol(f, "_", eval(s))
