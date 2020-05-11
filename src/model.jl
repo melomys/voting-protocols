@@ -50,11 +50,7 @@ end
 
 
 function scoring_hacker_news(post, time)
-    (post.votes - 1)^8/(post.time-timestamp)^1.8
-end
-
-function scoring_brrt(post, time)
-    (time-post.timestamp)/(post.votes -1)
+    (post.votes - 1)^8/(time- post.timestamp)^1.8
 end
 
 function scoring_random(post, time)
@@ -84,6 +80,8 @@ function model_initiation(;
     scoring_function=scoring,
     user_rating_function=user_rating,
     seed = 0,
+    agent_step! =agent_step!,
+    model_step! =model_step!
 )
     Random.seed!(seed)
     posts = Post[]
@@ -106,6 +104,8 @@ function model_initiation(;
         scoring_function,
         user_rating_function,
         time,
+        agent_step!,
+        model_step!
     )
     model = ABM(User; properties = properties)
     for i = 1:start_users
