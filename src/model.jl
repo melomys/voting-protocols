@@ -98,6 +98,7 @@ function model_initiation(;
     model_step! = model_step!,
     PostType = Post,
     UserType = User,
+    qargs...
 )
     rng = MersenneTwister(seed)
     posts = PostType[]
@@ -108,6 +109,7 @@ function model_initiation(;
     n = start_posts
     ranking = [1:start_posts...]
     time = 0
+
 
     properties = @dict(
         n,
@@ -126,6 +128,12 @@ function model_initiation(;
         PostType,
         UserType,
     )
+
+    for qarg in qargs
+        properties[qarg[1]] = qarg[2]
+    end
+
+    
     model = ABM(UserType; properties = properties)
     for i = 1:start_users
         add_agent!(
