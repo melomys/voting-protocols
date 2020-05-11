@@ -24,8 +24,9 @@ end
 
 quality_distribution = Distributions.MvNormal(M, Σ)
 
+abstract type APost end
 
-mutable struct Post
+mutable struct Post <: APost
     quality::Array
     votes::Int64
     timestamp::Int64
@@ -37,11 +38,24 @@ mutable struct User <: AbstractAgent
     quality_perception::Array
     vote_probability::Float64
     concentration::Int64
-    voted_on::Array{Post}
+    voted_on::Array{APost}
 end
 
-function User(id::Int, quality_perception::Array{Float64}, vote_probability::Float64, concentration::Int64)
-    User(id, quality_perception,vote_probability, concentration, Post[])
+function Post(rng)
+    Post(rand(rng, quality_distribution), 0, 0, 0)
+end
+
+function Post(rng, time)
+    Post(rand(rng, quality_distribution), 0, time, 0)
+end
+
+function User(
+    id::Int,
+    quality_perception::Array{Float64},
+    vote_probability::Float64,
+    concentration::Int64,
+)
+    User(id, quality_perception, vote_probability, concentration, Post[])
 end
 
 function scoring(post, time)
@@ -50,7 +64,7 @@ end
 
 
 function scoring_hacker_news(post, time)
-    (post.votes - 1)^8/(time- post.timestamp)^1.8
+    (post.votes - 1)^8 / (time - post.timestamp)^1.8
 end
 
 function scoring_random(post, time)
@@ -65,7 +79,7 @@ function user_rating(post_quality, user_quality_perception)
     sum(post_quality .* user_quality_perception)
 end
 
-function user_rating_exp(post_quality,user_quality_perception)
+function user_rating_exp(post_quality, user_quality_perception)
     sum(post_quality .^ user_quality_perception)
 end
 
@@ -77,16 +91,18 @@ function model_initiation(;
     vote_probability_scale = 1,
     frontpagesize = 10,
     new_posts_per_step = 3,
-    scoring_function=scoring,
-    user_rating_function=user_rating,
+    scoring_function = scoring,
+    user_rating_function = user_rating,
     seed = 0,
-    agent_step! =agent_step!,
-    model_step! =model_step!
+    agent_step! = agent_step!,
+    model_step! = model_step!,
+    PostType = Post,
+    UserType = User,
 )
     rng = MersenneTwister(seed)
-    posts = Post[]
+    posts = PostType[]
     for i = 1:start_posts
-        push!(posts, Post(rand(rng,quality_distribution), 0, 0, 0))
+        push!(posts, PostType(rng))
     end
 
     n = start_posts
@@ -106,42 +122,45 @@ function model_initiation(;
         time,
         agent_step!,
         model_step!,
-        rng
+        rng,
+        PostType,
+        UserType,
     )
-    model = ABM(User; properties = properties)
+    model = ABM(UserType; properties = properties)
     for i = 1:start_users
         add_agent!(
             model,
             rand(quality_distribution),
             rand() / vote_probability_scale,
-            rand(1:10)
+            rand(1:10),
         )
     end
     return model
 end
 
 function agent_step!(user, model)
-    for i in 1:rand(model.rng,1:model.n)
+    for i = 1:rand(model.rng, 1:model.n)
         post = model.posts[model.ranking[i]]
-        if model.user_rating_function(post.quality, user.quality_perception) > user.vote_probability && !in(post, user.voted_on)
-            push!(user.voted_on,post)
+        if model.user_rating_function(post.quality, user.quality_perception) >
+           user.vote_probability && !in(post, user.voted_on)
+            push!(user.voted_on, post)
             post.votes += 1
         end
     end
 end
 
 function model_step!(model)
-    for i in 1:model.new_posts_per_step
-        push!(model.posts, Post(rand(model.rng,quality_distribution), 0, model.time, 0))
+    for i = 1:model.new_posts_per_step
+        push!(model.posts, model.PostType(model.rng, model.time))
         model.n += 1
     end
 
     if rand() < model.new_user_probability
         add_agent!(
             model,
-            rand(model.rng,quality_distribution),
+            rand(model.rng, quality_distribution),
             rand(model.rng) / model.vote_probability,
-            rand(model.rng,1:10)
+            rand(model.rng, 1:10),
         )
     end
 
@@ -152,7 +171,7 @@ function model_step!(model)
             model.scoring_function(model.posts[i], model.time)
     end
 
-    model.ranking = sortperm(map(x -> -x.score , model.posts))
+    model.ranking = sortperm(map(x -> -x.score, model.posts))
 end
 
 macro get_post_data(s, f)

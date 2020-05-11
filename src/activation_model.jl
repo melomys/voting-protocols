@@ -13,11 +13,13 @@ function activation_model(;
     seed = 0,
     agent_step! = agent_step!,
     model_step! = model_step!,
+    PostType = Post,
+    UserType = User,
 )
     rng = MersenneTwister(seed)
-    posts = Post[]
+    posts = PostType[]
     for i = 1:start_posts
-        push!(posts, Post(rand(rng,quality_distribution), 0, 0, 0))
+        push!(posts, PostType(rand(rng,quality_distribution), 0, 0, 0))
     end
 
     n = start_posts
@@ -37,9 +39,11 @@ function activation_model(;
         time,
         agent_step!,
         model_step!,
-        rng
+        rng,
+        PostType,
+        UserType
     )
-    model = ABM(User; properties = properties)
+    model = ABM(UserType; properties = properties)
     for i = 1:start_users
         add_agent!(
             model,
@@ -65,7 +69,7 @@ end
 
 function activation_model_step!(model)
     for i in 1:model.new_posts_per_step
-        push!(model.posts, Post(rand(model.rng,quality_distribution), 0, model.time, 0))
+        push!(model.posts, model.PostType(model.rng, model.time))
         model.n += 1
     end
 

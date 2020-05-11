@@ -6,6 +6,7 @@ include("../src/plot_helper.jl")
 include("../src/model.jl")
 include("../src/model_factory.jl")
 include("../src/activation_model.jl")
+include("../src/view_model.jl")
 
 start_posts = 10
 start_users = 100
@@ -36,7 +37,7 @@ models = grid_params(Dict(
 
 models2 = grid_params(Dict(
     activation_model => Dict(
-        :model_step! =>  activation_model_step!,
+        :model_step! => activation_model_step!,
         :agent_step! => activation_agent_step!,
     ),
     model_initiation => Dict(
@@ -45,8 +46,9 @@ models2 = grid_params(Dict(
             scoring_hacker_news,
             scoring_best,
             scoring_random,
-        ]
-    )
+        ],
+    ),
+    view_model => Dict(),
 ))
 
 model_properties = [
@@ -85,7 +87,9 @@ for model in models2
     plot!(
         rp,
         model_df[!, :ranking_rating],
-        label = string(model.scoring_function) * "_" * string(model.agent_step!),
+        label = string(model.scoring_function) *
+                "_" *
+                string(model.agent_step!),
     )
 
     push!(data, (agent_df, model_df))
@@ -94,4 +98,4 @@ end
 
 #default(legend=false)
 #plot(plots...,rp,layout = (length(plots)+1,1))
-plot(rp,legend=true)
+plot(rp, legend = true)
