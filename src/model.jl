@@ -83,10 +83,10 @@ function model_initiation(;
     agent_step! =agent_step!,
     model_step! =model_step!
 )
-    Random.seed!(seed)
+    rng = MersenneTwister(seed)
     posts = Post[]
     for i = 1:start_posts
-        push!(posts, Post(rand(quality_distribution), 0, 0, 0))
+        push!(posts, Post(rand(rng,quality_distribution), 0, 0, 0))
     end
 
     n = start_posts
@@ -105,7 +105,8 @@ function model_initiation(;
         user_rating_function,
         time,
         agent_step!,
-        model_step!
+        model_step!,
+        rng
     )
     model = ABM(User; properties = properties)
     for i = 1:start_users
@@ -120,7 +121,7 @@ function model_initiation(;
 end
 
 function agent_step!(user, model)
-    for i in 1:rand(1:model.n)
+    for i in 1:rand(model.rng,1:model.n)
         post = model.posts[model.ranking[i]]
         if model.user_rating_function(post.quality, user.quality_perception) > user.vote_probability && !in(post, user.voted_on)
             push!(user.voted_on,post)
@@ -131,16 +132,16 @@ end
 
 function model_step!(model)
     for i in 1:model.new_posts_per_step
-        push!(model.posts, Post(rand(quality_distribution), 0, model.time, 0))
+        push!(model.posts, Post(rand(model.rng,quality_distribution), 0, model.time, 0))
         model.n += 1
     end
 
     if rand() < model.new_user_probability
         add_agent!(
             model,
-            rand(quality_distribution),
-            rand() / model.vote_probability,
-            rand(1:10)
+            rand(model.rng,quality_distribution),
+            rand(model.rng) / model.vote_probability,
+            rand(model.rng,1:10)
         )
     end
 
