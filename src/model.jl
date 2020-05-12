@@ -133,14 +133,14 @@ function model_initiation(;
         properties[qarg[1]] = qarg[2]
     end
 
-    
+
     model = ABM(UserType; properties = properties)
     for i = 1:start_users
         add_agent!(
             model,
-            rand(quality_distribution),
-            rand() / vote_probability_scale,
-            rand(1:10),
+            rand(rng,quality_distribution),
+            rand(rng) / vote_probability_scale,
+            rand(rng,1:10),
         )
     end
     return model

@@ -36,23 +36,33 @@ models = grid_params(Dict(
 ))
 
 models2 = grid_params(
-    (model_initiation,Dict(
-        :model_step! => activation_model_step!,
-        :agent_step! => activation_agent_step!,
-    )),
-    (model_initiation,Dict(
-        :scoring_function => [
-            scoring,
-            scoring_hacker_news,
-            scoring_best,
-            scoring_random,
-        ],
-    )),
-    (model_initiation,Dict(
-        :scoring_function => scoring_view,
-        :agent_step! => view_agent_step!,
-        :PostType => ViewPost
-    ))
+    (
+        model_initiation,
+        Dict(
+            :scoring_function => [scoring],
+            :model_step! => activation_model_step!,
+            :agent_step! => activation_agent_step!,
+        ),
+    ),
+    (
+        model_initiation,
+        Dict(
+            :scoring_function => [
+                scoring,
+                #scoring_hacker_news,
+                scoring_best,
+                #scoring_random,
+            ],
+        ),
+    ),
+    (
+        model_initiation,
+        Dict(
+            :scoring_function => [scoring],
+            :agent_step! => view_agent_step!,
+            :PostType => ViewPost,
+        ),
+    ),
 )
 
 model_properties = [
