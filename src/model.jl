@@ -66,12 +66,12 @@ function User(
 end
 
 function scoring(post, time, model)
-    (post.votes + 1)^2 / (time - post.timestamp)^(0.1)
+    (post.votes + 1)^2 / (time - post.timestamp + 1)^(0.1)
 end
 
 
 function scoring_hacker_news(post, time, model)
-    (post.votes - 1)^8 / (time - post.timestamp)^1.8
+    (post.votes - 1)^8 / (time - post.timestamp + 1)^1.8
 end
 
 function scoring_random(post, time, model)
@@ -181,7 +181,7 @@ function model_step!(model)
         )
     end
 
-    model.time += 1
+
 
     for i = 1:model.n
         model.posts[i].score =
@@ -189,6 +189,8 @@ function model_step!(model)
     end
 
     model.ranking = sortperm(map(x -> -x.score, model.posts))
+    model.time +=1
+
 end
 
 macro get_post_data(s, f)

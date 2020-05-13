@@ -60,14 +60,14 @@ end
 
 
 function scoring_view(post, time, model)
-    ((post.votes + 1)^2 / (post.views + 1)^0.7) / (time - post.timestamp)^(0.1)
+    ((post.votes + 1)^2 / (post.views + 1)^0.7) / (time - post.timestamp+ 1)^(0.1)
 end
 
 function scoring_view_exp(post, time, model)
-    post.views^post.votes / (time - post.timestamp)^0.1
+    post.views^post.votes / (time - post.timestamp+1)^0.1
 end
 
 function scoring_view_no_time(post, time, model)
     ((post.votes + 1)^2 / (post.views + 1)^0.2)^0.3 /
-    (time - post.timestamp)^(0.1)
+    (time - post.timestamp+1)^(0.1)
 end
