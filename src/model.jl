@@ -24,21 +24,22 @@ end
 
 quality_distribution = Distributions.MvNormal(M, Σ)
 
-abstract type APost end
+abstract type AbstractPost end
+abstract type AbstractUser <: AbstractAgent end
 
-mutable struct Post <: APost
+mutable struct Post <: AbstractPost
     quality::Array
     votes::Int64
     timestamp::Int64
     score::Float64
 end
 
-mutable struct User <: AbstractAgent
+mutable struct User <: AbstractUser
     id::Int
     quality_perception::Array
     vote_probability::Float64
     concentration::Int64
-    voted_on::Array{APost}
+    voted_on::Array{AbstractPost}
 end
 
 function Post(rng)
@@ -55,23 +56,29 @@ function User(
     vote_probability::Float64,
     concentration::Int64,
 )
-    User(id, quality_perception, vote_probability, concentration, Post[])
+    User(
+        id,
+        quality_perception,
+        vote_probability,
+        concentration,
+        AbstractPost[],
+    )
 end
 
-function scoring(post, time)
+function scoring(post, time, model)
     (post.votes + 1)^2 / (time - post.timestamp)^(0.1)
 end
 
 
-function scoring_hacker_news(post, time)
+function scoring_hacker_news(post, time, model)
     (post.votes - 1)^8 / (time - post.timestamp)^1.8
 end
 
-function scoring_random(post, time)
+function scoring_random(post, time, model)
     rand()
 end
 
-function scoring_best(post, time)
+function scoring_best(post, time, model)
     user_rating(post.quality, ones(quality_dimensions))
 end
 
@@ -98,7 +105,7 @@ function model_initiation(;
     model_step! = model_step!,
     PostType = Post,
     UserType = User,
-    qargs...
+    qargs...,
 )
     rng = MersenneTwister(seed)
     posts = PostType[]
@@ -138,9 +145,9 @@ function model_initiation(;
     for i = 1:start_users
         add_agent!(
             model,
-            rand(rng,quality_distribution),
+            rand(rng, quality_distribution),
             rand(rng) / vote_probability_scale,
-            rand(rng,1:10),
+            rand(rng, 1:10),
         )
     end
     return model
@@ -149,8 +156,10 @@ end
 function agent_step!(user, model)
     for i = 1:rand(model.rng, 1:model.n)
         post = model.posts[model.ranking[i]]
-        if model.user_rating_function(post.quality, user.quality_perception) >
-           user.vote_probability && !in(post, user.voted_on)
+        if model.user_rating_function(
+            post.quality,
+            user.quality_perception
+        ) > user.vote_probability && !in(post, user.voted_on)
             push!(user.voted_on, post)
             post.votes += 1
         end
@@ -176,7 +185,7 @@ function model_step!(model)
 
     for i = 1:model.n
         model.posts[i].score =
-            model.scoring_function(model.posts[i], model.time)
+            model.scoring_function(model.posts[i], model.time,model)
     end
 
     model.ranking = sortperm(map(x -> -x.score, model.posts))

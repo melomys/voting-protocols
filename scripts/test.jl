@@ -23,17 +23,7 @@ function ranking_rating(model)
     return rating
 end
 
-
-models = grid_params(Dict(
-    model_initiation => Dict(
-        :scoring_function => [
-            scoring,
-            scoring_hacker_news,
-            scoring_best,
-            scoring_random,
-        ],
-    ),
-))
+seed = abs.(rand(Int, 1))
 
 models2 = grid_params(
     (
@@ -42,28 +32,37 @@ models2 = grid_params(
             :scoring_function => [scoring],
             :model_step! => activation_model_step!,
             :agent_step! => activation_agent_step!,
+            :seed => seed,
         ),
     ),
     (
         model_initiation,
-        Dict(
-            :scoring_function => [
-                scoring,
-                #scoring_hacker_news,
-                scoring_best,
-                #scoring_random,
-            ],
-        ),
+        Dict(:scoring_function => [scoring, scoring_best], :seed => seed),
     ),
     (
         model_initiation,
         Dict(
-            :scoring_function => [scoring],
+            :scoring_function => [scoring_view],
             :agent_step! => view_agent_step!,
             :PostType => ViewPost,
+            :UserType => ViewUser,
+            :seed => seed,
         ),
     ),
 )
+
+models3 = grid_params((
+    model_initiation,
+    Dict(
+        :scoring_function =>
+            [scoring_view],
+        :agent_step! => view_agent_step!,
+        :PostType => ViewPost,
+        :UserType => ViewUser,
+        :seed => seed,
+        :rating_factor => [0.5,1,2]
+    ),
+))
 
 model_properties = [
     :ranking,
@@ -74,10 +73,21 @@ model_properties = [
 ]
 agent_properties = [:vote_probability]
 
+
+
+colors = Dict(
+    "scoring_activation_agent_step!" => "blue",
+    "scoring_agent_step!" => "orange",
+    "scoring_best_agent_step!" => "green",
+    "scoring_view_view_agent_step!" => "violet",
+    "scoring_view_agent_step!" => "cyan",
+    "scoring_view_no_time_view_agent_step!" => "red",
+)
+
 data = []
 plots = []
 rp = plot()
-for model in models2
+for model in models3
     agent_df, model_df = run!(
         model,
         model.agent_step!,
@@ -104,6 +114,7 @@ for model in models2
         label = string(model.scoring_function) *
                 "_" *
                 string(model.agent_step!),
+        color = colors[string(model.scoring_function)*"_"*string(model.agent_step!)],
     )
 
     push!(data, (agent_df, model_df))
@@ -111,5 +122,5 @@ for model in models2
 end
 
 #default(legend=false)
-#plot(plots...,rp,layout = (length(plots)+1,1))
-plot(rp, legend = true)
+plot(plots..., rp, layout = (length(plots) + 1, 1), legend = false)
+#plot(rp, legend = false)

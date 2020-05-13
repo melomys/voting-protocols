@@ -1,7 +1,4 @@
 function grid_params(model_params...)
-        println("model_params")
-        println(model_params)
-        println(typeof(model_params))
         models = []
         function rec(rest_keys, values,dic,model)
                 if isempty(rest_keys)
@@ -25,8 +22,6 @@ function grid_params(model_params...)
         end
 
         for model in model_params
-                println("MODEL")
-                println(typeof(model))
                 rec(collect(keys(model[2])), [], model[2],model[1])
         end
         return models
