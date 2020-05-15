@@ -2,8 +2,7 @@ function grid_params(model_params)
         models = []
         function rec(rest_keys, values,dic,model)
                 if isempty(rest_keys)
-                        new_model = model(;values...)
-                        push!(models, new_model)
+                        push!(models, model => values)
                         return
                 end
                 next_key = rest_keys[1]
@@ -26,6 +25,12 @@ function grid_params(model_params)
         end
         return models
 end
+
+
+create_models(model_params) = map(x -> x[1](;x[2]...),grid_params(model_params))
+
+get_params(model_params) = map( x -> x[2], grid_params(model_params))
+
 
 
 function param_count(param)

@@ -12,7 +12,7 @@ include("../src/evaluation.jl")
 start_posts = 10
 start_users = 100
 
-seed = abs.(rand(Int,1))
+seed = abs.(rand(Int, 1))
 
 models2 = grid_params([
     (
@@ -44,22 +44,16 @@ models2 = grid_params([
 model_params3 = [(
     model_initiation,
     Dict(
-        :scoring_function =>
-            [scoring_view,scoring],
+        :scoring_function => [scoring_view, scoring],
         :agent_step! => view_agent_step!,
         :PostType => ViewPost,
         :UserType => ViewUser,
         :seed => seed,
-        :rating_factor => [0.5]
+        :rating_factor => [0.5],
     ),
+)]
 
-),(model_initiation,
-Dict(
-:scoring_function => [scoring_view, scoring, scoring_best],
-:rating_factor => [1:3...]
-))]
-
-models3 = grid_params(model_params3)
+models3 = create_models(model_params3)
 
 model_properties = [
     :ranking,
@@ -79,7 +73,7 @@ colors = Dict(
     "scoring_view_view_agent_step!" => "violet",
     "scoring_view_agent_step!" => "cyan",
     "scoring_view_no_time_view_agent_step!" => "red",
-    "scoring_best_view_agent_step!" => "magenta"
+    "scoring_best_view_agent_step!" => "magenta",
 )
 
 data = []
@@ -98,7 +92,8 @@ for model in models3
     p = plot()
     scores = unpack_data(model_df[!, :identity_score])
     for i = 1:ncol(scores)
-        plot!(model_df[!,:step],
+        plot!(
+            model_df[!, :step],
             scores[!, i],
             linewidth = user_rating(
                 model.posts[i].quality,
@@ -108,7 +103,7 @@ for model in models3
     end
     plot!(
         rp,
-        model_df[!,:step],
+        model_df[!, :step],
         model_df[!, :ranking_rating],
         label = string(model.scoring_function) *
                 "_" *
@@ -122,30 +117,33 @@ end
 #default(legend=false)
 #plot(rp, legend = false)
 
+columnname(model_params) = string(model_params[:scoring_function]) * "_" * string(model_params[:rating_factor])
+
+
+
+model_init_params = [(
+    model_initiation,
+    Dict(
+        :scoring_function =>
+            [scoring_view, scoring_best, scoring, scoring_hacker_news],
+        :agent_step! => view_agent_step!,
+        :PostType => ViewPost,
+        :UserType => ViewUser,
+        :seed => seed,
+        :rating_factor => [0.5, 1, 2, 5],
+    ),
+)]
+
+results = DataFrame(Dict(map(x -> (columnname(Dict(x)), []),get_params(model_init_params))))
+
 iterations = 1
-
-results = Dict()
-for i in 1:iterations
+for i = 1:iterations
     seed = abs.(rand(Int,1))
-    models = grid_params([(
-        model_initiation,
-        Dict(
-            :scoring_function =>
-                [scoring_view,scoring_best,scoring, scoring_hacker_news],
-            :agent_step! => view_agent_step!,
-            :PostType => ViewPost,
-            :UserType => ViewUser,
-            :seed => seed,
-            :rating_factor => [0.5,1,2,5]
-        ),
-    )])
-    for j in 1:length(models)
-        model = models[j]
-        identifier = string(model.scoring_function) * "_" * string(model.rating_factor)
+    models = create_models(model_init_params)
 
-        if i == 1
-            results[identifier] = []
-        end
+    result = []
+    for j = 1:length(models)
+        model = models[j]
 
 
         agent_df, model_df = run!(
@@ -156,15 +154,22 @@ for i in 1:iterations
             agent_properties = agent_properties,
             model_properties = model_properties,
         )
-        push!(results[identifier], trapezoidial_rule(model_df[!,:ranking_rating]))
+
+        push!(result,
+            trapezoidial_rule(model_df[!, :ranking_rating]))
     end
+
+    push!(results, result)
 end
 
 
-println("")
-for key in sort(collect(keys(results)))
-    println("$(key): $(mean(results[key]))")
-end
+
+
+
+println(results)
+#for key in sort(collect(keys(results)))
+#    println("$(key): $(mean(results[key]))")
+#end
 
 
 plot(plots..., rp, layout = (length(plots) + 1, 1), legend = false)
