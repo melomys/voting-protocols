@@ -1,4 +1,4 @@
-function grid_params(model_params...)
+function grid_params(model_params)
         models = []
         function rec(rest_keys, values,dic,model)
                 if isempty(rest_keys)
@@ -25,4 +25,17 @@ function grid_params(model_params...)
                 rec(collect(keys(model[2])), [], model[2],model[1])
         end
         return models
+end
+
+
+function param_count(param)
+        if typeof(param) <: Vector
+                length(param)
+        else
+                1
+        end
+end
+
+function model_count(model_params)
+        sum(map(x -> reduce(*,map(param_count,collect(values(x)))), map(x -> x[2], model_params)))
 end

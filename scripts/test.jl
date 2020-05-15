@@ -14,7 +14,7 @@ start_users = 100
 
 seed = abs.(rand(Int,1))
 
-models2 = grid_params(
+models2 = grid_params([
     (
         model_initiation,
         Dict(
@@ -38,20 +38,28 @@ models2 = grid_params(
             :seed => seed,
         ),
     ),
-)
+])
 
-models3 = grid_params((
+
+model_params3 = [(
     model_initiation,
     Dict(
         :scoring_function =>
-            [scoring_view,scoring_best],
+            [scoring_view,scoring],
         :agent_step! => view_agent_step!,
         :PostType => ViewPost,
         :UserType => ViewUser,
         :seed => seed,
         :rating_factor => [0.5]
     ),
-))
+
+),(model_initiation,
+Dict(
+:scoring_function => [scoring_view, scoring, scoring_best],
+:rating_factor => [1:3...]
+))]
+
+models3 = grid_params(model_params3)
 
 model_properties = [
     :ranking,
@@ -112,15 +120,14 @@ for model in models3
     push!(plots, p)
 end
 #default(legend=false)
-plot(plots..., rp, layout = (length(plots) + 1, 1), legend = false)
 #plot(rp, legend = false)
 
-iterations = 10
+iterations = 1
 
-results = []
+results = Dict()
 for i in 1:iterations
     seed = abs.(rand(Int,1))
-    models = grid_params((
+    models = grid_params([(
         model_initiation,
         Dict(
             :scoring_function =>
@@ -131,13 +138,16 @@ for i in 1:iterations
             :seed => seed,
             :rating_factor => [0.5,1,2,5]
         ),
-    ))
+    )])
     for j in 1:length(models)
+        model = models[j]
+        identifier = string(model.scoring_function) * "_" * string(model.rating_factor)
+
         if i == 1
-            push!(results, [])
+            results[identifier] = []
         end
 
-        model = models[j]
+
         agent_df, model_df = run!(
             model,
             model.agent_step!,
@@ -146,6 +156,15 @@ for i in 1:iterations
             agent_properties = agent_properties,
             model_properties = model_properties,
         )
-        push!(results[j],trapezoidial_rule(model_df[!,:ranking_rating]))
+        push!(results[identifier], trapezoidial_rule(model_df[!,:ranking_rating]))
     end
 end
+
+
+println("")
+for key in sort(collect(keys(results)))
+    println("$(key): $(mean(results[key]))")
+end
+
+
+plot(plots..., rp, layout = (length(plots) + 1, 1), legend = false)
