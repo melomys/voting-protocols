@@ -82,6 +82,10 @@ function scoring_best(post, time, model)
     user_rating(post.quality, ones(quality_dimensions))
 end
 
+function scoring_worst(post, time, model)
+    - scoring_best(post, time,model)
+end
+
 function user_rating(post_quality, user_quality_perception)
     sum(post_quality .* user_quality_perception)
 end
