@@ -1,8 +1,9 @@
-function grid_params(model_params)
+function grid_params(model_params;seed = 0  )
         models = []
         function rec(rest_keys, values,dic,model)
                 if isempty(rest_keys)
-                        push!(models, model => values)
+                        values_with_seed = vcat(values, :seed => seed)
+                        push!(models, model => values_with_seed)
                         return
                 end
                 next_key = rest_keys[1]
@@ -26,8 +27,7 @@ function grid_params(model_params)
         return models
 end
 
-
-create_models(model_params) = map(x -> x[1](;x[2]...),grid_params(model_params))
+create_models(model_params;seed = 0) = map(x -> x[1](;x[2]...),grid_params(model_params; seed=seed))
 
 get_params(model_params) = map( x -> x[2], grid_params(model_params))
 
