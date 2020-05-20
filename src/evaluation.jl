@@ -38,11 +38,12 @@ end
     the dataframe is right-padded with the last value of each post.
 """
 function relative_post_data(data)
-    padding = -1
+    padding = NaN
     ncols = maximum(map(length, data))
     left_padded = [vcat(data[i], ones(ncols - length(data[i]))*padding) for i in 1:length(data)]
     left_padded_transformed = [map(x -> x[i], left_padded) for i in 1:length(left_padded[1])]
-    right_padded = map(x -> vcat(filter(filt-> filt!= padding,x),ones(length(data) - length(filter(filt-> filt!= padding,x)))*filter(filt-> filt!= padding,x)[end]), left_padded_transformed)
+    filter_padding(x) = filter(!isnan, x)
+    right_padded = map(x -> vcat(filter_padding(x),ones(length(data) - length(filter_padding(x)))*padding), left_padded_transformed)
     DataFrame(right_padded)
 end
 
