@@ -2,12 +2,12 @@ using Plots
 using Agents
 using DataFrames
 
-include("/home/ludwig/Bachelorarbeit/voting-protocols/src/plot_helper.jl")
-include("/home/ludwig/Bachelorarbeit/voting-protocols/src/model.jl")
-include("/home/ludwig/Bachelorarbeit/voting-protocols/src/model_factory.jl")
-include("/home/ludwig/Bachelorarbeit/voting-protocols/src/activation_model.jl")
-include("/home/ludwig/Bachelorarbeit/voting-protocols/src/view_model.jl")
-include("/home/ludwig/Bachelorarbeit/voting-protocols/src/evaluation.jl")
+include("../src/plot_helper.jl")
+include("../src/model.jl")
+include("../src/model_factory.jl")
+include("../src/activation_model.jl")
+include("../src/view_model.jl")
+include("../src/evaluation.jl")
 
 start_posts = 10
 start_users = 100
@@ -118,11 +118,11 @@ for model in models3
         plot!(
             model_df[!, :step],
             votes_relative[!, i],
-            linewidth = model.posts[i].timestamp / 4,
-            color = cgrad(:inferno)[sigmoid(user_rating(
+            color = cgrad(:inferno)[model.posts[i].timestamp/model.posts[end].timestamp*1.5],
+            linewidth =user_rating(
                 model.posts[i].quality,
                 ones(quality_dimensions),
-            ))],
+            ),
         )
     end
 
