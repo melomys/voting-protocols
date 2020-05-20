@@ -50,7 +50,7 @@ end
 returns dataframe, each row holds the given parameter over time of one post.
 the dataframe ist left-padded with zeros.
 """
-function post_data(data;padding=0)
+function post_data(data;padding=NaN)
     ncols = maximum(map(length, data))
     DataFrame(Matrix(DataFrame([vcat(data[i], ones(ncols - length(data[i]))*padding) for i in 1:length(data)]))')
 end
