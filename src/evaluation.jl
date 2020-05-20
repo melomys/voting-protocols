@@ -32,3 +32,30 @@ function gain(model_df)
     sign(model_df[2, :ranking_rating] - model_df[1, :ranking_rating]) *
     sign(model_df[end, :ranking_rating] - model_df[2, :ranking_rating])
 end
+
+""" returns dataframe, each row holds the given parameter over time of one post.
+    time in the dataframe is relative to the creation of the post.
+    the dataframe is right-padded with the last value of each post.
+"""
+function relative_post_data(data)
+    padding = -1
+    ncols = maximum(map(length, data))
+    left_padded = [vcat(data[i], ones(ncols - length(data[i]))*padding) for i in 1:length(data)]
+    left_padded_transformed = [map(x -> x[i], left_padded) for i in 1:length(left_padded[1])]
+    right_padded = map(x -> vcat(filter(filt-> filt!= padding,x),ones(length(data) - length(filter(filt-> filt!= padding,x)))*filter(filt-> filt!= padding,x)[end]), left_padded_transformed)
+    DataFrame(right_padded)
+end
+
+""".
+returns dataframe, each row holds the given parameter over time of one post.
+the dataframe ist left-padded with zeros.
+"""
+function post_data(data;padding=0)
+    ncols = maximum(map(length, data))
+    DataFrame(Matrix(DataFrame([vcat(data[i], ones(ncols - length(data[i]))*padding) for i in 1:length(data)]))')
+end
+
+"""
+Sigmoid function
+"""
+sigmoid(x) = 1/(1+ℯ^(-x*0.5))
