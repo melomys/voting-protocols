@@ -2,17 +2,17 @@ using Plots
 using Agents
 using DataFrames
 
-include("../src/plot_helper.jl")
-include("../src/model.jl")
-include("../src/model_factory.jl")
-include("../src/activation_model.jl")
-include("../src/view_model.jl")
-include("../src/evaluation.jl")
+include("/home/ludwig/Bachelorarbeit/voting-protocols/src/plot_helper.jl")
+include("/home/ludwig/Bachelorarbeit/voting-protocols/src/model.jl")
+include("/home/ludwig/Bachelorarbeit/voting-protocols/src/model_factory.jl")
+include("/home/ludwig/Bachelorarbeit/voting-protocols/src/activation_model.jl")
+include("/home/ludwig/Bachelorarbeit/voting-protocols/src/view_model.jl")
+include("/home/ludwig/Bachelorarbeit/voting-protocols/src/evaluation.jl")
 
 start_posts = 10
 start_users = 100
 
-seed = abs.(rand(Int, 1))
+seed = abs(rand(Int))
 
 models2 = grid_params([
     (
@@ -44,20 +44,19 @@ models2 = grid_params([
 model_params3 = [(
     model_initiation,
     Dict(
-        :scoring_function => [scoring_view, scoring],
+        :scoring_function => [scoring_view],
         :agent_step! => view_agent_step!,
         :PostType => ViewPost,
         :UserType => ViewUser,
-        :seed => seed,
         :rating_factor => [0.5],
     ),
 )]
 
-models3 = create_models(model_params3)
+models3 = create_models(model_params3; seed = seed)
 
 model_properties = [
-    :ranking,
     ranking_rating,
+    ranking_rating_relative,
     @get_post_data(:score, identity),
     @get_post_data(:votes, identity),
     @get_post_data(:quality, identity)
@@ -74,12 +73,19 @@ colors = Dict(
     "scoring_view_agent_step!" => "cyan",
     "scoring_view_no_time_view_agent_step!" => "red",
     "scoring_best_view_agent_step!" => "magenta",
+    "scoring_worst_view_agent_step!" => "black",
 )
 
 data = []
 plots = []
 rp = plot()
+rpr = plot()
+
+mmodel = nothing
+
 for model in models3
+    mmodel = model
+    global model_df
     agent_df, model_df = run!(
         model,
         model.agent_step!,
@@ -90,7 +96,7 @@ for model in models3
     )
 
     p = plot()
-    scores = unpack_data(model_df[!, :identity_score])
+    scores = post_data(model_df[!, :identity_score])
     for i = 1:ncol(scores)
         plot!(
             model_df[!, :step],
@@ -99,8 +105,27 @@ for model in models3
                 model.posts[i].quality,
                 ones(quality_dimensions),
             ),
+            color = cgrad(:inferno)[sigmoid(user_rating(
+                model.posts[i].quality,
+                ones(quality_dimensions),
+            ))],
         )
     end
+
+    vp = plot()
+    votes_relative = relative_post_data(model_df[!, :identity_votes])
+    for i = 1:ncol(votes_relative)
+        plot!(
+            model_df[!, :step],
+            votes_relative[!, i],
+            linewidth = model.posts[i].timestamp / 4,
+            color = cgrad(:inferno)[sigmoid(user_rating(
+                model.posts[i].quality,
+                ones(quality_dimensions),
+            ))],
+        )
+    end
+
     plot!(
         rp,
         model_df[!, :step],
@@ -111,37 +136,93 @@ for model in models3
         color = colors[string(model.scoring_function)*"_"*string(model.agent_step!)],
     )
 
+    plot!(
+        rpr,
+        model_df[!, :step],
+        model_df[!, :ranking_rating_relative],
+        label = string(model.scoring_function) *
+                "_" *
+                string(model.agent_step!),
+        color = colors[string(model.scoring_function)*"_"*string(model.agent_step!)],
+    )
+
     push!(data, (agent_df, model_df))
     push!(plots, p)
+    push!(plots, vp)
 end
 #default(legend=false)
 #plot(rp, legend = false)
 
-columnname(model_params) = string(model_params[:scoring_function]) * "_" * string(model_params[:rating_factor])
+function columnname(model_params)
+    string(reduce(
+        (x, y) -> x * "_" * y,
+        map(x -> string(model_params[x]), collect(keys(model_params))),
+    ))
+end
 
+function init_result_dataframe(models_params)
+    DataFrame(Dict(map(
+        x -> (columnname(Dict(x)), []),
+        get_params(model_init_params),
+    )))
+end
 
+rat_fac = 2
 
-model_init_params = [(
-    model_initiation,
-    Dict(
-        :scoring_function =>
-            [scoring_view, scoring_best, scoring, scoring_hacker_news],
-        :agent_step! => view_agent_step!,
-        :PostType => ViewPost,
-        :UserType => ViewUser,
-        :seed => seed,
-        :rating_factor => [0.5, 1, 2, 5],
+model_init_params = [
+    (
+        model_initiation,
+        Dict(
+            :scoring_function => [scoring_custom],
+            :agent_step! => view_agent_step!,
+            :PostType => ViewPost,
+            :UserType => ViewUser,
+            :votes_exp => [1:10...],
+            :time_exp => [0.1:0.1:1...],
+            :rating_factor => rat_fac,
+        ),
     ),
-)]
+    (
+        model_initiation,
+        Dict(
+            :scoring_function => [scoring_best, scoring_worst],
+            :rating_factor => rat_fac,
+        ),
+    ),
+]
 
-results = DataFrame(Dict(map(x -> (columnname(Dict(x)), []),get_params(model_init_params))))
 
-iterations = 1
+
+
+
+evaluation_functions = [
+    area_under_curve,
+    model_df ->
+        sign(model_df[2, :ranking_rating] - model_df[1, :ranking_rating]) *
+        sign(model_df[end, :ranking_rating] - model_df[2, :ranking_rating]),
+]
+
+to_evaluate = map(
+    x -> (init_result_dataframe(model_init_params), x),
+    evaluation_functions,
+)
+
+results = init_result_dataframe(model_init_params)
+first_full_corr = init_result_dataframe(model_init_params)
+
+iterations = 0
+models_arr = []
 for i = 1:iterations
-    seed = abs.(rand(Int,1))
-    models = create_models(model_init_params)
+    seed = abs(rand(Int))
+    models = create_models(model_init_params; seed = seed)
+
+    push!(models_arr, models)
 
     result = []
+    first_full_c = []
+
+    evaluations = map(x -> [], to_evaluate)
+
     for j = 1:length(models)
         model = models[j]
 
@@ -155,21 +236,30 @@ for i = 1:iterations
             model_properties = model_properties,
         )
 
-        push!(result,
-            trapezoidial_rule(model_df[!, :ranking_rating]))
+        push!(result, trapezoidial_rule(model_df[!, :ranking_rating]))
+        push!(
+            first_full_c,
+            sign(model_df[2, :ranking_rating] - model_df[1, :ranking_rating]) *
+            sign(model_df[end, :ranking_rating] - model_df[2, :ranking_rating]),
+        )
+        for i = 1:length(to_evaluate)
+            push!(evaluations[i], to_evaluate[i][2](model_df))
+        end
+
     end
 
+    for i = 1:length(evaluations)
+        push!(to_evaluate[i][1], evaluations[i])
+    end
     push!(results, result)
+    push!(first_full_corr, first_full_c)
+
 end
 
 
-
-
-
-println(results)
 #for key in sort(collect(keys(results)))
 #    println("$(key): $(mean(results[key]))")
 #end
 
 
-plot(plots..., rp, layout = (length(plots) + 1, 1), legend = false)
+plot(plots..., layout = (length(plots), 1), legend = false)
