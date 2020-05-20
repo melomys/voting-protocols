@@ -98,9 +98,10 @@ for model in models3
     p = plot()
     scores = post_data(model_df[!, :identity_score])
     for i = 1:ncol(scores)
+        start_index = findfirst(x -> x != 0, scores[!,i])-1
         plot!(
-            model_df[!, :step],
-            scores[!, i],
+            model_df[start_index:end, :step],
+            scores[start_index:end, i],
             linewidth = user_rating(
                 model.posts[i].quality,
                 ones(quality_dimensions),
