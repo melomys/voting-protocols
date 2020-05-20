@@ -69,6 +69,9 @@ function scoring(post, time, model)
     (post.votes + 1)^2 / (time - post.timestamp + 1)^(0.1)
 end
 
+function scoring_custom(post,time,model)
+    (post.votes+1)^model.votes_exp / (time - post.timestamp + 1)^model.time_exp
+end
 
 function scoring_hacker_news(post, time, model)
     (post.votes - 1)^8 / (time - post.timestamp + 1)^1.8
