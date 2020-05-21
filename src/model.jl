@@ -47,7 +47,11 @@ function Post(rng)
 end
 
 function Post(rng, time)
-    Post(rand(rng, quality_distribution), 0, time, 0)
+    Post(rand(rng, quality_distribution), 0, time)
+end
+
+function Post(rng, time, init_score)
+    Post(rand(rng, quality_distribution), 0, time, init_score)
 end
 
 function User(
@@ -112,6 +116,7 @@ function model_initiation(;
     model_step! = model_step!,
     PostType = Post,
     UserType = User,
+    init_score = 0,
     qargs...,
 )
     rng = MersenneTwister(seed)
@@ -141,6 +146,7 @@ function model_initiation(;
         rng,
         PostType,
         UserType,
+        init_score
     )
 
     for qarg in qargs
@@ -174,8 +180,14 @@ function agent_step!(user, model)
 end
 
 function model_step!(model)
+    for i = 1:model.n
+        model.posts[i].score =
+            model.scoring_function(model.posts[i], model.time,model)
+    end
+
+
     for i = 1:model.new_posts_per_step
-        push!(model.posts, model.PostType(model.rng, model.time))
+        push!(model.posts, model.PostType(model.rng, model.time,model.init_score))
         model.n += 1
     end
 
@@ -186,13 +198,6 @@ function model_step!(model)
             rand(model.rng) / model.vote_probability,
             rand(model.rng, 1:10),
         )
-    end
-
-
-
-    for i = 1:model.n
-        model.posts[i].score =
-            model.scoring_function(model.posts[i], model.time,model)
     end
 
     model.ranking = sortperm(map(x -> -x.score, model.posts))
