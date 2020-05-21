@@ -8,9 +8,11 @@ include("../src/model_factory.jl")
 include("../src/activation_model.jl")
 include("../src/view_model.jl")
 include("../src/evaluation.jl")
+include("../src/data_preparation.jl")
 
-start_posts = 10
+start_posts = 100
 start_users = 100
+iterations = 100
 
 seed = abs(rand(Int))
 
@@ -49,6 +51,9 @@ model_params3 = [(
         :PostType => ViewPost,
         :UserType => ViewUser,
         :rating_factor => [0.5],
+        :start_posts => start_posts,
+        :start_users => start_users,
+        :init_score => [20:30:120...]
     ),
 )]
 
@@ -81,16 +86,14 @@ plots = []
 rp = plot()
 rpr = plot()
 
-mmodel = nothing
 
 for model in models3
-    mmodel = model
     global model_df
     agent_df, model_df = run!(
         model,
         model.agent_step!,
         model.model_step!,
-        30;
+        iterations;
         agent_properties = agent_properties,
         model_properties = model_properties,
     )
@@ -119,12 +122,26 @@ for model in models3
             model_df[!, :step],
             votes_relative[!, i],
             color = cgrad(:inferno)[model.posts[i].timestamp/model.posts[end].timestamp*1.5],
-            linewidth =user_rating(
+            linewidth = user_rating(
                 model.posts[i].quality,
                 ones(quality_dimensions),
             ),
         )
     end
+
+    #corr_p = plot()
+    #for i = 1:ncol(votes_relative)
+    #    max_index = index_maximum_reached(votes_relative[!, i])
+    #    scatter!(corr_p,
+    #        [model.posts[i].timestamp],
+    #        [votes_relative[max_index,i]/max_index],
+    #        color = cgrad(:inferno)[sigmoid(user_rating(
+    #            model.posts[i].quality,
+    #            ones(quality_dimensions),
+    #        ))],
+    #    )
+    #end
+
 
     plot!(
         rp,
@@ -149,23 +166,11 @@ for model in models3
     push!(data, (agent_df, model_df))
     push!(plots, p)
     push!(plots, vp)
+    #push!(plots, corr_p)
 end
 #default(legend=false)
 #plot(rp, legend = false)
 
-function columnname(model_params)
-    string(reduce(
-        (x, y) -> x * "_" * y,
-        map(x -> string(model_params[x]), collect(keys(model_params))),
-    ))
-end
-
-function init_result_dataframe(models_params)
-    DataFrame(Dict(map(
-        x -> (columnname(Dict(x)), []),
-        get_params(model_init_params),
-    )))
-end
 
 rat_fac = 2
 
@@ -173,12 +178,10 @@ model_init_params = [
     (
         model_initiation,
         Dict(
-            :scoring_function => [scoring_custom],
+            :scoring_function => [scoring],
             :agent_step! => view_agent_step!,
             :PostType => ViewPost,
             :UserType => ViewUser,
-            :votes_exp => [1:10...],
-            :time_exp => [0.1:0.1:1...],
             :rating_factor => rat_fac,
         ),
     ),
@@ -190,10 +193,6 @@ model_init_params = [
         ),
     ),
 ]
-
-
-
-
 
 evaluation_functions = [
     area_under_curve,
@@ -262,4 +261,5 @@ end
 #end
 
 
-plot(plots..., layout = (length(plots), 1), legend = false)
+#plot(plots... ,layout = (length(plots), 1), legend = false)
+plot(plots...,rpr, legend = false)

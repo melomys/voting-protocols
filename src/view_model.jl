@@ -12,8 +12,12 @@ function ViewPost(rng)
     ViewPost(rand(rng, quality_distribution), 0, 0, 0, 0)
 end
 
-function ViewPost(rng, time)
+function ViewPost(rng, time,)
     ViewPost(rand(rng, quality_distribution), 0, 0, time, 0)
+end
+
+function ViewPost(rng, time,init_score)
+    ViewPost(rand(rng, quality_distribution), 0, 0, time, init_score)
 end
 
 mutable struct ViewUser <: AbstractUser
