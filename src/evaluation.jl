@@ -24,7 +24,7 @@ function trapezoidial_rule(points)
 end
 
 
-function area_under_curve(model_df)
+function area_under_curve(model, model_df)
     trapezoidial_rule(model_df[!, :ranking_rating])
 end
 
