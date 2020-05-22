@@ -1,5 +1,3 @@
-
-
 """ returns dataframe, each row holds the given parameter over time of one post.
     time in the dataframe is relative to the creation of the post.
     the dataframe is right-padded with the last value of each post.
@@ -38,4 +36,9 @@ function init_result_dataframe(models_params)
         x -> (columnname(Dict(x)), []),
         get_params(model_init_params),
     )))
+end
+
+
+function init_correlation_dataframe(functions)
+    DataFrame(Dict(map(x -> (Symbol(x),[]), functions)))
 end
