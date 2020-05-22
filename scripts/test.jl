@@ -2,7 +2,6 @@ using Plots
 using Agents
 using DataFrames
 
-include("../src/plot_helper.jl")
 include("../src/model.jl")
 include("../src/model_factory.jl")
 include("../src/activation_model.jl")
