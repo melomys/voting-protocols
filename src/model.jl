@@ -212,3 +212,10 @@ macro get_post_data(s, f)
         $f(collected)
     end)
 end
+
+macro model_property_function(property)
+    name = Symbol("",property)
+    return :(function $property(model, model_df)
+        model.$property
+    end)
+end
