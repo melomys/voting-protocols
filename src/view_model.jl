@@ -12,11 +12,11 @@ function ViewPost(rng)
     ViewPost(rand(rng, quality_distribution), 0, 0, 0, 0)
 end
 
-function ViewPost(rng, time,)
+function ViewPost(rng, time)
     ViewPost(rand(rng, quality_distribution), 0, 0, time, 0)
 end
 
-function ViewPost(rng, time,init_score)
+function ViewPost(rng, time, init_score)
     ViewPost(rand(rng, quality_distribution), 0, 0, time, init_score)
 end
 
@@ -27,6 +27,32 @@ mutable struct ViewUser <: AbstractUser
     concentration::Int64
     voted_on::Array{AbstractPost}
     viewed::Array{AbstractPost}
+end
+
+
+function view_model(;
+    PostType = ViewPost,
+    UserType = ViewUser,
+    agent_step! = view_agent_step!,
+    scoring_function = scoring_view,
+    qargs...,
+)
+    println(qargs...)
+    init_arr = [
+        :PostType => PostType,
+        :UserType => UserType,
+        :agent_step! => agent_step!,
+        :scoring_function => scoring_function,
+        qargs...,
+    ]
+    println(init_arr)
+    model_initiation(;
+        PostType = PostType,
+        UserType = UserType,
+        agent_step! = agent_step!,
+        scoring_function = scoring_view,
+        qargs...,
+    )
 end
 
 function ViewUser(
@@ -51,7 +77,8 @@ function view_agent_step!(user, model)
     for i = 1:rand(model.rng, 1:model.n)
         post = model.posts[model.ranking[i]]
         if model.user_rating_function(post.quality, user.quality_perception) >
-           user.vote_probability * model.rating_factor && !in(post, user.voted_on)
+           user.vote_probability * model.rating_factor &&
+           !in(post, user.voted_on)
             push!(user.voted_on, post)
             post.votes += 1
         end
@@ -64,14 +91,15 @@ end
 
 
 function scoring_view(post, time, model)
-    ((post.votes + 1)^2 / (post.views + 1)^0.7) / (time - post.timestamp+ 1)^(0.1)
+    ((post.votes + 1)^2 / (post.views + 1)^0.7) /
+    (time - post.timestamp + 1)^(0.1)
 end
 
 function scoring_view_exp(post, time, model)
-    post.views^post.votes / (time - post.timestamp+1)^0.1
+    post.views^post.votes / (time - post.timestamp + 1)^0.1
 end
 
 function scoring_view_no_time(post, time, model)
     ((post.votes + 1)^2 / (post.views + 1)^0.2)^0.3 /
-    (time - post.timestamp+1)^(0.1)
+    (time - post.timestamp + 1)^(0.1)
 end
