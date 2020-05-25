@@ -49,10 +49,10 @@ model_params3 = [(
         :agent_step! => view_agent_step!,
         :PostType => ViewPost,
         :UserType => ViewUser,
-        :rating_factor => [0.5],
+        :rating_factor => [0.5,2],
         :start_posts => start_posts,
         :start_users => start_users,
-        :init_score => [20:30:120...]
+        :user_rating_function => [user_rating,user_rating_exp]
     ),
 )]
 
@@ -68,6 +68,19 @@ model_properties = [
 agent_properties = [:vote_probability]
 
 
+function name_plot_function(model_params)
+    custom_parameters = Set()
+    for pair in model_params
+        push!(custom_parameters, keys(pair[2])...)
+    end
+    function plot_name(model)
+        string(reduce(
+                (x, y) -> x * "/" * y,
+                map(x -> "$(string(x)):$(string(model.properties[x]))", collect(custom_parameters)),
+        ))
+    end
+end
+
 
 colors = Dict(
     "scoring_activation_agent_step!" => "blue",
@@ -82,8 +95,10 @@ colors = Dict(
 
 data = []
 plots = []
-rp = plot()
-rpr = plot()
+rp = Plots.plot()
+rpr = Plots.plot()
+
+plotname = name_plot_function(model_params3)
 
 
 for model in models3
@@ -97,7 +112,7 @@ for model in models3
         model_properties = model_properties,
     )
 
-    p = plot()
+    p = Plots.plot()
     scores = post_data(model_df[!, :identity_score])
     for i = 1:ncol(scores)
         plot!(
@@ -111,10 +126,11 @@ for model in models3
                 model.posts[i].quality,
                 ones(quality_dimensions),
             ))],
+            title = plotname(model)
         )
     end
 
-    vp = plot()
+    vp = Plots.plot()
     votes_relative = relative_post_data(model_df[!, :identity_votes])
     for i = 1:ncol(votes_relative)
         plot!(
@@ -125,10 +141,11 @@ for model in models3
                 model.posts[i].quality,
                 ones(quality_dimensions),
             ),
+            title = plotname(model),
         )
     end
 
-    #corr_p = plot()
+    #corr_p = Plots.plot()
     #for i = 1:ncol(votes_relative)
     #    max_index = index_maximum_reached(votes_relative[!, i])
     #    scatter!(corr_p,
@@ -156,10 +173,7 @@ for model in models3
         rpr,
         model_df[!, :step],
         model_df[!, :ranking_rating_relative],
-        label = string(model.scoring_function) *
-                "_" *
-                string(model.agent_step!),
-        color = colors[string(model.scoring_function)*"_"*string(model.agent_step!)],
+        label = string(model)
     )
 
     push!(data, (agent_df, model_df))
@@ -261,4 +275,5 @@ end
 
 
 #plot(plots... ,layout = (length(plots), 1), legend = false)
-plot(plots...,rpr, legend = false)
+Plots.plot(plots...,rpr, legend = false)
+#Plots.plot(rpr,legend = :outertopright)
