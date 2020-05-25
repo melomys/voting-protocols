@@ -98,7 +98,7 @@ function user_rating(post_quality, user_quality_perception)
 end
 
 function user_rating_exp(post_quality, user_quality_perception)
-    sum(post_quality .^ user_quality_perception)
+    reduce(*,sigmoid.(post_quality).^(sigmoid.(user_quality_perception)))
 end
 
 
@@ -146,7 +146,9 @@ function model_initiation(;
         rng,
         PostType,
         UserType,
-        init_score
+        init_score,
+        start_users,
+        start_posts,
     )
 
     for qarg in qargs
