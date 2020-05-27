@@ -37,20 +37,11 @@ function view_model(;
     scoring_function = scoring_view,
     qargs...,
 )
-    println(qargs...)
-    init_arr = [
-        :PostType => PostType,
-        :UserType => UserType,
-        :agent_step! => agent_step!,
-        :scoring_function => scoring_function,
-        qargs...,
-    ]
-    println(init_arr)
     model_initiation(;
         PostType = PostType,
         UserType = UserType,
         agent_step! = agent_step!,
-        scoring_function = scoring_view,
+        scoring_function = scoring_function,
         qargs...,
     )
 end
@@ -92,7 +83,7 @@ end
 
 function scoring_view(post, time, model)
     ((post.votes + 1)^2 / (post.views + 1)^0.7) /
-    (time - post.timestamp + 1)^(0.1)
+    (time - post.timestamp + 1)^(1)
 end
 
 function scoring_view_exp(post, time, model)
