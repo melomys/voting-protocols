@@ -4,17 +4,17 @@ function ranking_rating(model)
         rating +=
             1 / i * user_rating(
                 model.posts[model.ranking[i]].quality,
-                ones(quality_dimensions),
+                ones(model.quality_dimensions),
             )
     end
     return rating
 end
 
 function ranking_rating_relative(model)
-    by_quality = sortperm(model.posts, by=x -> - user_rating(x.quality,ones(quality_dimensions)))
+    by_quality = sortperm(model.posts, by=x -> - user_rating(x.quality,ones(model.quality_dimensions)))
     rating = 0
     for i = 1:model.n
-        rating += 1/i * user_rating(model.posts[by_quality[i]].quality,ones(quality_dimensions))
+        rating += 1/i * user_rating(model.posts[by_quality[i]].quality,ones(model.quality_dimensions))
     end
     ranking_rating(model)/rating
 end

@@ -3,45 +3,23 @@ using Agents
 using DataFrames
 using Logging
 
+LogLevel(-1000)
+
 include("../src/models/model.jl")
 include("../src/model_factory.jl")
+include("../src/models/downvote_model.jl")
 include("../src/activation_model.jl")
 include("../src/models/view_model.jl")
 include("../src/evaluation.jl")
 include("../src/data_preparation.jl")
-include("../src/models/downvote_model.jl")
+include("../src/rating.jl")
+include("../src/scoring.jl")
 
 start_posts = 100
 start_users = 100
 iterations = 100
 
 seed = abs(rand(Int))
-
-models2 = grid_params([
-    (
-        model_initiation,
-        Dict(
-            :scoring_function => [scoring],
-            :model_step! => activation_model_step!,
-            :agent_step! => activation_agent_step!,
-            :seed => seed,
-        ),
-    ),
-    (
-        model_initiation,
-        Dict(:scoring_function => [scoring, scoring_best], :seed => seed),
-    ),
-    (
-        model_initiation,
-        Dict(
-            :scoring_function => [scoring_view],
-            :agent_step! => view_agent_step!,
-            :PostType => ViewPost,
-            :UserType => ViewUser,
-            :seed => seed,
-        ),
-    ),
-])
 
 
 model_params3 = [
@@ -127,25 +105,25 @@ for model in models3
     )
 
     p = Plots.plot()
-    scores = post_data(model_df[!, :identity_score])
+    scores = post_data(model_df[!, :score])
     for i = 1:ncol(scores)
         plot!(
             model_df[!, :step],
             scores[!, i],
             linewidth = user_rating(
                 model.posts[i].quality,
-                ones(quality_dimensions),
+                ones(model.quality_dimensions),
             ),
             color = cgrad(:inferno)[sigmoid(user_rating(
                 model.posts[i].quality,
-                ones(quality_dimensions),
+                ones(model.quality_dimensions),
             ))],
             title = plotname(model),
         )
     end
 
     vp = Plots.plot()
-    votes_relative = relative_post_data(model_df[!, :identity_votes])
+    votes_relative = relative_post_data(model_df[!, :votes])
     for i = 1:ncol(votes_relative)
         plot!(
             model_df[!, :step],
@@ -153,7 +131,7 @@ for model in models3
             color = cgrad(:inferno)[model.posts[i].timestamp/model.posts[end].timestamp*1.5],
             linewidth = user_rating(
                 model.posts[i].quality,
-                ones(quality_dimensions),
+                ones(model.quality_dimensions),
             ),
             title = plotname(model),
         )
