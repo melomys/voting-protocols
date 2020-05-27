@@ -1,6 +1,7 @@
 using Plots
 using Agents
 using DataFrames
+using Logging
 
 include("../src/model.jl")
 include("../src/model_factory.jl")
@@ -8,6 +9,7 @@ include("../src/activation_model.jl")
 include("../src/view_model.jl")
 include("../src/evaluation.jl")
 include("../src/data_preparation.jl")
+include("../src/models/downvote_model.jl")
 
 start_posts = 100
 start_users = 100
@@ -42,19 +44,26 @@ models2 = grid_params([
 ])
 
 
-model_params3 = [(
-    model_initiation,
-    Dict(
-        :scoring_function => [scoring_view],
-        :agent_step! => view_agent_step!,
-        :PostType => ViewPost,
-        :UserType => ViewUser,
-        :rating_factor => [0.5,2],
-        :start_posts => start_posts,
-        :start_users => start_users,
-        :user_rating_function => [user_rating,user_rating_exp]
+model_params3 = [
+    (
+        model_initiation,
+        Dict(
+            :scoring_function => [scoring_view],
+            :agent_step! => view_agent_step!,
+            :PostType => ViewPost,
+            :UserType => ViewUser,
+            :rating_factor => 1,
+            :start_posts => start_posts,
+            :start_users => start_users,
+            :user_rating_function => [user_rating_exp],
+            :init_score => 0,
+        ),
     ),
-)]
+    (
+        downvote_model,
+        Dict(:user_rating_function => user_rating_exp, :init_score => [20, 30]),
+    ),
+]
 
 models3 = create_models(model_params3; seed = seed)
 
@@ -71,12 +80,17 @@ agent_properties = [:vote_probability]
 function name_plot_function(model_params)
     custom_parameters = Set()
     for pair in model_params
-        push!(custom_parameters, keys(pair[2])...)
+        if !isempty(keys(pair[2]))
+            push!(custom_parameters, keys(pair[2])...)
+        end
     end
     function plot_name(model)
         string(reduce(
-                (x, y) -> x * "/" * y,
-                map(x -> "$(string(x)):$(string(model.properties[x]))", collect(custom_parameters)),
+            (x, y) -> x * "/" * y,
+            map(
+                x -> "$(string(x)):$(string(get(model.properties,x,"-")))",
+                collect(custom_parameters),
+            ),
         ))
     end
 end
@@ -126,7 +140,7 @@ for model in models3
                 model.posts[i].quality,
                 ones(quality_dimensions),
             ))],
-            title = plotname(model)
+            title = plotname(model),
         )
     end
 
@@ -166,14 +180,13 @@ for model in models3
         label = string(model.scoring_function) *
                 "_" *
                 string(model.agent_step!),
-        color = colors[string(model.scoring_function)*"_"*string(model.agent_step!)],
     )
 
     plot!(
         rpr,
         model_df[!, :step],
         model_df[!, :ranking_rating_relative],
-        label = string(model)
+        label = string(model),
     )
 
     push!(data, (agent_df, model_df))
@@ -275,5 +288,5 @@ end
 
 
 #plot(plots... ,layout = (length(plots), 1), legend = false)
-Plots.plot(plots...,rpr, legend = false)
+Plots.plot(plots..., rpr, legend = false)
 #Plots.plot(rpr,legend = :outertopright)
