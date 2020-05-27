@@ -70,7 +70,7 @@ function User(
 end
 
 function scoring(post, time, model)
-    (post.votes + 1)^2 / (time - post.timestamp + 1)^(0.1)
+    (post.votes)^1 / (time - post.timestamp + 1)^(0.3)
 end
 
 function scoring_custom(post,time,model)
@@ -94,12 +94,14 @@ function scoring_worst(post, time, model)
 end
 
 function user_rating(post_quality, user_quality_perception)
-    sum(post_quality .* user_quality_perception)
+    sum((post_quality) .* (user_quality_perception))
 end
 
 function user_rating_exp(post_quality, user_quality_perception)
     reduce(*,sigmoid.(post_quality).^(sigmoid.(user_quality_perception)))
 end
+
+
 
 
 function model_initiation(;
@@ -161,8 +163,8 @@ function model_initiation(;
         add_agent!(
             model,
             rand(rng, quality_distribution),
-            rand(rng) / vote_probability_scale,
-            rand(rng, 1:10),
+            sigmoid(rand(rng)),
+            rand(rng, 1:30),
         )
     end
     return model
