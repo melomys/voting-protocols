@@ -174,22 +174,3 @@ function model_step!(model)
     model.time += 1
 
 end
-
-macro get_post_data(s, f)
-    if eval(f) === identity
-        name = Symbol("",eval(s))
-    else
-        name = Symbol(f, "__", eval(s))
-    end
-    return :(function $name(model)
-        collected = map(x -> getproperty(x, $s), model.posts)
-        $f(collected)
-    end)
-end
-
-macro model_property_function(property)
-    name = Symbol("", property)
-    return :(function $property(model, model_df)
-        model.$property
-    end)
-end

@@ -1,44 +1,37 @@
-"""
-plots the correlation matrix between given features of the model
-"""
-
 
 using Agents
 using DataFrames
 using StatsPlots
 using PyPlot
 
-include("../../src/model.jl")
+include("../../src/models/model.jl")
 include("../../src/model_factory.jl")
 include("../../src/activation_model.jl")
-include("../../src/view_model.jl")
+include("../../src/models/view_model.jl")
 include("../../src/evaluation.jl")
 include("../../src/data_collection.jl")
 
 
 rat_fac = 2
 steps = 30
-quality_dimensions = 3
 
-vote_count(model, model_df) = sum(map(x -> x.votes, model.posts))
 
-quality_sum(model, model_df) = sum(map(
-    x -> model.user_rating_function(x.quality, ones(quality_dimensions)),
-    model.posts,
-))
+function quality(post,model,model_df)
+    model.user_rating_function(post.quality, ones(model.quality_dimensions))
+end
 
-gain(model, model_df) =
-    model_df[end, :ranking_rating_relative] -
-    model_df[1, :ranking_rating_relative]
+function end_position(post, model, model_df)
+    @info model.ranking
+    index = findfirst(isequal(post), model.posts)
+    findfirst(isequal(index), model.ranking)
+end
+
+
 
 evaluation_functions = [
-    area_under_curve,
-    vote_count,
-    quality_sum,
-    gain,
-    @model_property_function(:rating_factor),
-    @model_property_function(:votes_exp),
-    @model_property_function(:time_exp)
+    @post_property_function(:timestamp),
+    quality,
+    end_position
 ]
 
 sort!(evaluation_functions, by = x -> string(x))
@@ -53,23 +46,19 @@ model_properties = [
 agent_properties = [:vote_probability]
 
 model_init_params = [(
-    model_initiation,
+    view_model,
     Dict(
-        :scoring_function => [scoring_custom],
+        :scoring_function => [scoring],
         :agent_step! => view_agent_step!,
-        :PostType => ViewPost,
-        :UserType => ViewUser,
-        :rating_factor => [1:2:4...],
-        :votes_exp => [7:3:15...],
-        :time_exp => [0.3:0.3:1...],
-        :user_rating_function => user_rating_exp
+        :user_rating_function => user_rating,
+        :rating_factor => 1
     ),
 )]
 
 
 corr_df = init_correlation_dataframe(evaluation_functions)
 
-iterations = 20
+iterations = 1
 for i = 1:iterations
     seed = abs(rand(Int))
     models = create_models(model_init_params; seed = seed)
@@ -88,8 +77,9 @@ for i = 1:iterations
 
         global model
         global model_df
-
-        push!(corr_df, map(x -> x(model, model_df), evaluation_functions))
+        for post in model.posts
+            push!(corr_df, map(x -> x(post, model, model_df), evaluation_functions))
+        end
     end
 end
 

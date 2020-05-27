@@ -11,7 +11,7 @@ include("../src/models/downvote_model.jl")
 include("../src/activation_model.jl")
 include("../src/models/view_model.jl")
 include("../src/evaluation.jl")
-include("../src/data_preparation.jl")
+include("../src/data_collection.jl")
 include("../src/rating.jl")
 include("../src/scoring.jl")
 
