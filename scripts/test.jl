@@ -3,10 +3,10 @@ using Agents
 using DataFrames
 using Logging
 
-include("../src/model.jl")
+include("../src/models/model.jl")
 include("../src/model_factory.jl")
 include("../src/activation_model.jl")
-include("../src/view_model.jl")
+include("../src/models/view_model.jl")
 include("../src/evaluation.jl")
 include("../src/data_preparation.jl")
 include("../src/models/downvote_model.jl")
