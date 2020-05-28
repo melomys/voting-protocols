@@ -8,10 +8,10 @@ using DataFrames
 using StatsPlots
 using PyPlot
 
-include("../../src/model.jl")
+include("../../src/models/model.jl")
 include("../../src/model_factory.jl")
 include("../../src/activation_model.jl")
-include("../../src/view_model.jl")
+include("../../src/models/view_model.jl")
 include("../../src/evaluation.jl")
 include("../../src/data_collection.jl")
 
@@ -43,22 +43,10 @@ evaluation_functions = [
 
 sort!(evaluation_functions, by = x -> string(x))
 
-model_properties = [
-    ranking_rating,
-    ranking_rating_relative,
-    @get_post_data(:score, identity),
-    @get_post_data(:votes, identity),
-    @get_post_data(:quality, identity)
-]
-agent_properties = [:vote_probability]
-
 model_init_params = [(
-    model_initiation,
+    view_model,
     Dict(
         :scoring_function => [scoring_custom],
-        :agent_step! => view_agent_step!,
-        :PostType => ViewPost,
-        :UserType => ViewUser,
         :rating_factor => [1:2:4...],
         :votes_exp => [7:3:15...],
         :time_exp => [0.3:0.3:1...],
@@ -69,7 +57,7 @@ model_init_params = [(
 
 corr_df = init_correlation_dataframe(evaluation_functions)
 
-iterations = 20
+iterations = 2
 for i = 1:iterations
     seed = abs(rand(Int))
     models = create_models(model_init_params; seed = seed)
@@ -82,8 +70,8 @@ for i = 1:iterations
             model.agent_step!,
             model.model_step!,
             steps;
-            agent_properties = agent_properties,
-            model_properties = model_properties,
+            agent_properties = [],
+            model_properties = default_view_model_properties,
         )
 
         global model
