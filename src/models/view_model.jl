@@ -86,5 +86,3 @@ function scoring_view_no_time(post, time, model)
     ((post.votes + 1)^2 / (post.views + 1)^0.2)^0.3 /
     (time - post.timestamp + 1)^(0.1)
 end
-
-default_view_model_properties = [default_model_properties..., @get_post_data(:views, identity)]

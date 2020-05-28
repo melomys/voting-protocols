@@ -47,7 +47,7 @@ model_init_params = [(
         :scoring_function => [scoring],
         :agent_step! => view_agent_step!,
         :user_rating_function => user_rating,
-        :rating_factor => [0.7],
+        :rating_factor => [0],
         :init_score => [10]
     ),
 )]

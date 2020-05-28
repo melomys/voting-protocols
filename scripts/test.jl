@@ -8,7 +8,7 @@ LogLevel(-1000)
 include("../src/models/model.jl")
 include("../src/model_factory.jl")
 include("../src/models/downvote_model.jl")
-include("../src/activation_model.jl")
+include("../src/models/activation_model.jl")
 include("../src/models/view_model.jl")
 include("../src/evaluation.jl")
 include("../src/data_collection.jl")
@@ -26,11 +26,8 @@ model_params3 = [
     (
         model_initiation,
         Dict(
-            :scoring_function => [scoring_view],
-            :agent_step! => view_agent_step!,
-            :PostType => ViewPost,
-            :UserType => ViewUser,
-            :rating_factor => 1,
+            :scoring_function => scoring_acitvation,
+            :rating_factor => 0,
             :start_posts => start_posts,
             :start_users => start_users,
             :user_rating_function => [user_rating_exp],

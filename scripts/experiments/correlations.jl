@@ -57,7 +57,7 @@ model_init_params = [(
 
 corr_df = init_correlation_dataframe(evaluation_functions)
 
-iterations = 2
+iterations = 20
 for i = 1:iterations
     seed = abs(rand(Int))
     models = create_models(model_init_params; seed = seed)

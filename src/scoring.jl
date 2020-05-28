@@ -15,9 +15,14 @@ function scoring_random(post, time, model)
 end
 
 function scoring_best(post, time, model)
-    user_rating(post.quality, ones(model.quality_dimensions))
+    model.user_rating(post.quality, ones(model.quality_dimensions))
 end
 
 function scoring_worst(post, time, model)
     - scoring_best(post, time,model)
+end
+
+
+function scoring_acitvation(post, time,model)
+    (post.votes - post.score) / (time -post.timestamp + 1)^(0.3)
 end

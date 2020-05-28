@@ -11,6 +11,8 @@ using LinearAlgebra
 using Random
 
 
+
+
 abstract type AbstractPost end
 abstract type AbstractUser <: AbstractAgent end
 
@@ -142,12 +144,6 @@ function agent_step!(user, model)
 end
 
 function model_step!(model)
-    for i = 1:model.n
-        model.posts[i].score =
-            model.scoring_function(model.posts[i], model.time, model)
-    end
-
-
     for i = 1:model.new_posts_per_step
         push!(
             model.posts,
@@ -159,6 +155,11 @@ function model_step!(model)
             ),
         )
         model.n += 1
+    end
+
+    for i = 1:model.n
+        model.posts[i].score =
+            model.scoring_function(model.posts[i], model.time, model)
     end
 
     if rand() < model.new_user_probability
@@ -174,10 +175,3 @@ function model_step!(model)
     model.time += 1
 
 end
-
-default_model_properties = [
-    ranking_rating,
-    ranking_rating_relative,
-    @get_post_data(:score, identity),
-    @get_post_data(:votes, identity),
-]

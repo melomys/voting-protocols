@@ -1,5 +1,7 @@
 import Base
 
+include("evaluation.jl")
+
 function Base.getproperty(value, name::Symbol, default_value)
     if hasproperty(value, name)
         return getproperty(value, name)
@@ -103,3 +105,13 @@ macro post_property_function(property)
         post.$name
     end)
 end
+
+
+default_model_properties = [
+    ranking_rating,
+    ranking_rating_relative,
+    @get_post_data(:score, identity),
+    @get_post_data(:votes, identity),
+]
+
+default_view_model_properties = [default_model_properties..., @get_post_data(:views, identity)]
