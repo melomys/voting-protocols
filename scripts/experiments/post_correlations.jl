@@ -3,6 +3,7 @@ using Agents
 using DataFrames
 using StatsPlots
 using PyPlot
+using Statistics
 
 include("../../src/models/model.jl")
 include("../../src/model_factory.jl")
@@ -10,6 +11,8 @@ include("../../src/activation_model.jl")
 include("../../src/models/view_model.jl")
 include("../../src/evaluation.jl")
 include("../../src/data_collection.jl")
+include("../../src/scoring.jl")
+include("../../src/rating.jl")
 
 
 rat_fac = 2
@@ -21,29 +24,22 @@ function quality(post,model,model_df)
 end
 
 function end_position(post, model, model_df)
-    @info model.ranking
     index = findfirst(isequal(post), model.posts)
     findfirst(isequal(index), model.ranking)
 end
 
 
 
+
 evaluation_functions = [
     @post_property_function(:timestamp),
+    @post_property_function(:score),
+    @post_property_function(:votes),
     quality,
     end_position
 ]
 
 sort!(evaluation_functions, by = x -> string(x))
-
-model_properties = [
-    ranking_rating,
-    ranking_rating_relative,
-    @get_post_data(:score, identity),
-    @get_post_data(:votes, identity),
-    @get_post_data(:quality, identity)
-]
-agent_properties = [:vote_probability]
 
 model_init_params = [(
     view_model,
@@ -51,14 +47,15 @@ model_init_params = [(
         :scoring_function => [scoring],
         :agent_step! => view_agent_step!,
         :user_rating_function => user_rating,
-        :rating_factor => 1
+        :rating_factor => [0.7],
+        :init_score => [10]
     ),
 )]
 
 
 corr_df = init_correlation_dataframe(evaluation_functions)
 
-iterations = 1
+iterations = 20
 for i = 1:iterations
     seed = abs(rand(Int))
     models = create_models(model_init_params; seed = seed)
@@ -71,8 +68,8 @@ for i = 1:iterations
             model.agent_step!,
             model.model_step!,
             steps;
-            agent_properties = agent_properties,
-            model_properties = model_properties,
+            agent_properties = [],
+            model_properties = default_view_model_properties,
         )
 
         global model

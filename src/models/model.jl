@@ -174,3 +174,10 @@ function model_step!(model)
     model.time += 1
 
 end
+
+default_model_properties = [
+    ranking_rating,
+    ranking_rating_relative,
+    @get_post_data(:score, identity),
+    @get_post_data(:votes, identity),
+]
