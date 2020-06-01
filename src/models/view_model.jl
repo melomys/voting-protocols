@@ -86,3 +86,11 @@ function scoring_view_no_time(post, time, model)
     ((post.votes + 1)^2 / (post.views + 1)^0.2)^0.3 /
     (time - post.timestamp + 1)^(0.1)
 end
+
+function scoring_unfair_view(post, time, model)
+    (post.views - post.score) / (time - post.timestamp + 1)^(0.3)
+end
+
+function scoring_view_activation(post, time, model)
+    ((post.votes)/ (post.views) - post.score)/ ( time - post.timestamp + 1)
+end

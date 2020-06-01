@@ -8,7 +8,6 @@ LogLevel(-1000)
 include("../src/models/model.jl")
 include("../src/model_factory.jl")
 include("../src/models/downvote_model.jl")
-include("../src/models/activation_model.jl")
 include("../src/models/view_model.jl")
 include("../src/evaluation.jl")
 include("../src/data_collection.jl")
@@ -26,17 +25,19 @@ model_params3 = [
     (
         model_initiation,
         Dict(
-            :scoring_function => scoring_acitvation,
+            :scoring_function => scoring_activation,
             :rating_factor => 0,
             :start_posts => start_posts,
             :start_users => start_users,
-            :user_rating_function => [user_rating_exp],
+            :user_rating_function => [user_rating_exp, user_rating],
             :init_score => 0,
         ),
     ),
     (
         downvote_model,
-        Dict(:user_rating_function => user_rating_exp, :init_score => [20, 30]),
+        Dict(:user_rating_function => user_rating_exp,
+        :rating_factor => 1,
+        :init_score => [0]),
     ),
 ]
 

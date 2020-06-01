@@ -23,6 +23,14 @@ function scoring_worst(post, time, model)
 end
 
 
-function scoring_acitvation(post, time,model)
+function scoring_activation(post, time,model)
     (post.votes - post.score) / (time -post.timestamp + 1)^(0.3)
+end
+
+function scoring_votes_divided_score(post, time, model)
+    (post.votes)/(post.score+1) / (time - post.timestamp + 1)^(0.5)
+end
+
+function scoring_votes_times_score(post, time, model)
+    post.votes * (post.score + 1) / (time- post.timestamp + 1)^(0.5)
 end
