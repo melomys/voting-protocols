@@ -10,6 +10,8 @@ using Distributions
 using LinearAlgebra
 using Random
 
+include("../user_creation.jl")
+
 
 
 
@@ -67,6 +69,8 @@ function model_initiation(;
     UserType = User,
     init_score = 0,
     quality_dimensions = 3,
+    user_creation = users(),
+    concentration = 30,
     qargs...,
 )
 
