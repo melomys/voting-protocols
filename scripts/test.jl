@@ -9,6 +9,7 @@ include("../src/models/model.jl")
 include("../src/model_factory.jl")
 include("../src/models/downvote_model.jl")
 include("../src/models/view_model.jl")
+include("../src/models/random_model.jl")
 include("../src/evaluation.jl")
 include("../src/data_collection.jl")
 include("../src/rating.jl")
@@ -25,17 +26,19 @@ model_params3 = [
     (
         model_initiation,
         Dict(
-            :scoring_function => scoring_activation,
-            :rating_factor => 0,
+            :scoring_function => scoring,
+            :rating_factor => 2,
             :start_posts => start_posts,
             :start_users => start_users,
-            :user_rating_function => [user_rating_exp, user_rating],
+            :user_rating_function => [user_rating],
             :init_score => 0,
         ),
     ),
     (
-        downvote_model,
-        Dict(:user_rating_function => user_rating_exp,
+        random_model,
+        Dict(:user_rating_function => user_rating,
+        :model_step! => random_model_step2!,
+        :deviation_function => [mean_deviation, std_deviation],
         :rating_factor => 1,
         :init_score => [0]),
     ),

@@ -43,5 +43,6 @@ function boring_users()
             sigmoid(rang,rng),
             rand(rng,1:30),
             )
+        end
     end
 end
