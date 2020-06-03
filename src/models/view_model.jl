@@ -27,6 +27,7 @@ function view_model(;
     UserType = ViewUser,
     agent_step! = view_agent_step!,
     scoring_function = scoring_view,
+    rating_factor = 1,
     qargs...,
 )
     model_initiation(;
@@ -34,6 +35,7 @@ function view_model(;
         UserType = UserType,
         agent_step! = agent_step!,
         scoring_function = scoring_function,
+        rating_factor = rating_factor,
         qargs...,
     )
 end

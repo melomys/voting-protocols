@@ -28,10 +28,34 @@ function area_under_curve(model, model_df)
     trapezoidial_rule(model_df[!, :ranking_rating])
 end
 
+function sum_gradient(model, model_df)
+    ranking = model_df[!, :ranking_rating]
+    sum(map(i ->  ranking[i+1] - ranking[i] ,1:length(ranking)-1))
+end
+
+quality_sum(model, model_df) = sum(map(
+    x -> model.user_rating_function(x.quality, ones(quality_dimensions)),
+    model.posts,
+))
+
 function gain(model_df)
     sign(model_df[2, :ranking_rating] - model_df[1, :ranking_rating]) *
     sign(model_df[end, :ranking_rating] - model_df[2, :ranking_rating])
 end
+
+
+# Evaluation inner rating
+
+function end_position(post, model, model_df)
+    index = findfirst(isequal(post), model.posts)
+    findfirst(isequal(index), model.ranking)
+end
+
+function quality(post,model,model_df)
+    model.user_rating_function(post.quality, ones(model.quality_dimensions))
+end
+
+
 
 
 """

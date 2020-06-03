@@ -181,12 +181,8 @@ rat_fac = 2
 
 model_init_params = [
     (
-        model_initiation,
+        view_model,
         Dict(
-            :scoring_function => [scoring],
-            :agent_step! => view_agent_step!,
-            :PostType => ViewPost,
-            :UserType => ViewUser,
             :rating_factor => rat_fac,
         ),
     ),
@@ -201,7 +197,8 @@ model_init_params = [
 
 evaluation_functions = [
     area_under_curve,
-    model_df ->
+    mean_gradient,
+    (model,model_df) ->
         sign(model_df[2, :ranking_rating] - model_df[1, :ranking_rating]) *
         sign(model_df[end, :ranking_rating] - model_df[2, :ranking_rating]),
 ]
@@ -214,7 +211,7 @@ to_evaluate = map(
 results = init_result_dataframe(model_init_params)
 first_full_corr = init_result_dataframe(model_init_params)
 
-iterations = 0
+iterations = 1
 models_arr = []
 for i = 1:iterations
     seed = abs(rand(Int))
@@ -247,7 +244,7 @@ for i = 1:iterations
             sign(model_df[end, :ranking_rating] - model_df[2, :ranking_rating]),
         )
         for i = 1:length(to_evaluate)
-            push!(evaluations[i], to_evaluate[i][2](model_df))
+            push!(evaluations[i], to_evaluate[i][2](model,model_df))
         end
 
     end

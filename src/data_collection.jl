@@ -107,6 +107,20 @@ macro post_property_function(property)
 end
 
 
+macro rating_correlation(function1, function2)
+    name = Symbol("corr_", eval(function1), "_", eval(function2))
+    return :(function $name(model, model_df)
+        v1 = []
+        v2 = []
+        for post in model.posts
+            push!(v1, $function1(post, model, model_df))
+            push!(v2, $function2(post, model, model_df))
+        end
+        return cor(v1, v2)
+    end)
+end
+
+
 default_model_properties = [
     ranking_rating,
     ranking_rating_relative,

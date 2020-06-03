@@ -7,7 +7,6 @@ using Statistics
 
 include("../../src/models/model.jl")
 include("../../src/model_factory.jl")
-include("../../src/activation_model.jl")
 include("../../src/models/view_model.jl")
 include("../../src/evaluation.jl")
 include("../../src/data_collection.jl")
