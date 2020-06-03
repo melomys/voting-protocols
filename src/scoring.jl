@@ -1,3 +1,5 @@
+using Dates
+
 function scoring(post, time, model)
     (post.votes)^1 / (time - post.timestamp + 1)^(0.3)
 end
@@ -8,6 +10,13 @@ end
 
 function scoring_hacker_news(post, time, model)
     (post.votes - 1)^8 / (time - post.timestamp + 1)^1.8
+end
+
+epoch = DateTime(1970,1,1)
+
+function scoring_reddit(post, time, model)
+    order = log(10, max(abs(post.votes),1))
+    round(sign(post.votes)*order + post.timestamp/45000; digits=7)
 end
 
 function scoring_random(post, time, model)
