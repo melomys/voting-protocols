@@ -26,18 +26,19 @@ model_params3 = [
     (
         model_initiation,
         Dict(
-            :scoring_function => scoring,
+            :scoring_function => [scoring_hacker_news, scoring_reddit],
             :rating_factor => 2,
             :start_posts => start_posts,
             :start_users => start_users,
             :user_rating_function => [user_rating],
+            :user => extreme_user(-20),
             :init_score => 0,
         ),
     ),
     (
         random_model,
         Dict(:user_rating_function => user_rating,
-        :model_step! => random_model_step2!,
+        :model_step! => random_model_step!,
         :deviation_function => [mean_deviation, std_deviation],
         :rating_factor => 1,
         :init_score => [0]),
@@ -189,7 +190,7 @@ model_init_params = [
     (
         model_initiation,
         Dict(
-            :scoring_function => [scoring_best, scoring_worst],
+            :scoring_function => [scoring_hacker_news, scoring_reddit],
             :rating_factor => rat_fac,
         ),
     ),
@@ -197,7 +198,7 @@ model_init_params = [
 
 evaluation_functions = [
     area_under_curve,
-    mean_gradient,
+    sum_gradient,
     (model,model_df) ->
         sign(model_df[2, :ranking_rating] - model_df[1, :ranking_rating]) *
         sign(model_df[end, :ranking_rating] - model_df[2, :ranking_rating]),

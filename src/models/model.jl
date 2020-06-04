@@ -25,16 +25,16 @@ mutable struct Post <: AbstractPost
     score::Float64
 end
 
+function Post(rng::MersenneTwister, quality_distribution, time, init_score = 0)
+    Post(rand(rng, quality_distribution), 0, time, init_score)
+end
+
 mutable struct User <: AbstractUser
     id::Int
     quality_perception::Array
     vote_probability::Float64
     concentration::Int64
     voted_on::Array{AbstractPost}
-end
-
-function Post(rng::MersenneTwister, quality_distribution, time, init_score = 0)
-    Post(rand(rng, quality_distribution), 0, time, init_score)
 end
 
 function User(
@@ -69,7 +69,7 @@ function model_initiation(;
     UserType = User,
     init_score = 0,
     quality_dimensions = 3,
-    user_creation = users(),
+    user = user(),
     concentration = 30,
     qargs...,
 )
@@ -116,7 +116,8 @@ function model_initiation(;
         start_users,
         start_posts,
         quality_dimensions,
-        quality_distribution
+        quality_distribution,
+        user
     )
 
     for qarg in qargs
@@ -125,19 +126,28 @@ function model_initiation(;
 
 
     model = ABM(UserType; properties = properties)
-    for i = 1:start_users
-        add_agent!(
-            model,
-            rand(rng, quality_distribution),
-            sigmoid(rand(rng)),
-            rand(rng, 1:30),
-        )
+
+
+    #user creation
+    if typeof(user) <: Array
+        @assert sum(map(x -> x[1], user)) === 1 "user_creation percentages sum is not equal to 1!"
+        for p in user_creation
+            for i = 1:p[1]*start_users
+                p[2](model)
+            end
+        end
+    else
+        for i = 1:start_users
+            user(model)
+        end
     end
+
+
     return model
 end
 
 function agent_step!(user, model)
-    for i = 1:rand(model.rng, 1:model.n)
+    for i = 1:minimum([user.concentration, model.n])
         post = model.posts[model.ranking[i]]
         if model.user_rating_function(post.quality, user.quality_perception) >
            user.vote_probability && !in(post, user.voted_on)
@@ -170,7 +180,7 @@ function model_step!(model)
         add_agent!(
             model,
             rand(model.rng, model.quality_distribution),
-            rand(model.rng) / model.vote_probability,
+            sigmoid(rand(model.rng),Normal()),
             rand(model.rng, 1:10),
         )
     end
