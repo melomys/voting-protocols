@@ -14,7 +14,7 @@ function extreme_user(extremeness)
         add_agent!(
             model,
             rand(model.rng, model.quality_distribution) - ones(length(model.quality_distribution))*extremeness,
-            Float64(rand(model.rng, [1])),
+            Float64(rand(model.rng, [0.5])),
             rand(model.rng, [500]),
         )
     end

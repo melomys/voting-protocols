@@ -26,11 +26,11 @@ model_params3 = [
     (
         model_initiation,
         Dict(
-            :scoring_function => [scoring_hacker_news, scoring_reddit],
+            :scoring_function => [scoring],
             :rating_factor => 2,
             :start_posts => start_posts,
             :start_users => start_users,
-            :user_rating_function => [user_rating],
+            :user_rating_function => [user_rating_dist1],
             :user => extreme_user(-20),
             :init_score => 0,
         ),
