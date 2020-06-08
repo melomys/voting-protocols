@@ -15,18 +15,20 @@ function downvote_user_rating(post_quality, user_quality_perception)
 end
 
 vals = []
+
+
 function downvote_agent_step!(user,model)
-    for i= 1:minimum([user.concentration, model.n])
-    #for i = 1 : rand(1:model.n)
+    #for i= 1:minimum([user.concentration, model.n])
+    for i = 1 : rand(1:model.n)
         post = model.posts[model.ranking[i]]
-        if user.vote_probability > rand(model.rng) &&  !in(post, user.voted_on)
-            push!(vals, model.user_rating_function(post.quality, user.quality_perception))
-            if model.user_rating_function(post.quality, user.quality_perception) > 0.35
-                post.votes += 1
-            else
+        if !in(post, user.voted_on)
+            if model.user_rating_function(post.quality, user.quality_perception) < user.vote_probability/2
                 post.votes -= 1
+                push!(user.voted_on, post)
+            elseif model.user_rating_function(post.quality, user.quality_perception) >1 - user.vote_probability/2
+                post.votes += 1
+                push!(user.voted_on, post)
             end
-            push!(user.voted_on, post)
         end
     end
 end
