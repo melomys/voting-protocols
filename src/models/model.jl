@@ -130,8 +130,8 @@ function model_initiation(;
 
     #user creation
     if typeof(user) <: Array
-        @assert sum(map(x -> x[1], user)) === 1 "user_creation percentages sum is not equal to 1!"
-        for p in user_creation
+        @assert sum(map(x -> x[1], user)) == 1 "user_creation percentages sum is not equal to 1!"
+        for p in user
             for i = 1:p[1]*start_users
                 p[2](model)
             end

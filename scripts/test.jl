@@ -36,9 +36,9 @@ model_params3 = [
         ),
     ),
     (
-        random_model,
+        downvote_model,
         Dict(:user_rating_function => user_rating,
-        :model_step! => random_model_step!,
+#        :model_step! => random_model_step!,
         :deviation_function => [mean_deviation, std_deviation],
         :rating_factor => 1,
         :init_score => [0]),

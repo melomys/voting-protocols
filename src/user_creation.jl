@@ -4,7 +4,7 @@ function user()
             model,
             rand(model.rng, model.quality_distribution),
             sigmoid(rand(model.rng)),
-            rand(model.rng, 10:100),
+            rand(model.rng, 30:70),
         )
     end
 end
@@ -14,7 +14,7 @@ function extreme_user(extremeness)
         add_agent!(
             model,
             rand(model.rng, model.quality_distribution) - ones(length(model.quality_distribution))*extremeness,
-            Float64(rand(model.rng, [0.5])),
+            Float64(rand(model.rng, [0.55])),
             rand(model.rng, [500]),
         )
     end
