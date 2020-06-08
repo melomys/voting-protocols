@@ -6,6 +6,7 @@ plots the correlation matrix between given features of the model
 using Agents
 using DataFrames
 using StatsPlots
+using CSV
 
 using PyPlot
 
@@ -16,6 +17,9 @@ include("../../src/evaluation.jl")
 include("../../src/data_collection.jl")
 include("../../src/scoring.jl")
 include("../../src/rating.jl")
+
+timestamp_func = @post_property_function(:timestamp)
+score_func = @post_property_function(:score)
 
 @time begin
     rat_fac = 2
@@ -33,8 +37,7 @@ include("../../src/rating.jl")
         model_df[end, :ranking_rating_relative] -
         model_df[1, :ranking_rating_relative]
 
-    timestamp_func = @post_property_function(:timestamp)
-    score_func = @post_property_function(:score)
+
 
 
     evaluation_functions = [
@@ -100,3 +103,6 @@ corrplot(
     label = map(string, names(corr_df)),
     markercolor = cgrad(:inferno),
 )
+
+
+CSV.write("df.csv",corr_df)
