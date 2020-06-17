@@ -38,13 +38,18 @@ macro model_property_function(property, func=identity)
     else
         name = Symbol(func, "_", eval(property))
     end
+
     return :(function $name(model, model_df)
-        val = model.$(eval(property))
-        if typeof(val) <: Function
-            string(val)
+        if hasproperty(model, name)
+            val = model.$(eval(property))
+            if typeof(val) <: Function
+                string(val)
+            else
+                $func(model.$(eval(property)))
+            end
         else
-            $func(model.$(eval(property)))
-        end
+            NaN
+        end    
     end)
 end
 
