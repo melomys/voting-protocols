@@ -25,10 +25,13 @@ function downvote_agent_step!(user,model)
             if model.user_rating_function(post.quality, user.quality_perception) < user.vote_probability/2
                 post.votes -= 1
                 push!(user.voted_on, post)
-            elseif model.user_rating_function(post.quality, user.quality_perception) >1 - user.vote_probability/2
+            elseif model.user_rating_function(post.quality, user.quality_perception) > 1 - user.vote_probability/2
                 post.votes += 1
                 push!(user.voted_on, post)
             end
+
+            push!(model.user_ratings, model.user_rating_function(post.quality, user.quality_perception))
+
         end
     end
 end

@@ -59,13 +59,16 @@ end
 
 
 function view_agent_step!(user, model)
-    for i = 1:rand(model.rng, 1:model.n)
+    #for i = 1:rand(model.rng, 1:model.n)
+    for i = 1:minimum([user.concentration, model.n])
         post = model.posts[model.ranking[i]]
         if model.user_rating_function(post.quality, user.quality_perception) >
-           user.vote_probability * model.rating_factor &&
-           !in(post, user.voted_on)
+           user.vote_probability  && !in(post, user.voted_on)
             push!(user.voted_on, post)
             post.votes += 1
+
+            push!(model.user_ratings, model.user_rating_function(post.quality, user.quality_perception))
+
         end
         if !in(post, user.viewed)
             push!(user.viewed, post)
