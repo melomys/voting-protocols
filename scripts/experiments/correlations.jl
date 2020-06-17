@@ -6,7 +6,7 @@ plots the correlation matrix between given features of the model
 using Agents
 using DataFrames
 using StatsPlots
-using CSV
+using RCall
 
 using PyPlot
 
@@ -49,6 +49,8 @@ score_func = @post_property_function(:score)
         @model_property_function(:rating_factor),
         @model_property_function(:votes_exp),
         @model_property_function(:time_exp),
+        @model_property_function(:user_ratings),
+        @model_property_function(:user_rating_function),
         @rating_correlation(quality, end_position),
         @rating_correlation(timestamp_func, score_func)
     ]
@@ -97,12 +99,15 @@ score_func = @post_property_function(:score)
 end
 
 plotly()
+unary_corr_df = unary_columns(corr_df)
 corrplot(
-    Array{Float64}(corr_df),
+    Array{Float64}(unary_corr_df),
     bins = 10,
-    label = map(string, names(corr_df)),
+    label = map(string, names(unary_corr_df)),
     markercolor = cgrad(:inferno),
 )
 
 
-CSV.write("df.csv",corr_df)
+R"""
+saveRDS($(robject(corr_df)), file = \"df.rds\")
+"""
