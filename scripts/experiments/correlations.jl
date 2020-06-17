@@ -13,6 +13,7 @@ using PyPlot
 include("../../src/models/model.jl")
 include("../../src/model_factory.jl")
 include("../../src/models/view_model.jl")
+include("../../src/models/random_model.jl")
 include("../../src/evaluation.jl")
 include("../../src/data_collection.jl")
 include("../../src/scoring.jl")
@@ -51,46 +52,55 @@ score_func = @post_property_function(:score)
         @model_property_function(:time_exp),
         @model_property_function(:user_ratings),
         @model_property_function(:user_rating_function),
+        @model_property_function(:model_type),
         @rating_correlation(quality, end_position),
         @rating_correlation(timestamp_func, score_func)
     ]
 
     sort!(evaluation_functions, by = x -> string(x))
 
-    model_init_params = [(
-        view_model,
-        Dict(
-            :scoring_function => [scoring_custom],
-            :rating_factor => [1:2:4...],
-            :votes_exp => [7:3:15...],
-            :time_exp => [0.3:0.3:1...],
-            :user_rating_function => user_rating_exp,
+    model_init_params = [
+        (
+            view_model,
+            Dict(
+                :scoring_function => [scoring_custom],
+                :rating_factor => [1:2:4...],
+                :votes_exp => [7:3:15...],
+                :time_exp => [0.3:0.3:1...],
+                :user_rating_function => user_rating_exp,
+            ),
         ),
-    )]
+        (random_model, Dict()),
+    ]
 
 
     corr_df = init_correlation_dataframe(evaluation_functions)
 
-    iterations = 20
+    iterations = 10
     for i = 1:iterations
         seed = abs(rand(Int))
         models = create_models(model_init_params; seed = seed)
 
         for j = 1:length(models)
-            model = models[j]
+            tmp_model = models[j]
             agent_df, model_df = run!(
-                model,
-                model.agent_step!,
-                model.model_step!,
+                tmp_model,
+                tmp_model.agent_step!,
+                tmp_model.model_step!,
                 steps;
                 agent_properties = [],
                 model_properties = default_view_model_properties,
             )
 
-            global model
-            global model_df
+            ab_model = tmp_model
+            ab_model_df = model_df
+            global ab_model
+            global ab_model_df
 
-            push!(corr_df, map(x -> x(model, model_df), evaluation_functions))
+            push!(
+                corr_df,
+                map(x -> x(ab_model, ab_model_df), evaluation_functions),
+            )
 
 
 
