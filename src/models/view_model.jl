@@ -30,12 +30,13 @@ function view_model(;
     rating_factor = 1,
     qargs...,
 )
-    model_initiation(;
+    standard_model(;
         PostType = PostType,
         UserType = UserType,
         agent_step! = agent_step!,
         scoring_function = scoring_function,
         rating_factor = rating_factor,
+        model_type = view_model,
         qargs...,
     )
 end

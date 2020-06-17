@@ -2,9 +2,10 @@ function downvote_model(;
     user_rating_function = downvote_user_rating,
     agent_step! = downvote_agent_step!,
     qargs...)
-    model_initiation(;
+    standard_model(;
     user_rating_function = user_rating_function,
     agent_step! = agent_step!,
+    model_type = downvote_model,
     qargs...
     )
 end

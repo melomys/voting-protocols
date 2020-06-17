@@ -53,7 +53,7 @@ function User(
 end
 
 
-function model_initiation(;
+function standard_model(;
     start_posts = 100,
     start_users = 100,
     new_user_probability = 0,
@@ -71,6 +71,7 @@ function model_initiation(;
     quality_dimensions = 3,
     user = user(),
     concentration = 30,
+    model_type = standard_model,
     qargs...,
 )
 
@@ -120,7 +121,8 @@ function model_initiation(;
         quality_dimensions,
         quality_distribution,
         user,
-        user_ratings
+        user_ratings,
+        model_type
     )
 
     for qarg in qargs

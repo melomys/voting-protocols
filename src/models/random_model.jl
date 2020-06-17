@@ -4,10 +4,11 @@ function random_model(;
     deviation_function = mean_deviation,
     qargs...,
 )
-    model_initiation(;
+    standard_model(;
         model_step! = model_step!,
         random_scoring_factor = random_scoring_factor,
         deviation_function = deviation_function,
+        model_type = random_model,
         qargs...,
     )
 end
