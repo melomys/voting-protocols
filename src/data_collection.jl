@@ -32,10 +32,19 @@ end
 macro to create a function to return the given property from a model,
     the function is named after the porperty
 """
-macro model_property_function(property)
-    name = Symbol("", eval(property))
+macro model_property_function(property, func=identity)
+    if eval(func) === identity
+        name = Symbol("",eval(property))
+    else
+        name = Symbol(func, "_", eval(property))
+    end
     return :(function $name(model, model_df)
-        model.$name
+        val = model.$(eval(property))
+        if typeof(val) <: Function
+            string(val)
+        else
+            $func(model.$(eval(property)))
+        end
     end)
 end
 
@@ -120,7 +129,9 @@ macro rating_correlation(function1, function2)
     end)
 end
 
-
+function unary_columns(df)
+    df[!,filter(x -> (typeof(df[1,x]) <: Union{Float64,Int,Bool}), names(df))]
+end
 default_model_properties = [
     ranking_rating,
     ranking_rating_relative,
