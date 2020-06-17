@@ -95,6 +95,8 @@ function model_initiation(;
     ranking = [1:start_posts...]
     time = 0
 
+    user_ratings = []
+
 
     properties = @dict(
         n,
@@ -117,7 +119,8 @@ function model_initiation(;
         start_posts,
         quality_dimensions,
         quality_distribution,
-        user
+        user,
+        user_ratings
     )
 
     for qarg in qargs
@@ -153,6 +156,9 @@ function agent_step!(user, model)
            user.vote_probability && !in(post, user.voted_on)
             push!(user.voted_on, post)
             post.votes += 1
+
+            push!(model.user_ratings, model.user_rating_function(post.quality,user.quality_perception))
+
         end
     end
 end
