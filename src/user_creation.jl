@@ -3,7 +3,7 @@ function user()
         add_agent!(
             model,
             rand(model.rng, model.quality_distribution),
-            sigmoid(rand(model.rng)),
+            sigmoid(rand(model.rng, Normal())),
             rand(model.rng, 30:70),
         )
     end

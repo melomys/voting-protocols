@@ -72,6 +72,7 @@ function standard_model(;
     user = user(),
     concentration = 30,
     model_type = standard_model,
+    sorted = 0,
     qargs...,
 )
 
@@ -98,6 +99,17 @@ function standard_model(;
 
     user_ratings = []
 
+    if sorted > 0
+        tmp_properties = @dict(user_rating_function, time,quality_dimensions)
+        tmp_model = ABM(UserType; properties = tmp_properties)
+        scores = []
+        for i = 1:start_posts
+            push!(scores, scoring_best(posts[i], tmp_model.time, tmp_model))
+        end
+        ranking = sortperm(map(x -> -x, scores))
+        ranking = partial_shuffle(rng,ranking, 1 - sorted)
+    end
+
 
     properties = @dict(
         n,
@@ -122,7 +134,8 @@ function standard_model(;
         quality_distribution,
         user,
         user_ratings,
-        model_type
+        model_type,
+        seed
     )
 
     for qarg in qargs
@@ -147,25 +160,37 @@ function standard_model(;
         end
     end
 
-
     return model
 end
 
 function agent_step!(user, model)
     for i = 1:minimum([user.concentration, model.n])
         post = model.posts[model.ranking[i]]
+        #println("ur: $(model.user_rating_function(post.quality, user.quality_perception)) uvp: $(user.vote_probability)")
+        model.user_rating_function(post.quality, user.quality_perception)
         if model.user_rating_function(post.quality, user.quality_perception) >
            user.vote_probability && !in(post, user.voted_on)
             push!(user.voted_on, post)
             post.votes += 1
 
-            push!(model.user_ratings, model.user_rating_function(post.quality,user.quality_perception))
+            push!(
+                model.user_ratings,
+                model.user_rating_function(
+                    post.quality,
+                    user.quality_perception,
+                ),
+            )
 
         end
     end
 end
 
 function model_step!(model)
+    for i = 1:model.n
+        model.posts[i].score =
+            model.scoring_function(model.posts[i], model.time, model)
+    end
+
     for i = 1:model.new_posts_per_step
         push!(
             model.posts,
@@ -179,16 +204,11 @@ function model_step!(model)
         model.n += 1
     end
 
-    for i = 1:model.n
-        model.posts[i].score =
-            model.scoring_function(model.posts[i], model.time, model)
-    end
-
     if rand() < model.new_user_probability
         add_agent!(
             model,
             rand(model.rng, model.quality_distribution),
-            sigmoid(rand(model.rng),Normal()),
+            sigmoid(rand(model.rng), Normal()),
             rand(model.rng, 1:10),
         )
     end
@@ -196,4 +216,24 @@ function model_step!(model)
     model.ranking = sortperm(map(x -> -x.score, model.posts))
     model.time += 1
 
+end
+
+
+function partial_shuffle(rng, v::AbstractArray, percent)
+    amount = round(Int, length(v) * percent)
+    indeces = [1:length(v)...]
+    ret = copy(v)
+    rand_numbers = []
+    for i = 1:amount
+        new_rand_number = rand(rng, indeces)
+        indeces = filter(x -> x != new_rand_number, indeces)
+        push!(rand_numbers, new_rand_number)
+    end
+
+    for i = 1:2*length(rand_numbers)
+        a = rand(rng, rand_numbers)
+        b = rand(rng, rand_numbers)
+        ret[a], ret[b] = ret[b], ret[a]
+    end
+    ret
 end
