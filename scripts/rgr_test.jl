@@ -17,40 +17,33 @@ include("../src/scoring.jl")
 
 start_posts = 100
 start_users = 100
-iterations = 100
+iterations = 300
 
 seed = abs(rand(Int))
 
 
-model_params3 = [
+model_params = [
     (
-        standard_model,
+        view_model,
         Dict(
             :scoring_function => [scoring],
-            :rating_factor => 2,
             :start_posts => start_posts,
             :start_users => start_users,
-            :user_rating_function => [user_rating_dist1],
-            :user => extreme_user(-20),
-            :init_score => 0,
-            :sorted => [0,0.5,1]
+            :init_score => 5,
+            :new_posts_per_step => 20,
+            :user_rating_function => [user_rating_exp],
+            :UserType => ViewUser
         ),
-    ),
-    (
-        downvote_model,
-        Dict(:user_rating_function => user_rating,
-#        :model_step! => random_model_step!,
-        :deviation_function => [mean_deviation, std_deviation],
-        :rating_factor => 1,
-        :init_score => [0]),
     ),
 ]
 
-models3 = create_models(model_params3; seed = seed)
+models = create_models(model_params; seed = seed)
 
 model_properties = [
     ranking_rating,
     ranking_rating_relative,
+    mean_user_view,
+    mean_user_vote,
     @get_post_data(:score, identity),
     @get_post_data(:votes, identity),
     @get_post_data(:quality, identity)
@@ -93,10 +86,12 @@ plots = []
 rp = Plots.plot()
 rpr = Plots.plot()
 
-plotname = name_plot_function(model_params3)
+plotname = name_plot_function(model_params)
 
 
-for model in models3
+for model in models
+    ab_model = model
+    global ab_model
     global model_df
     agent_df, model_df = run!(
         model,
@@ -139,20 +134,6 @@ for model in models3
             title = plotname(model),
         )
     end
-
-    #corr_p = Plots.plot()
-    #for i = 1:ncol(votes_relative)
-    #    max_index = index_maximum_reached(votes_relative[!, i])
-    #    scatter!(corr_p,
-    #        [model.posts[i].timestamp],
-    #        [votes_relative[max_index,i]/max_index],
-    #        color = cgrad(:inferno)[sigmoid(user_rating(
-    #            model.posts[i].quality,
-    #            ones(quality_dimensions),
-    #        ))],
-    #    )
-    #end
-
 
     plot!(
         rp,
@@ -197,74 +178,8 @@ model_init_params = [
     ),
 ]
 
-evaluation_functions = [
-    area_under_curve,
-    sum_gradient,
-    (model,model_df) ->
-        sign(model_df[2, :ranking_rating] - model_df[1, :ranking_rating]) *
-        sign(model_df[end, :ranking_rating] - model_df[2, :ranking_rating]),
-]
-
-to_evaluate = map(
-    x -> (init_result_dataframe(model_init_params), x),
-    evaluation_functions,
-)
-
-results = init_result_dataframe(model_init_params)
-first_full_corr = init_result_dataframe(model_init_params)
-
-iterations = 0
-models_arr = []
-for i = 1:iterations
-    seed = abs(rand(Int))
-    models = create_models(model_init_params; seed = seed)
-
-    push!(models_arr, models)
-
-    result = []
-    first_full_c = []
-
-    evaluations = map(x -> [], to_evaluate)
-
-    for j = 1:length(models)
-        model = models[j]
-
-
-        agent_df, model_df = run!(
-            model,
-            model.agent_step!,
-            model.model_step!,
-            30;
-            agent_properties = agent_properties,
-            model_properties = model_properties,
-        )
-
-        push!(result, trapezoidial_rule(model_df[!, :ranking_rating]))
-        push!(
-            first_full_c,
-            sign(model_df[2, :ranking_rating] - model_df[1, :ranking_rating]) *
-            sign(model_df[end, :ranking_rating] - model_df[2, :ranking_rating]),
-        )
-        for i = 1:length(to_evaluate)
-            push!(evaluations[i], to_evaluate[i][2](model,model_df))
-        end
-
-    end
-
-    for i = 1:length(evaluations)
-        push!(to_evaluate[i][1], evaluations[i])
-    end
-    push!(results, result)
-    push!(first_full_corr, first_full_c)
-
-end
-
-
-#for key in sort(collect(keys(results)))
-#    println("$(key): $(mean(results[key]))")
-#end
 
 
 #plot(plots... ,layout = (length(plots), 1), legend = false)
-Plots.plot(rpr, legend = false)
+Plots.plot(plots...,rpr, legend = false)
 #Plots.plot(rpr,legend = :outertopright)

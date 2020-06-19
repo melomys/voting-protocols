@@ -14,6 +14,7 @@ include("../../src/models/model.jl")
 include("../../src/model_factory.jl")
 include("../../src/models/view_model.jl")
 include("../../src/models/random_model.jl")
+include("../../src/models/downvote_model.jl")
 include("../../src/evaluation.jl")
 include("../../src/data_collection.jl")
 include("../../src/scoring.jl")
@@ -24,7 +25,7 @@ score_func = @post_property_function(:score)
 
 @time begin
     rat_fac = 2
-    steps = 30
+    steps = 300
     quality_dimensions = 3
 
     vote_count(model, model_df) = sum(map(x -> x.votes, model.posts))
@@ -52,7 +53,9 @@ score_func = @post_property_function(:score)
         @model_property_function(:time_exp),
         @model_property_function(:user_ratings),
         @model_property_function(:user_rating_function),
+        @model_property_function(:scoring_function),
         @model_property_function(:model_type),
+        @model_property_function(:seed),
         @rating_correlation(quality, end_position),
         @rating_correlation(timestamp_func, score_func)
     ]
@@ -67,21 +70,40 @@ score_func = @post_property_function(:score)
                 :rating_factor => [1:2:4...],
                 :votes_exp => [7:3:15...],
                 :time_exp => [0.3:0.3:1...],
-                :user_rating_function => user_rating_exp,
+                :user_rating_function => user_rating,
             ),
         ),
-        (random_model, Dict()),
+        (
+            random_model,
+            Dict(:user_rating_function => [user_rating, user_rating_exp]),
+        ),
+        (downvote_model, Dict()),
+        (standard_model, Dict()),
     ]
+
+    model_init_params2 = [(
+        standard_model,
+        Dict(
+            :scoring_function => [
+                scoring_activation,
+                scoring_reddit,
+                scoring_hacker_news,
+                scoring_best,
+            ],
+        ),
+    )]
 
 
     corr_df = init_correlation_dataframe(evaluation_functions)
 
-    iterations = 10
+    iterations = 20
     for i = 1:iterations
-        seed = abs(rand(Int))
-        models = create_models(model_init_params; seed = seed)
+        println("$((i-1)/iterations*100) %")
+        seed = abs(rand(Int32))
+        models = create_models(model_init_params2; seed = seed)
 
         for j = 1:length(models)
+            #println("$(((i - 1)/iterations + 1/iterations*(j-1)/models)*100) %")
             tmp_model = models[j]
             agent_df, model_df = run!(
                 tmp_model,
@@ -110,14 +132,16 @@ end
 
 plotly()
 unary_corr_df = unary_columns(corr_df)
+"""
 corrplot(
     Array{Float64}(unary_corr_df),
     bins = 10,
     label = map(string, names(unary_corr_df)),
     markercolor = cgrad(:inferno),
 )
+"""
 
 
 R"""
-saveRDS($(robject(corr_df)), file = \"df.rds\")
+saveRDS($(robject(corr_df)), file = \"df2.rds\")
 """
