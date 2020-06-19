@@ -40,7 +40,7 @@ macro model_property_function(property, func=identity)
     end
 
     return :(function $name(model, model_df)
-        if hasproperty(model, name)
+        if hasproperty(model, Symbol($name))
             val = model.$(eval(property))
             if typeof(val) <: Function
                 string(val)
@@ -49,7 +49,7 @@ macro model_property_function(property, func=identity)
             end
         else
             NaN
-        end    
+        end
     end)
 end
 
