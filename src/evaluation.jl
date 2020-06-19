@@ -43,6 +43,14 @@ function gain(model_df)
     sign(model_df[end, :ranking_rating] - model_df[2, :ranking_rating])
 end
 
+function mean_user_view(model)
+    mean(x -> length(x.viewed)/model.n, allagents(model))
+end
+
+function mean_user_vote(model)
+    mean(x -> length(x.voted_on)/model.n,allagents(model))
+end
+
 
 # Evaluation inner rating
 
