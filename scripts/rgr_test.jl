@@ -17,7 +17,7 @@ include("../src/scoring.jl")
 
 start_posts = 100
 start_users = 100
-iterations = 300
+iterations = 100
 
 seed = abs(rand(Int))
 
@@ -26,13 +26,16 @@ model_params = [
     (
         view_model,
         Dict(
-            :scoring_function => [scoring],
+            :scoring_function => [scoring_reddit],
             :start_posts => start_posts,
             :start_users => start_users,
-            :init_score => 5,
-            :new_posts_per_step => 20,
+            :init_score => 0,
+            :new_posts_per_step => 10,
             :user_rating_function => [user_rating_exp],
-            :UserType => ViewUser
+            :UserType => ViewUser,
+            :sorted => 0,
+            :equal_posts => false,
+            :activity_voting_probability_distribution => MvNormal([-2, 0], [1.0 0.8; 0.8 1.0])
         ),
     ),
 ]
@@ -42,8 +45,6 @@ models = create_models(model_params; seed = seed)
 model_properties = [
     ranking_rating,
     ranking_rating_relative,
-    mean_user_view,
-    mean_user_vote,
     @get_post_data(:score, identity),
     @get_post_data(:votes, identity),
     @get_post_data(:quality, identity)
@@ -160,23 +161,7 @@ end
 #plot(rp, legend = false)
 
 
-rat_fac = 2
 
-model_init_params = [
-    (
-        view_model,
-        Dict(
-            :rating_factor => rat_fac,
-        ),
-    ),
-    (
-        standard_model,
-        Dict(
-            :scoring_function => [scoring_hacker_news, scoring_reddit],
-            :rating_factor => rat_fac,
-        ),
-    ),
-]
 
 
 
