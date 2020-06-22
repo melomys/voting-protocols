@@ -29,6 +29,11 @@ function Post(rng::MersenneTwister, quality_distribution, time, init_score = 0)
     Post(rand(rng, quality_distribution), 0, time, init_score)
 end
 
+function EqualPost(quality,rng,quality_distribution, time, PostType,init_score = 0)
+    rand(rng,quality_distribution)
+    PostType(quality, 0, 0, time, init_score)
+end
+
 mutable struct User <: AbstractUser
     id::Int
     quality_perception::Array
@@ -73,6 +78,7 @@ function standard_model(;
     concentration = 30,
     model_type = standard_model,
     sorted = 0,
+    equal_posts = false,
     qargs...,
 )
 
@@ -88,10 +94,20 @@ function standard_model(;
     quality_distribution = Distributions.MvNormal(M, Σ)
 
     rng = MersenneTwister(seed)
+
+
     posts = PostType[]
-    for i = 1:start_posts
-        push!(posts, PostType(rng, quality_distribution, 0))
+    if !equal_posts
+        for i = 1:start_posts
+            push!(posts, PostType(rng, quality_distribution, 0))
+        end
+    else
+        quality = [0.7,0.6,0.7]
+        for i = 1:start_posts
+            push!(posts, EqualPost(quality,rng, quality_distribution, 0, PostType))
+        end
     end
+
 
     n = start_posts
     ranking = [1:start_posts...]
@@ -100,14 +116,14 @@ function standard_model(;
     user_ratings = []
 
     if sorted > 0
-        tmp_properties = @dict(user_rating_function, time,quality_dimensions)
+        tmp_properties = @dict(user_rating_function, time, quality_dimensions)
         tmp_model = ABM(UserType; properties = tmp_properties)
         scores = []
         for i = 1:start_posts
             push!(scores, scoring_best(posts[i], tmp_model.time, tmp_model))
         end
-        ranking = sortperm(map(x -> -x, scores))
-        ranking = partial_shuffle(rng,ranking, 1 - sorted)
+        ranking = sortperm(map(x -> x, scores))
+        ranking = partial_shuffle(rng, ranking, 1 - sorted)
     end
 
 
@@ -166,8 +182,6 @@ end
 function agent_step!(user, model)
     for i = 1:minimum([user.concentration, model.n])
         post = model.posts[model.ranking[i]]
-        #println("ur: $(model.user_rating_function(post.quality, user.quality_perception)) uvp: $(user.vote_probability)")
-        model.user_rating_function(post.quality, user.quality_perception)
         if model.user_rating_function(post.quality, user.quality_perception) >
            user.vote_probability && !in(post, user.voted_on)
             push!(user.voted_on, post)
