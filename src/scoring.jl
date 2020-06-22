@@ -13,10 +13,12 @@ function scoring_hacker_news(post, time, model)
 end
 
 epoch = DateTime(1970,1,1)
+start_time = DateTime(2020,06,20)
 
 function scoring_reddit(post, time, model)
+    seconds = Dates.value(start_time - epoch)/1000 - 1134028003 + post.timestamp * 60 * 30 # 60 Sekunden pro 30 Minuten!!
     order = log(10, max(abs(post.votes),1))
-    round(sign(post.votes)*order + post.timestamp/45000; digits=7)
+    round(sign(post.votes)*order + seconds/45000; digits=7)
 end
 
 function scoring_random(post, time, model)
