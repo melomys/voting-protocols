@@ -18,7 +18,7 @@ function random_model_step!(model)
         push!(
             model.posts,
             model.PostType(
-                model.rng,
+                model.rng_user_posts,
                 model.quality_distribution,
                 model.time,
                 model.init_score,
@@ -32,13 +32,8 @@ function random_model_step!(model)
             model.scoring_function(model.posts[i], model.time, model)
     end
 
-    if rand() < model.new_user_probability
-        add_agent!(
-            model,
-            rand(model.rng, model.quality_distribution),
-            rand(model.rng) / model.vote_probability,
-            rand(model.rng, 1:10),
-        )
+    for i = 1:model.new_users_per_step
+        model.user()(model)
     end
 
     random_deviation = model.deviation_function(model)
@@ -57,12 +52,12 @@ function mean_deviation(model)
     mean_scores = mean(map(x -> x.score, model.posts))
     function to_map(post)
         dist = abs(mean_scores - post.score)
-        rand(-dist:0.01:dist)
+        rand(model.rag_model,-dist:0.01:dist)
     end
     map(to_map, model.posts)
 end
 
 function std_deviation(model)
     std_scores = std(map(x -> x.score, model.posts))
-    map(x -> rand(-std_scores:0.01:std_scores), model.posts)
+    map(x -> rand(model.rng_model-std_scores:0.01:std_scores), model.posts)
 end

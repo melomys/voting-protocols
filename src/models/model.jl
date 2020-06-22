@@ -71,7 +71,7 @@ end
 function standard_model(;
     start_posts = 100,
     start_users = 100,
-    new_user_probability = 0,
+    new_users_per_step = 0,
     vote_probability_scale = 1,
     frontpagesize = 10,
     new_posts_per_step = 3,
@@ -100,20 +100,21 @@ function standard_model(;
     qargs...,
 )
 
-    rng = MersenneTwister(seed)
+    rng_user_posts = MersenneTwister(seed-1) # nur für user und post generierung
+    rng_model = MersenneTwister(seed) # für alles andere
 
 
     posts = PostType[]
     if !equal_posts
         for i = 1:start_posts
-            push!(posts, PostType(rng, quality_distribution, 0))
+            push!(posts, PostType(rng_user_posts, quality_distribution, 0))
         end
     else
         quality = [0.7, 0.6, 0.7]
         for i = 1:start_posts
             push!(
                 posts,
-                EqualPost(quality, rng, quality_distribution, 0, PostType),
+                EqualPost(quality, rng_user_posts, quality_distribution, 0, PostType),
             )
         end
     end
@@ -133,14 +134,14 @@ function standard_model(;
             push!(scores, scoring_best(posts[i], tmp_model.time, tmp_model))
         end
         ranking = sortperm(map(x -> x, scores))
-        ranking = partial_shuffle(rng, ranking, 1 - sorted)
+        ranking = partial_shuffle(rng_model, ranking, 1 - sorted)
     end
 
 
     properties = @dict(
         n,
         posts,
-        new_user_probability,
+        new_users_per_step,
         vote_probability_scale,
         new_posts_per_step,
         frontpagesize,
@@ -150,7 +151,8 @@ function standard_model(;
         time,
         agent_step!,
         model_step!,
-        rng,
+        rng_user_posts,
+        rng_model,
         PostType,
         UserType,
         init_score,
@@ -191,7 +193,7 @@ function standard_model(;
 end
 
 function agent_step!(user, model)
-    if rand(model.rng) < user.activity_probability
+    if rand(model.rng_model) < user.activity_probability
         for i = 1:minimum([user.concentration, model.n])
             post = model.posts[model.ranking[i]]
             if model.user_rating_function(
@@ -224,7 +226,7 @@ function model_step!(model)
         push!(
             model.posts,
             model.PostType(
-                model.rng,
+                model.rng_user_posts,
                 model.quality_distribution,
                 model.time,
                 model.init_score,
@@ -233,13 +235,8 @@ function model_step!(model)
         model.n += 1
     end
 
-    if rand() < model.new_user_probability
-        add_agent!(
-            model,
-            rand(model.rng, model.quality_distribution),
-            sigmoid(rand(model.rng), Normal()),
-            rand(model.rng, 1:10),
-        )
+    for i = 1:model.new_users_per_step
+        model.user()(model)
     end
 
     model.ranking = sortperm(map(x -> -x.score, model.posts))

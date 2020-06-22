@@ -63,7 +63,7 @@ end
 
 
 function view_agent_step!(user, model)
-    if rand(model.rng) < user.activity_probability
+    if rand(model.rng_model) < user.activity_probability
         for i = 1:minimum([user.concentration, model.n])
             post = model.posts[model.ranking[i]]
             if model.user_rating_function(
