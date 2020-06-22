@@ -16,6 +16,7 @@ mutable struct ViewUser <: AbstractUser
     id::Int
     quality_perception::Array
     vote_probability::Float64
+    activity_probability::Float64
     concentration::Int64
     voted_on::Array{AbstractPost}
     viewed::Array{AbstractPost}
@@ -45,12 +46,14 @@ function ViewUser(
     id::Int,
     quality_perception::Array{Float64},
     vote_probability::Float64,
+    activity_probability::Float64,
     concentration::Int64,
 )
     ViewUser(
         id,
         quality_perception,
         vote_probability,
+        activity_probability,
         concentration,
         AbstractPost[],
         AbstractPost[],
@@ -60,20 +63,29 @@ end
 
 
 function view_agent_step!(user, model)
-    #for i = 1:rand(model.rng, 1:model.n)
-    for i = 1:minimum([user.concentration, model.n])
-        post = model.posts[model.ranking[i]]
-        if model.user_rating_function(post.quality, user.quality_perception) >
-           user.vote_probability  && !in(post, user.voted_on)
-            push!(user.voted_on, post)
-            post.votes += 1
+    if rand(model.rng) < user.activity_probability
+        for i = 1:minimum([user.concentration, model.n])
+            post = model.posts[model.ranking[i]]
+            if model.user_rating_function(
+                post.quality,
+                user.quality_perception,
+            ) > user.vote_probability && !in(post, user.voted_on)
+                push!(user.voted_on, post)
+                post.votes += 1
 
-            push!(model.user_ratings, model.user_rating_function(post.quality, user.quality_perception))
+                push!(
+                    model.user_ratings,
+                    model.user_rating_function(
+                        post.quality,
+                        user.quality_perception,
+                    ),
+                )
 
-        end
-        if !in(post, user.viewed)
-            push!(user.viewed, post)
-            post.views += 1
+            end
+            if !in(post, user.viewed)
+                push!(user.viewed, post)
+                post.views += 1
+            end
         end
     end
 end
@@ -98,5 +110,5 @@ function scoring_unfair_view(post, time, model)
 end
 
 function scoring_view_activation(post, time, model)
-    ((post.votes)/ (post.views) - post.score)/ ( time - post.timestamp + 1)
+    ((post.votes) / (post.views) - post.score) / (time - post.timestamp + 1)
 end

@@ -29,8 +29,15 @@ function Post(rng::MersenneTwister, quality_distribution, time, init_score = 0)
     Post(rand(rng, quality_distribution), 0, time, init_score)
 end
 
-function EqualPost(quality,rng,quality_distribution, time, PostType,init_score = 0)
-    rand(rng,quality_distribution)
+function EqualPost(
+    quality,
+    rng,
+    quality_distribution,
+    time,
+    PostType,
+    init_score = 0,
+)
+    rand(rng, quality_distribution)
     PostType(quality, 0, 0, time, init_score)
 end
 
@@ -38,6 +45,7 @@ mutable struct User <: AbstractUser
     id::Int
     quality_perception::Array
     vote_probability::Float64
+    activity_probability::Float64
     concentration::Int64
     voted_on::Array{AbstractPost}
 end
@@ -46,12 +54,14 @@ function User(
     id::Int,
     quality_perception::Array{Float64},
     vote_probability::Float64,
+    activity_probability::Float64,
     concentration::Int64,
 )
     User(
         id,
         quality_perception,
         vote_probability,
+        activity_probability,
         concentration,
         AbstractPost[],
     )
@@ -79,19 +89,16 @@ function standard_model(;
     model_type = standard_model,
     sorted = 0,
     equal_posts = false,
+    quality_distribution = Distributions.MvNormal(
+        zeros(quality_dimensions),
+        I(3),
+    ),
+    activity_voting_probability_distribution = Distributions.MvNormal(
+        zeros(2),
+        [2 0.9; 0.9 2],
+    ),
     qargs...,
 )
-
-    M = [0 for i = 1:quality_dimensions]
-    sigma_col_vec = [0.2 for i = 1:quality_dimensions]
-    sigma_row_vec = [0.5 for i = 1:quality_dimensions]
-    Σ = sigma_col_vec * sigma_row_vec'
-
-    for i = 1:quality_dimensions
-        Σ[i, i] = 1
-    end
-
-    quality_distribution = Distributions.MvNormal(M, Σ)
 
     rng = MersenneTwister(seed)
 
@@ -102,9 +109,12 @@ function standard_model(;
             push!(posts, PostType(rng, quality_distribution, 0))
         end
     else
-        quality = [0.7,0.6,0.7]
+        quality = [0.7, 0.6, 0.7]
         for i = 1:start_posts
-            push!(posts, EqualPost(quality,rng, quality_distribution, 0, PostType))
+            push!(
+                posts,
+                EqualPost(quality, rng, quality_distribution, 0, PostType),
+            )
         end
     end
 
@@ -148,6 +158,7 @@ function standard_model(;
         start_posts,
         quality_dimensions,
         quality_distribution,
+        activity_voting_probability_distribution,
         user,
         user_ratings,
         model_type,
@@ -180,21 +191,25 @@ function standard_model(;
 end
 
 function agent_step!(user, model)
-    for i = 1:minimum([user.concentration, model.n])
-        post = model.posts[model.ranking[i]]
-        if model.user_rating_function(post.quality, user.quality_perception) >
-           user.vote_probability && !in(post, user.voted_on)
-            push!(user.voted_on, post)
-            post.votes += 1
+    if rand(model.rng) < user.activity_probability
+        for i = 1:minimum([user.concentration, model.n])
+            post = model.posts[model.ranking[i]]
+            if model.user_rating_function(
+                post.quality,
+                user.quality_perception,
+            ) > user.vote_probability && !in(post, user.voted_on)
+                push!(user.voted_on, post)
+                post.votes += 1
 
-            push!(
-                model.user_ratings,
-                model.user_rating_function(
-                    post.quality,
-                    user.quality_perception,
-                ),
-            )
+                push!(
+                    model.user_ratings,
+                    model.user_rating_function(
+                        post.quality,
+                        user.quality_perception,
+                    ),
+                )
 
+            end
         end
     end
 end
