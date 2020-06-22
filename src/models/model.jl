@@ -100,6 +100,7 @@ function standard_model(;
     qargs...,
 )
 
+
     rng_user_posts = MersenneTwister(seed-1) # nur für user und post generierung
     rng_model = MersenneTwister(seed) # für alles andere
 
@@ -137,6 +138,7 @@ function standard_model(;
         ranking = partial_shuffle(rng_model, ranking, 1 - sorted)
     end
 
+    model_id = rand()
 
     properties = @dict(
         n,
@@ -164,7 +166,8 @@ function standard_model(;
         user,
         user_ratings,
         model_type,
-        seed
+        seed,
+        model_id
     )
 
     for qarg in qargs
