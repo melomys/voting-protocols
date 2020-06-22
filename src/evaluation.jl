@@ -53,6 +53,12 @@ function mean_user_vote(model, model_df)
     mean(x -> length(x.voted_on)/model.n,allagents(model))
 end
 
+function post_views(model, model_df)
+    views = map(x -> x.views, model.posts)
+    return hist_dataframe(views,model)
+end
+
+# evaluation of rich get richer effects only
 function quality_first_quantile(model, model_df)
     max_score = model.posts[model.ranking[1]].score
     min_score = model.posts[model.ranking[end]].score
@@ -90,6 +96,15 @@ end
 Sigmoid function
 """
 sigmoid(x) = 1/(1+ℯ^(-x*0.5))
+
+
+function hist_dataframe(array, model)
+    dic = Dict()
+    for i in 0:length(allagents(model))
+        dic[i] = length(filter(x -> x == i, array))
+    end
+    return DataFrame(dic)
+end
 
 
 """
