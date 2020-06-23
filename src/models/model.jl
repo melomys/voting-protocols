@@ -85,7 +85,7 @@ function standard_model(;
     init_score = 0,
     quality_dimensions = 3,
     user = user(),
-    concentration = 30,
+    concentration_scale = 30:70,
     model_type = standard_model,
     sorted = 0,
     equal_posts = false,
@@ -151,6 +151,7 @@ function standard_model(;
         scoring_function,
         user_rating_function,
         time,
+        concentration_scale,
         agent_step!,
         model_step!,
         rng_user_posts,
@@ -195,14 +196,17 @@ function standard_model(;
     return model
 end
 
+
+# < user.activity
+# und > 1 - user.vote_probability. Bsp vp = 0.3, dann muss urf > 0.7 sein
 function agent_step!(user, model)
-    if rand(model.rng_model) < user.activity_probability
+    if rand(model.user_posts) < user.activity_probability
         for i = 1:minimum([user.concentration, model.n])
             post = model.posts[model.ranking[i]]
             if model.user_rating_function(
                 post.quality,
                 user.quality_perception,
-            ) > user.vote_probability && !in(post, user.voted_on)
+            ) > 1 - user.vote_probability && !in(post, user.voted_on)
                 push!(user.voted_on, post)
                 post.votes += 1
 

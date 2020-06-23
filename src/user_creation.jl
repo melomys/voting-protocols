@@ -6,7 +6,7 @@ function user()
             rand(model.rng_user_posts, model.quality_distribution),
             sigmoid(voting_probability),
             sigmoid(activity),
-            rand(model.rng_user_posts, 30:70),
+            rand(model.rng_user_posts, model.concentration_scale),
         )
     end
 end
@@ -31,7 +31,7 @@ function uniform_user()
             rand(model.rng_user_posts, [mean(quality_distribution)]),
             sigmoid(voting_probability),
             sigmoid(activity),
-            rand(model.rng_user_posts, 1:30),
+            rand(model.rng_user_posts, model.concentration_scale),
         )
     end
 end
