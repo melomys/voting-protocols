@@ -22,7 +22,6 @@ function ranking_rating_relative(model)
     ranking_rating(model)/rating
 end
 
-
 # per model
 # parameters: model, model_df
 
