@@ -27,7 +27,7 @@ mutable struct Post <: AbstractPost
 end
 
 function Post(rng::MersenneTwister, quality_distribution, time, init_score = 0)
-    Post(rand(rng, quality_distribution), 0,0, time, init_score)
+    Post(rand(rng, quality_distribution), 0, 0, time, init_score)
 end
 
 function EqualPost(
@@ -70,33 +70,33 @@ end
 
 
 function standard_model(;
-    start_posts = 100,
-    start_users = 100,
-    new_users_per_step = 0,
-    new_posts_per_step = 10,
-    scoring_function = scoring,
-    user_rating_function = user_rating,
-    seed = 0,
-    agent_step! = agent_step!,
-    model_step! = model_step!,
-    PostType = Post,
-    UserType = User,
-    init_score = 0,
-    quality_dimensions = 3,
-    user = user(),
-    concentration_scale = 30:70,
-    model_type = standard_model,
-    sorted = 0,
-    equal_posts = false,
-    quality_distribution = Distributions.MvNormal(
-        zeros(quality_dimensions),
-        I(3),
-    ),
-    time_exp = 0.5,
     activity_voting_probability_distribution = Distributions.MvNormal(
         zeros(2),
         [2 0.9; 0.9 2],
     ),
+    agent_step! = agent_step!,
+    concentration_scale = 30:70,
+    equal_posts = false,
+    init_score = 0,
+    model_step! = model_step!,
+    model_type = standard_model,
+    new_posts_per_step = 10,
+    new_users_per_step = 0,
+    PostType = Post,
+    quality_dimensions = 3,
+    quality_distribution = Distributions.MvNormal(
+        zeros(quality_dimensions),
+        I(3),
+    ),
+    scoring_function = scoring,
+    seed = 0,
+    sorted = 0,
+    start_posts = 100,
+    start_users = 100,
+    user = user(),
+    UserType = User,
+    user_rating_function = user_rating,
+    time_exp = 0.5,
     qargs...,
 )
 
@@ -147,33 +147,33 @@ function standard_model(;
     model_id = rand(1:2147483647)
 
     properties = @dict(
-        n,
-        posts,
-        new_users_per_step,
-        new_posts_per_step,
-        ranking,
-        scoring_function,
-        user_rating_function,
-        time,
-        concentration_scale,
+        activity_voting_probability_distribution,
         agent_step!,
-        model_step!,
-        rng_user_posts,
-        rng_model,
-        PostType,
-        UserType,
+        concentration_scale,
         init_score,
-        start_users,
-        start_posts,
+        model_id,
+        model_step!,
+        model_type,
+        n,
+        new_posts_per_step,
+        new_users_per_step,
+        posts,
+        PostType,
         quality_dimensions,
         quality_distribution,
-        activity_voting_probability_distribution,
-        user,
-        user_ratings,
-        model_type,
+        ranking,
+        rng_model,
+        rng_user_posts,
+        scoring_function,
         seed,
-        model_id,
-        time_exp
+        start_posts,
+        start_users,
+        time,
+        time_exp,
+        user,
+        UserType,
+        user_ratings,
+        user_rating_function,
     )
 
     for qarg in qargs
