@@ -21,12 +21,13 @@ abstract type AbstractUser <: AbstractAgent end
 mutable struct Post <: AbstractPost
     quality::Array
     votes::Int64
+    downvotes::Int64
     timestamp::Int64
     score::Float64
 end
 
 function Post(rng::MersenneTwister, quality_distribution, time, init_score = 0)
-    Post(rand(rng, quality_distribution), 0, time, init_score)
+    Post(rand(rng, quality_distribution), 0,0, time, init_score)
 end
 
 function EqualPost(
@@ -72,9 +73,7 @@ function standard_model(;
     start_posts = 100,
     start_users = 100,
     new_users_per_step = 0,
-    vote_probability_scale = 1,
-    frontpagesize = 10,
-    new_posts_per_step = 3,
+    new_posts_per_step = 10,
     scoring_function = scoring,
     user_rating_function = user_rating,
     seed = 0,
@@ -93,6 +92,7 @@ function standard_model(;
         zeros(quality_dimensions),
         I(3),
     ),
+    time_exp = 0.5,
     activity_voting_probability_distribution = Distributions.MvNormal(
         zeros(2),
         [2 0.9; 0.9 2],
@@ -101,7 +101,7 @@ function standard_model(;
 )
 
 
-    rng_user_posts = MersenneTwister(seed-1) # nur für user und post generierung
+    rng_user_posts = MersenneTwister(seed - 1) # nur für user und post generierung
     rng_model = MersenneTwister(seed) # für alles andere
 
 
@@ -115,7 +115,13 @@ function standard_model(;
         for i = 1:start_posts
             push!(
                 posts,
-                EqualPost(quality, rng_user_posts, quality_distribution, 0, PostType),
+                EqualPost(
+                    quality,
+                    rng_user_posts,
+                    quality_distribution,
+                    0,
+                    PostType,
+                ),
             )
         end
     end
@@ -138,15 +144,13 @@ function standard_model(;
         ranking = partial_shuffle(rng_model, ranking, 1 - sorted)
     end
 
-    model_id = rand()
+    model_id = rand(1:2147483647)
 
     properties = @dict(
         n,
         posts,
         new_users_per_step,
-        vote_probability_scale,
         new_posts_per_step,
-        frontpagesize,
         ranking,
         scoring_function,
         user_rating_function,
@@ -168,7 +172,8 @@ function standard_model(;
         user_ratings,
         model_type,
         seed,
-        model_id
+        model_id,
+        time_exp
     )
 
     for qarg in qargs
@@ -200,7 +205,7 @@ end
 # < user.activity
 # und > 1 - user.vote_probability. Bsp vp = 0.3, dann muss urf > 0.7 sein
 function agent_step!(user, model)
-    if rand(model.user_posts) < user.activity_probability
+    if rand(model.rng_user_posts) < user.activity_probability
         for i = 1:minimum([user.concentration, model.n])
             post = model.posts[model.ranking[i]]
             if model.user_rating_function(
