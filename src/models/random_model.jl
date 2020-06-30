@@ -52,12 +52,12 @@ function mean_deviation(model)
     mean_scores = mean(map(x -> x.score, model.posts))
     function to_map(post)
         dist = abs(mean_scores - post.score)
-        rand(model.rag_model,-dist:0.01:dist)
+        rand(model.rng_model,-dist:0.01:dist)
     end
     map(to_map, model.posts)
 end
 
 function std_deviation(model)
     std_scores = std(map(x -> x.score, model.posts))
-    map(x -> rand(model.rng_model-std_scores:0.01:std_scores), model.posts)
+    map(x -> rand(model.rng_model,std_scores:0.01:std_scores), model.posts)
 end
