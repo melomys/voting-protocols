@@ -19,8 +19,9 @@ start_posts = 100
 start_users = 100
 iterations = 100
 
-seed = abs(rand(Int))
+seeed = abs(rand(Int))
 
+model_dfs = []
 
 model_params = [
     (
@@ -30,24 +31,28 @@ model_params = [
             :start_posts => start_posts,
             :start_users => start_users,
             :init_score => 0,
-            :new_posts_per_step => 10,
+            :new_posts_per_step => [3,5],
             :user_rating_function => [user_rating_exp],
             :UserType => ViewUser,
             :sorted => 0,
             :equal_posts => false,
-            :activity_voting_probability_distribution => MvNormal([-2, 0], [1.0 0.8; 0.8 1.0])
+            :activity_voting_probability_distribution => MvNormal([-4, 0], [1.0 0.8; 0.8 1.0]) #kleiner erwartungswert für activity, so sind nicht alle user auf einmal aktiv
         ),
     ),
 ]
 
-models = create_models(model_params; seed = seed)
+models = create_models(model_params; seed = seeed)
 
 model_properties = [
     ranking_rating,
     ranking_rating_relative,
+    @model_property_function(:model_id),
+    @model_property_function(:scoring_function),
+    @model_property_function(:seed),
     @get_post_data(:score, identity),
     @get_post_data(:votes, identity),
-    @get_post_data(:quality, identity)
+    @get_post_data(:quality, identity),
+
 ]
 agent_properties = [:vote_probability]
 
@@ -102,6 +107,8 @@ for model in models
         agent_properties = agent_properties,
         model_properties = model_properties,
     )
+
+    push!(model_dfs, model_df)
 
     p = Plots.plot()
     scores = post_data(model_df[!, :score])

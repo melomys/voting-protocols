@@ -94,7 +94,9 @@ score_func = @post_property_function(:score)
     )]
 
 
-    corr_df = init_correlation_dataframe(evaluation_functions)
+    #corr_df = init_correlation_dataframe(evaluation_functions)
+
+    corr_df = DataFrame()
 
     iterations = 20
     for i = 1:iterations
@@ -103,7 +105,6 @@ score_func = @post_property_function(:score)
         models = create_models(model_init_params2; seed = seed)
 
         for j = 1:length(models)
-            #println("$(((i - 1)/iterations + 1/iterations*(j-1)/models)*100) %")
             tmp_model = models[j]
             agent_df, model_df = run!(
                 tmp_model,
@@ -119,13 +120,11 @@ score_func = @post_property_function(:score)
             global ab_model
             global ab_model_df
 
-            push!(
-                corr_df,
-                map(x -> x(ab_model, ab_model_df), evaluation_functions),
-            )
-
-
-
+            #push!(
+            #    corr_df,
+            #    map(x -> x(ab_model, ab_model_df), evaluation_functions),
+            #)
+            corr_df = vcat(corr_df, [map(x -> x(ab_model, ab_model_df), evaluation_functions)])
         end
     end
 end
