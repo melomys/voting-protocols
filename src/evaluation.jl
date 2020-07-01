@@ -45,6 +45,17 @@ function gain(model, model_df)
     model_df[1, :ranking_rating_relative]
 end
 
+function gini(model, model_df)
+    s = 0
+    n = sum(map(post -> post.votes - post.downvotes, model.posts))
+    for p1 in model.posts
+        for p2 in model.posts
+            s = s + abs((p1.votes - p1.downvotes - (p2.votes - p2.downvotes))/n)
+        end
+    end
+    s/(2*length(model.posts))
+end
+
 function mean_user_view(model, model_df)
     mean(x -> length(x.viewed)/model.n, allagents(model))
 end
