@@ -25,49 +25,10 @@ timestamp_func = @post_property_function(:timestamp)
 score_func = @post_property_function(:score)
 
 
-steps = 300
-quality_dimensions = 3
-
-vote_count(model, model_df) = sum(map(x -> x.votes, model.posts))
-
-quality_sum(model, model_df) = sum(map(
-    x -> model.user_rating_function(x.quality, ones(quality_dimensions)),
-    model.posts,
-))
-
-gain(model, model_df) =
-    model_df[end, :ranking_rating_relative] -
-    model_df[1, :ranking_rating_relative]
+steps = 50
 
 
-
-
-evaluation_functions = [
-    area_under_curve,
-    vote_count,
-    quality_sum,
-    gain,
-    sum_gradient,
-    @model_property_function(:activity_voting_probability),
-    @model_property_function(:concentration_scale),
-    @model_property_function(:init_score),
-    @model_property_function(:new_posts_per_step),
-    @model_property_function(:model_id),
-    @model_property_function(:model_type),
-    @model_property_function(:quality_dimensions),
-    @model_property_function(:scoring_function),
-    @model_property_function(:seed),
-    @model_property_function(:start_posts),
-    @model_property_function(:start_users),
-    @model_property_function(:time_exp),
-    @model_property_function(:user_ratings),
-    @model_property_function(:user_rating_function),
-    @model_property_function(:votes_exp),
-    @rating_correlation(quality, end_position),
-    @rating_correlation(timestamp_func, score_func)
-]
-
-sort!(evaluation_functions, by = x -> string(x))
+evaluation_functions = default_evaluation_functions
 
 model_properties = [
     ranking_rating,
@@ -83,23 +44,24 @@ model_properties = [
 
 model_init_params2 = [
     (
-        [standard_model, random_model, downvote_model],
+        [standard_model, random_model],
         Dict(
             :scoring_function => [
                 scoring_activation,
-                scoring_reddit_hot,
                 scoring_hacker_news,
             ],
             :user_rating_function =>
-                [user_rating_exp, user_rating, user_rating_exp],
+                [user_rating_exp, user_rating, user_rating_exp2],
             :UserType => ViewUser,
-            :init_score => [0, 10, 20],
+            :PostType => ViewPost,
+            :init_score => [0, 10, 20, 30],
             :activity_voting_probability_distribution => [
                 MvNormal([-4, 0], [1.0 0.8; 0.8 1.0]), #kleiner erwartungswert für activity, so sind nicht alle user auf einmal aktiv
                 MvNormal([0, 0], [1.0 0.1; 0.1 1.0]),
             ],
             :deviation_function => [mean_deviation, std_deviation],
-            :time_exp => 0.5,
+            :time_exp => [0.1,0.5,0.7],
+            :steps => [steps]
         ),
     ),
     (
@@ -108,17 +70,35 @@ model_init_params2 = [
             :scoring_function =>
                 [scoring_view_activation, scoring_view, scoring_view_exp],
             :user_rating_function =>
-                [user_rating_exp, user_rating, user_rating_exp],
+                [user_rating_exp, user_rating, user_rating_exp2],
             :UserType => ViewUser,
-            :init_score => [0, 10, 20],
+            :init_score => [0, 10, 20, 30],
             :activity_voting_probability_distribution => [
                 MvNormal([-4, 0], [1.0 0.8; 0.8 1.0]), #kleiner erwartungswert für activity, so sind nicht alle user auf einmal aktiv
                 MvNormal([0, 0], [1.0 0.1; 0.1 1.0]),
             ],
             :time_exp => [0.1, 0.5, 1],
+            :steps => [steps]
         ),
     ),
-    (standard_model, Dict(:scoring_function => [scoring_best, scoring_worst])),
+    (downvote_model, Dict(
+        :scoring_function => [
+            scoring_reddit_hot,
+            scoring_reddit_best,
+        ],
+        :user_rating_function =>
+            [user_rating_exp, user_rating, user_rating_exp2],
+        :UserType => ViewUser,
+        :PostType => ViewPost,
+        :activity_voting_probability_distribution => [
+            MvNormal([-4, 0], [1.0 0.8; 0.8 1.0]), #kleiner erwartungswert für activity, so sind nicht alle user auf einmal aktiv
+            MvNormal([0, 0], [1.0 0.1; 0.1 1.0]),
+        ],
+        :steps = [steps],
+    ),
+    ),
+    (standard_model, Dict(:scoring_function => [scoring_best, scoring_worst],
+    :steps => steps)),
 ]
 
 model_init_params = [(
@@ -135,26 +115,11 @@ model_init_params = [(
 
 @time begin
     model_dfs, corr_df = collect_model_data(
-        model_init_params,
+        model_init_params2,
         model_properties,
         evaluation_functions,
         10,
     )
 end
 
-
-files = cd(readdir,"data")
-numbers = map(x -> parse(Int32,match(r"([0-9]+)",x)[1]),files)
-
-no = maximum(numbers) + 1
-
-df_file = "data/df$(no).rds"
-model_dfs_file = "data/model_dfs$(no).rds"
-
-R"""
-saveRDS($(robject(corr_df)), file = $df_file)
-"""
-
-#R"""
-#saveRDS($(robject(cat_model_dfs(model_dfs))), file = $model_dfs_file)
-#"""
+export_rds(corr_df, model_dfs)
