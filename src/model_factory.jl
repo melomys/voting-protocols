@@ -21,17 +21,40 @@ function grid_params(model_params; seed = 1)
 
         end
 
+        all_models = Dict{Symbol,Any}()
+
         for model in model_params
+                if model[1] == :all_models
+                        for key in keys(model[2])
+                                all_models[key] = model[2][key]
+                        end
+                end
+        end
+
+        model_params = filter(x -> !(typeof(x[1]) <: Symbol), model_params)
+        for model in model_params
+
                 if typeof(model[1]) <: Vector
                         for m in model[1]
-                                rec(collect(keys(model[2])), [], model[2], m)
+                                props = add_dicts(model[2], all_models)
+                                rec(collect(keys(props)), [], props, m)
                         end
                 else
-                        rec(collect(keys(model[2])), [], model[2], model[1])
+                        props = add_dicts(model[2], all_models)
+                        rec(collect(keys(props)), [], props, model[1])
                 end
         end
         return models
 end
+
+function add_dicts(d_model, d_default)
+        d_ret = copy(d_default)
+        for key in keys(d_model)
+                d_ret[key] = d_model[key]
+        end
+        return d_ret
+end
+
 
 create_models(model_params; seed = 1) =
         map(x -> x[1](; x[2]...), grid_params(model_params; seed = seed))
