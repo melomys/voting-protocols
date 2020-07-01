@@ -1,14 +1,28 @@
 import Base
+using Logging
 
 include("evaluation.jl")
 
-function collect_model_data(model_init_params, model_properties,evaluation_functions, iterations = 10)
-    corr_df = init_correlation_dataframe(evaluation_functions)
+
+function collect_model_data(
+    model_init_params,
+    model_properties,
+    evaluation_functions,
+    iterations = 10,
+)
+
+    models = create_models(model_init_params)
+    df = init_correlation_dataframe(
+        evaluation_functions,
+        models,
+        model_properties,
+    )
+
 
     model_dfs = []
 
     for i = 1:iterations
-        println("$((i-1)/iterations*100) %")
+        @info "$((i-1)/iterations*100) %"
         seed = abs(rand(Int32))
         models = create_models(model_init_params; seed = seed)
 
@@ -18,7 +32,7 @@ function collect_model_data(model_init_params, model_properties,evaluation_funct
                 tmp_model,
                 tmp_model.agent_step!,
                 tmp_model.model_step!,
-                steps;
+                tmp_model.steps;
                 agent_properties = [],
                 model_properties = model_properties,
             )
@@ -27,16 +41,11 @@ function collect_model_data(model_init_params, model_properties,evaluation_funct
 
             ab_model = tmp_model
             ab_model_df = model_df
-            global ab_model
-            global ab_model_df
 
-            push!(
-                corr_df,
-                map(x -> x(ab_model, ab_model_df), evaluation_functions),
-            )
+            push!(df, map(x -> x(ab_model, ab_model_df), evaluation_functions))
         end
     end
-    return model_dfs, corr_df
+    return model_dfs, df
 end
 
 
@@ -82,7 +91,7 @@ macro model_property_function(property, func = identity)
     return :(function $name(model, model_df = Nothing)
         if hasproperty(model, Symbol($name))
             val = model.$(eval(property))
-            if typeof(val) <: Function
+            if typeof(val) <: Union{Function,Distribution}
                 string(val)
             else
                 $func(model.$(eval(property)))
@@ -149,8 +158,28 @@ function init_result_dataframe(models_params)
     )))
 end
 
-function init_correlation_dataframe(functions)
-    DataFrame(Dict(map(x -> (Symbol(x), []), functions)))
+function init_correlation_dataframe(functions, models, model_properties)
+    tmp_model = models[1]
+    agent_df, model_df = run!(
+        tmp_model,
+        tmp_model.agent_step!,
+        tmp_model.model_step!,
+        1;
+        agent_properties = [],
+        model_properties = model_properties,
+    )
+
+    corr_dict = Dict()
+    for func in functions
+        r = func(tmp_model, model_df)
+        #if typeof(r) <: Union{Int, Float64, Array, Symbol, String}
+        corr_dict[Symbol(func)] = typeof(r)[]
+        #else
+        #    corr_dict[Symbol(func)] = String[]
+        #end
+    end
+
+    return DataFrame(corr_dict)
 end
 
 macro post_property_function(property)
@@ -181,7 +210,6 @@ end
 default_model_properties = [
     ranking_rating,
     ranking_rating_relative,
-    model_id,
     @get_post_data(:score, identity),
     @get_post_data(:votes, identity),
 ]
@@ -190,39 +218,38 @@ default_view_model_properties =
     [default_model_properties..., @get_post_data(:views, identity)]
 
 
+"""
+Default Parameters
+"""
 
-function generate_model_evaluation_parameters(model_init_params)
-    models = create_models(model_init_params)
-    parameters = sort(unique(reduce((a,b) -> [a...,b...],map(x-> keys(x.properties),models))))
-    funcs = []
-    l = [:a, :b, :c]
-    for param in l
-        func = eval(:(@model_init_property_function($param)))
-        push!(funcs, func)
-    end
-    funcs
-end
+timestamp_func = @post_property_function(:timestamp)
+score_func = @post_property_function(:score)
 
-macro model_init_property_function(property, func = identity)
-    #property = Symbol("",eval)
-    println(property)
-    println(typeof(property))
-    if eval(func) === identity
-        name = Symbol("", eval(property))
-    else
-        name = Symbol(func, "_", eval(property))
-    end
 
-    return :(function $name(model, model_df = Nothing)
-        if hasproperty(model, Symbol($name))
-            val = model.$(eval(property))
-            if typeof(val) <: Function
-                string(val)
-            else
-                $func(model.$(eval(property)))
-            end
-        else
-            NaN
-        end
-    end)
-end
+default_evaluation_functions = [
+    area_under_curve,
+    vote_count,
+    quality_sum,
+    gain,
+    sum_gradient,
+    post_views,
+    @model_property_function(:activity_voting_probability_distribution),
+    @model_property_function(:concentration_scale),
+    @model_property_function(:init_score),
+    @model_property_function(:new_posts_per_step),
+    @model_property_function(:model_id),
+    @model_property_function(:model_type),
+    @model_property_function(:quality_dimensions),
+    @model_property_function(:scoring_function),
+    @model_property_function(:seed),
+    @model_property_function(:start_posts),
+    @model_property_function(:start_users),
+    @model_property_function(:steps),
+    @model_property_function(:time_exp),
+    @model_property_function(:user_rating_function),
+    @model_property_function(:votes_exp),
+    @rating_correlation(quality, end_position),
+    @rating_correlation(timestamp_func, score_func)
+]
+
+sort!(default_evaluation_functions, by = x -> string(x))
