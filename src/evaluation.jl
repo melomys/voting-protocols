@@ -1,6 +1,7 @@
 # Per iteration
 # parameters: model
 
+
 function ranking_rating(model)
     rating = 0
     for i = 1:model.n
@@ -39,9 +40,9 @@ quality_sum(model, model_df) = sum(map(
     model.posts,
 ))
 
-function gain(model_df)
-    sign(model_df[2, :ranking_rating] - model_df[1, :ranking_rating]) *
-    sign(model_df[end, :ranking_rating] - model_df[2, :ranking_rating])
+function gain(model, model_df)
+    model_df[end, :ranking_rating_relative] -
+    model_df[1, :ranking_rating_relative]
 end
 
 function mean_user_view(model, model_df)
@@ -56,6 +57,9 @@ function post_views(model, model_df)
     views = map(x -> x.views, model.posts)
     return hist_dataframe(views,model)
 end
+
+vote_count(model, model_df) = sum(map(x -> x.votes, model.posts))
+
 
 # evaluation of rich get richer effects only
 function quality_first_quantile(model, model_df)
