@@ -24,8 +24,8 @@ end
 
 
 function view_model(;
-    PostType = ViewPost,
-    UserType = ViewUser,
+    PostType = Post,
+    UserType = User,
     agent_step! = view_agent_step!,
     scoring_function = scoring_view,
     rating_factor = 1,
@@ -92,16 +92,16 @@ end
 
 
 function scoring_view(post, time, model)
-    ((post.votes + 1)^2 / (post.views + 1)^0.7) /
+    ((post.votes - post.downvotes + 1)^2 / (post.views + 1)^0.7) /
     (time - post.timestamp + 1)^(1)
 end
 
 function scoring_view_exp(post, time, model)
-    post.views^post.votes / (time - post.timestamp + 1)^model.time_exp
+    post.views^(post.votes-post.downvotes) / (time - post.timestamp + 1)^model.time_exp
 end
 
 function scoring_view_no_time(post, time, model)
-    ((post.votes + 1)^2 / (post.views + 1)^0.2)^0.3 /
+    ((post.votes - post.votes + 1)^2 / (post.views + 1)^0.2)^0.3 /
     (time - post.timestamp + 1)^(0.1)
 end
 
@@ -110,5 +110,5 @@ function scoring_unfair_view(post, time, model)
 end
 
 function scoring_view_activation(post, time, model)
-    ((post.votes) / (post.views) - post.score) / (time - post.timestamp + 1)
+    ((post.votes - post.downvotes) / (post.views) - post.score) / (time - post.timestamp + 1)
 end
