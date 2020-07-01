@@ -22,12 +22,13 @@ mutable struct Post <: AbstractPost
     quality::Array
     votes::Int64
     downvotes::Int64
+    views::Int64
     timestamp::Int64
     score::Float64
 end
 
 function Post(rng::MersenneTwister, quality_distribution, time, init_score = 0)
-    Post(rand(rng, quality_distribution), 0, 0, time, init_score)
+    Post(rand(rng, quality_distribution), 0, 0,0, time, init_score)
 end
 
 function EqualPost(
@@ -39,7 +40,7 @@ function EqualPost(
     init_score = 0,
 )
     rand(rng, quality_distribution)
-    PostType(quality, 0, 0, time, init_score)
+    PostType(quality, 0, 0, 0, time, init_score)
 end
 
 mutable struct User <: AbstractUser
@@ -49,6 +50,7 @@ mutable struct User <: AbstractUser
     activity_probability::Float64
     concentration::Int64
     voted_on::Array{AbstractPost}
+    viewed::Array{AbstractPost}
 end
 
 function User(
@@ -65,13 +67,14 @@ function User(
         activity_probability,
         concentration,
         AbstractPost[],
+        AbstractPost[],
     )
 end
 
 
 function standard_model(;
     activity_voting_probability_distribution = Distributions.MvNormal(
-        zeros(2),
+        [-2, 0],
         [2 0.9; 0.9 2],
     ),
     agent_step! = agent_step!,
@@ -93,10 +96,12 @@ function standard_model(;
     sorted = 0,
     start_posts = 100,
     start_users = 100,
+    steps = 100,
     user = user(),
     UserType = User,
     user_rating_function = user_rating,
     time_exp = 0.5,
+    vote_evaluation = upvotes
     qargs...,
 )
 
@@ -168,6 +173,7 @@ function standard_model(;
         seed,
         start_posts,
         start_users,
+        steps,
         time,
         time_exp,
         user,
