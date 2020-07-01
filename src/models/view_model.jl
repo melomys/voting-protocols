@@ -92,23 +92,23 @@ end
 
 
 function scoring_view(post, time, model)
-    ((post.votes - post.downvotes + 1)^2 / (post.views + 1)^0.7) /
+    ((model.vote_evaluation(post) + 1)^2 / (post.views + 1)^0.7) /
     (time - post.timestamp + 1)^(1)
 end
 
 function scoring_view_exp(post, time, model)
-    post.views^(post.votes-post.downvotes) / (time - post.timestamp + 1)^model.time_exp
+    post.views^(model.vote_evaluation(post)) / (time - post.timestamp + 1)^model.time_exp
 end
 
 function scoring_view_no_time(post, time, model)
-    ((post.votes - post.votes + 1)^2 / (post.views + 1)^0.2)^0.3 /
+    ((model.vote_evaluation(post) + 1)^2 / (post.views + 1)^0.2)^0.3 /
     (time - post.timestamp + 1)^(0.1)
 end
 
 function scoring_unfair_view(post, time, model)
-    (post.views - post.score) / (time - post.timestamp + 1)^model.time_exp
+    (model.vote_evaluation(post)) / (time - post.timestamp + 1)^model.time_exp
 end
 
 function scoring_view_activation(post, time, model)
-    ((post.votes - post.downvotes) / (post.views) - post.score) / (time - post.timestamp + 1)
+    ((model.vote_evaluation(post)) / (post.views) - post.score) / (time - post.timestamp + 1)
 end
