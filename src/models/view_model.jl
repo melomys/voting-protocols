@@ -69,7 +69,7 @@ function view_agent_step!(user, model)
             if model.user_rating_function(
                 post.quality,
                 user.quality_perception,
-            ) > 1 - user.vote_probability && !in(post, user.voted_on)
+            ) > rating_quantile(model,1 - user.vote_probability) && !in(post, user.voted_on)
                 push!(user.voted_on, post)
                 post.votes += 1
 

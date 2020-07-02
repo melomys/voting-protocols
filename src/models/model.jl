@@ -89,7 +89,7 @@ function standard_model(;
     quality_dimensions = 3,
     quality_distribution = Distributions.MvNormal(
         zeros(quality_dimensions),
-        I(3),
+        I(quality_dimensions),
     ),
     scoring_function = scoring,
     seed = 0,
@@ -149,6 +149,20 @@ function standard_model(;
         ranking = partial_shuffle(rng_model, ranking, 1 - sorted)
     end
 
+    # berechne Werte um beim Userrating das Quantil abzuleiten
+    nn = 100
+    p_qual = rand(rng_user_posts, quality_distribution, nn)
+    u_qual = rand(rng_user_posts, quality_distribution, nn)
+    rating_distribution = []
+    for i in 1:length(p_qual[1,:])
+        for j in 1:length(u_qual[1,:])
+            push!(rating_distribution, user_rating_exp(p_qual[:,i],u_qual[:,j]))
+        end
+    end
+
+    sort!(rating_distribution)
+
+
     model_id = rand(1:2147483647)
 
     properties = @dict(
@@ -167,6 +181,7 @@ function standard_model(;
         quality_dimensions,
         quality_distribution,
         ranking,
+        rating_distribution,
         rng_model,
         rng_user_posts,
         scoring_function,
@@ -218,7 +233,7 @@ function agent_step!(user, model)
             if model.user_rating_function(
                 post.quality,
                 user.quality_perception,
-            ) > 1 - user.vote_probability && !in(post, user.voted_on)
+            ) > rating_quantile(model,1 - user.vote_probability) && !in(post, user.voted_on)
                 push!(user.voted_on, post)
                 post.votes += 1
 
@@ -285,4 +300,8 @@ function partial_shuffle(rng, v::AbstractArray, percent)
         ret[a], ret[b] = ret[b], ret[a]
     end
     ret
+end
+
+function rating_quantile(model, quantile)
+    model.rating_distribution[maximum([1,Int64(round(length(model.rating_distribution)*quantile))])]
 end
