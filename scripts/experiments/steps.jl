@@ -44,7 +44,7 @@ model_properties = [
         model_init_params,
         model_properties,
         default_evaluation_functions,
-        100,
+        20,
     )
 end
 

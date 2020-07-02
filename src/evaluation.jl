@@ -23,15 +23,29 @@ function ranking_rating_relative(model)
     ranking_rating(model)/rating
 end
 
+
+function gini(model, model_df = Nothing)
+    s = 0
+    n = sum(map(post -> post.score, model.posts))
+    for p1 in model.posts
+        for p2 in model.posts
+            s = s + abs(p1.score - p2.score)
+        end
+    end
+    s/(2*n*length(model.posts))
+end
+
 # per model
 # parameters: model, model_df
 
+
 function area_under_curve(model, model_df)
-    trapezoidial_rule(model_df[!, :ranking_rating])
+    trapezoidial_rule(model_df[!, :ranking_rating_relative])
 end
 
+
 function sum_gradient(model, model_df)
-    ranking = model_df[!, :ranking_rating]
+    ranking = model_df[!, :ranking_rating_relative]
     sum(map(i ->  ranking[i+1] - ranking[i] ,1:length(ranking)-1))
 end
 
@@ -43,17 +57,6 @@ quality_sum(model, model_df) = sum(map(
 function gain(model, model_df)
     model_df[end, :ranking_rating_relative] -
     model_df[1, :ranking_rating_relative]
-end
-
-function gini(model, model_df)
-    s = 0
-    n = sum(map(post -> post.votes - post.downvotes, model.posts))
-    for p1 in model.posts
-        for p2 in model.posts
-            s = s + abs((p1.votes - p1.downvotes - (p2.votes - p2.downvotes))/n)
-        end
-    end
-    s/(2*length(model.posts))
 end
 
 function mean_user_view(model, model_df)
