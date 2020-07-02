@@ -4,7 +4,7 @@ function user()
         add_agent!(
             model,
             rand(model.rng_user_posts, model.quality_distribution),
-            sigmoid(voting_probability),
+            sigmoid(voting_probability), # sigmoid, da dies ja das quantil angibt
             sigmoid(activity),
             rand(model.rng_user_posts, model.concentration_scale),
         )
