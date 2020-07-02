@@ -231,6 +231,10 @@ function agent_step!(user, model)
                 )
 
             end
+            if !in(post, user.viewed)
+                push!(user.viewed, post)
+                post.views += 1
+            end
         end
     end
 end

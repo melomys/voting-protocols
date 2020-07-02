@@ -8,6 +8,7 @@ include("../../src/data_collection.jl")
 include("../../src/scoring.jl")
 include("../../src/rating.jl")
 include("../../src/export_r.jl")
+include("../../src/default.jl")
 
 model_init_params = [
     (
@@ -23,28 +24,16 @@ model_init_params = [
             :scoring_function => [scoring_reddit_best, scoring_reddit_hot],
         ),
     ),
-    (:all_models, Dict(:steps => [5, 10, 30, 50, 100, 300, 500])),
+    #(:all_models, Dict(:steps => [5, 10, 30, 50, 100, 300, 500])),
 ]
 
-
-model_properties = [
-    ranking_rating,
-    ranking_rating_relative,
-    @model_property_function(:model_id),
-    @model_property_function(:votes_exp),
-    @model_property_function(:time_exp),
-    @model_property_function(:seed),
-    @get_post_data(:score, identity),
-    @get_post_data(:votes, identity),
-    @get_post_data(:quality, identity),
-]
 
 @time begin
     model_dfs, df = collect_model_data(
         model_init_params,
-        model_properties,
+        default_model_properties,
         default_evaluation_functions,
-        20,
+        2,
     )
 end
 

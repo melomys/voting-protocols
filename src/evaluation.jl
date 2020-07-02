@@ -24,31 +24,34 @@ function ranking_rating_relative(model)
     ranking_rating(model)/rating
 end
 
-function gcd(model)
+function dcg(model)
     ord = zscore(map(post -> user_rating(post.quality, ones(model.quality_dimensions)), model.posts))
-
-    gcd = 0
+    dcg = 0
     for i = 1:model.n
-        gcd += (2^(ord[model.ranking[i]]) - 1) / log2( i + 1)
+        dcg += (2^(ord[model.ranking[i]]) - 1) / log2( i + 1)
     end
+    dcg
 end
 
-function ngcd(model)
+function ndcg(model)
     ord = zscore(map(post -> user_rating(post.quality, ones(model.quality_dimensions)), model.posts))
     by_quality = sortperm(ord, by= x -> -x)
-    bgcd = 0
+    bdcg = 0
     for i = 1:model.n
-        bcd += (2^(ord[by_quality[i]]) - 1) / log2( i + 1)
+        bdcg += (2^(ord[by_quality[i]]) - 1) / log2( i + 1)
     end
-    gcd(model)/bgcd
+    dcg(model)/bdcg
 end
 
-function gini(model, model_df = Nothing)
+function gini(model)
     s = 0
-    n = sum(map(post -> post.score, model.posts))
+    n = sum(map(post -> post.views , model.posts))
+    if n == 0
+        return 0.0
+    end
     for p1 in model.posts
         for p2 in model.posts
-            s = s + abs(p1.score - p2.score)
+            s = s + abs(p1.views - p2.views)
         end
     end
     s/(2*n*length(model.posts))
@@ -59,7 +62,11 @@ end
 
 
 function area_under_curve(model, model_df)
-    trapezoidial_rule(model_df[!, :ranking_rating_relative])
+    trapezoidial_rule(model_df[!, :ndcg])/model.steps
+end
+
+function area_under_gini(model, model_df)
+    trapezoidial_rule(model_df[!, :gini])/model.steps
 end
 
 
@@ -89,6 +96,11 @@ end
 function post_views(model, model_df)
     views = map(x -> x.views, model.posts)
     return hist_dataframe(views,model)
+end
+
+function post_scores(model, model_df)
+    scores = map(x -> x.score, model.posts)
+    return hist_dataframe(scores, model)
 end
 
 vote_count(model, model_df) = sum(map(x -> x.votes, model.posts))

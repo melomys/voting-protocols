@@ -203,6 +203,13 @@ macro rating_correlation(function1, function2)
     end)
 end
 
+macro model_df_column(col)
+    name = Symbol(eval(col), "_all")
+    return :(function $name(model, model_df)
+    model_df[!,$col]
+    end)
+end
+
 function unary_columns(df)
     df[!, filter(x -> (typeof(df[1, x]) <: Union{Float64,Int,Bool}), names(df))]
 end
@@ -223,35 +230,3 @@ Default Parameters
 
 timestamp_func = @post_property_function(:timestamp)
 score_func = @post_property_function(:score)
-
-
-default_evaluation_functions = [
-    area_under_curve,
-    vote_count,
-    quality_sum,
-    gain,
-    sum_gradient,
-    post_views,
-    gini,
-    mean_user_view,
-    mean_user_vote,
-    @model_property_function(:activity_voting_probability_distribution),
-    @model_property_function(:concentration_scale),
-    @model_property_function(:init_score),
-    @model_property_function(:new_posts_per_step),
-    @model_property_function(:model_id),
-    @model_property_function(:model_type),
-    @model_property_function(:quality_dimensions),
-    @model_property_function(:scoring_function),
-    @model_property_function(:seed),
-    @model_property_function(:start_posts),
-    @model_property_function(:start_users),
-    @model_property_function(:steps),
-    @model_property_function(:time_exp),
-    @model_property_function(:user_rating_function),
-    @model_property_function(:votes_exp),
-    @rating_correlation(quality, end_position),
-    @rating_correlation(timestamp_func, score_func)
-]
-
-sort!(default_evaluation_functions, by = x -> string(x))
