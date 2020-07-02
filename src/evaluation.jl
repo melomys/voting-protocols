@@ -14,6 +14,7 @@ function ranking_rating(model)
     return rating
 end
 
+
 function ranking_rating_relative(model)
     by_quality = sortperm(model.posts, by=x -> - user_rating(x.quality,ones(model.quality_dimensions)))
     rating = 0
@@ -23,6 +24,24 @@ function ranking_rating_relative(model)
     ranking_rating(model)/rating
 end
 
+function gcd(model)
+    ord = zscore(map(post -> user_rating(post.quality, ones(model.quality_dimensions)), model.posts))
+
+    gcd = 0
+    for i = 1:model.n
+        gcd += (2^(ord[model.ranking[i]]) - 1) / log2( i + 1)
+    end
+end
+
+function ngcd(model)
+    ord = zscore(map(post -> user_rating(post.quality, ones(model.quality_dimensions)), model.posts))
+    by_quality = sortperm(ord, by= x -> -x)
+    bgcd = 0
+    for i = 1:model.n
+        bcd += (2^(ord[by_quality[i]]) - 1) / log2( i + 1)
+    end
+    gcd(model)/bgcd
+end
 
 function gini(model, model_df = Nothing)
     s = 0
@@ -114,6 +133,12 @@ Sigmoid function
 """
 sigmoid(x) = 1/(1+ℯ^(-x*0.5))
 
+
+function zscore(data)
+    μ = mean(data)
+    σ = std(data)
+    map(x -> (x - μ)/σ, data)
+end
 
 function hist_dataframe(array, model)
     dic = Dict()
