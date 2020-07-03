@@ -20,32 +20,40 @@ function collect_model_data(
 
 
     model_dfs = []
+    try
+        for i = 1:iterations
+            @info "$((i-1)/iterations*100) %"
+            seed = abs(rand(Int32))
+            models = create_models(model_init_params; seed = seed)
 
-    for i = 1:iterations
-        @info "$((i-1)/iterations*100) %"
-        seed = abs(rand(Int32))
-        models = create_models(model_init_params; seed = seed)
+            for j = 1:length(models)
+                tmp_model = models[j]
+                agent_df, model_df = run!(
+                    tmp_model,
+                    tmp_model.agent_step!,
+                    tmp_model.model_step!,
+                    tmp_model.steps;
+                    agent_properties = [],
+                    model_properties = model_properties,
+                )
 
-        for j = 1:length(models)
-            tmp_model = models[j]
-            agent_df, model_df = run!(
-                tmp_model,
-                tmp_model.agent_step!,
-                tmp_model.model_step!,
-                tmp_model.steps;
-                agent_properties = [],
-                model_properties = model_properties,
-            )
+                push!(model_dfs, model_df)
 
-            push!(model_dfs, model_df)
+                ab_model = tmp_model
+                ab_model_df = model_df
 
-            ab_model = tmp_model
-            ab_model_df = model_df
-
-            push!(df, map(x -> x(ab_model, ab_model_df), evaluation_functions))
+                push!(df, map(x -> x(ab_model, ab_model_df), evaluation_functions))
+            end
         end
+    catch e
+        if isa(e, InterruptException)
+            @info "Interrupted"
+        else
+            throw(e)
+        end
+    finally
+        return model_dfs, df
     end
-    return model_dfs, df
 end
 
 
