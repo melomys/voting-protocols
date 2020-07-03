@@ -95,7 +95,7 @@ end
 
 function post_views(model, model_df)
     views = map(x -> x.views, model.posts)
-    return hist_dataframe(views,model)
+    return views
 end
 
 function post_scores(model, model_df)
