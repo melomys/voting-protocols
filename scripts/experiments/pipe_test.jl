@@ -20,6 +20,7 @@ include("../../src/data_collection.jl")
 include("../../src/scoring.jl")
 include("../../src/rating.jl")
 include("../../src/export_r.jl")
+include("../../src/default.jl")
 
 timestamp_func = @post_property_function(:timestamp)
 score_func = @post_property_function(:score)
@@ -101,9 +102,9 @@ model_init_params = [(
 @time begin
     model_dfs, corr_df = collect_model_data(
         model_init_params2,
-        model_properties,
-        evaluation_functions,
-        20,
+        default_model_properties,
+        default_evaluation_functions,
+        30,
     )
 end
 
