@@ -44,17 +44,25 @@ function ndcg(model)
 end
 
 function gini(model)
+
+    posts = model.posts
+
     s = 0
-    n = sum(map(post -> post.views , model.posts))
+    cutoff = 70
+    if length(model.posts) > 2 * cutoff
+        posts = [model.posts[1:cutoff]...,model.posts[length(model.posts) - cutoff + 1:end]...]
+    end
+    n = sum(map(post -> post.views, posts))
     if n == 0
         return 0.0
     end
-    for p1 in model.posts
-        for p2 in model.posts
+    for p1 in posts
+        for p2 in posts
             s = s + abs(p1.views - p2.views)
         end
     end
-    s/(2*n*length(model.posts))
+    s/(2*n*length(posts))
+
 end
 
 # per model
