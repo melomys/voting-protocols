@@ -27,6 +27,7 @@ function collect_model_data(
         models = create_models(model_init_params; seed = seed)
 
         for j = 1:length(models)
+            @info "Step: $j"
             tmp_model = models[j]
             agent_df, model_df = run!(
                 tmp_model,

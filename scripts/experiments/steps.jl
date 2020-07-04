@@ -14,15 +14,15 @@ model_init_params = [
         standard_model,
         Dict(
             :scoring_function => [scoring_activation],
-            :init_score => [0, 10],
+            :init_score => [10],
         ),
     ),
-    (
-        downvote_model,
-        Dict(
-            :scoring_function => [scoring_reddit_best, scoring_reddit_hot],
-        ),
-    ),
+#    (
+        #downvote_model,
+        #Dict(
+        #    :scoring_function => [scoring_reddit_best, scoring_reddit_hot],
+        #),
+#    ),
     (:all_models, Dict(:steps => [50, 100, 300, 500])),
 ]
 
