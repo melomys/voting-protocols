@@ -47,13 +47,7 @@ function grid_params(model_params; seed = 1)
         return models
 end
 
-function add_dicts(d_model, d_default)
-        d_ret = copy(d_default)
-        for key in keys(d_model)
-                d_ret[key] = d_model[key]
-        end
-        return d_ret
-end
+
 
 
 create_models(model_params; seed = 1) =
@@ -76,4 +70,13 @@ function model_count(model_params)
                 x -> reduce(*, map(param_count, collect(values(x)))),
                 map(x -> x[2], model_params),
         ))
+end
+
+
+function add_dicts(d_model, d_default)
+        d_ret = copy(d_default)
+        for key in keys(d_model)
+                d_ret[key] = d_model[key]
+        end
+        return d_ret
 end
