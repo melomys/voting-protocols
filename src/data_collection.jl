@@ -27,6 +27,7 @@ function collect_model_data(
             models = create_models(model_init_params; seed = seed)
 
             for j = 1:length(models)
+                @info "Step $i: $j"
                 tmp_model = models[j]
                 agent_df, model_df = run!(
                     tmp_model,
@@ -41,8 +42,8 @@ function collect_model_data(
 
                 ab_model = tmp_model
                 ab_model_df = model_df
-
-                push!(df, map(x -> x(ab_model, ab_model_df), evaluation_functions))
+                    push!(df, map(x -> x(ab_model, ab_model_df), evaluation_functions))
+                end
             end
         end
     catch e
