@@ -72,6 +72,8 @@ function difference(post)
     return post.votes - post.downvotes
 end
 
+# untere Grenze des Konfidenzintervalls des anteils der Upvotes
+# je höher die untere Grenze geschätzt werden kann, desto höher ist der score
 function wilson_score(post)
     confidence = 0.95
     n = post.votes + post.downvotes
