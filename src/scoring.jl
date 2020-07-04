@@ -35,7 +35,7 @@ end
 
 
 function scoring_random(post, time, model)
-    rand()
+    rand(model.rng_model)
 end
 
 function scoring_best(post, time, model)
