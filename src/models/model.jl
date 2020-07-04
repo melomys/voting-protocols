@@ -49,8 +49,8 @@ mutable struct User <: AbstractUser
     vote_probability::Float64
     activity_probability::Float64
     concentration::Int64
-    voted_on::Array{AbstractPost}
-    viewed::Array{AbstractPost}
+    voted_on::Set{AbstractPost}
+    viewed::Set{AbstractPost}
 end
 
 function User(
@@ -66,8 +66,8 @@ function User(
         vote_probability,
         activity_probability,
         concentration,
-        AbstractPost[],
-        AbstractPost[],
+        Set{AbstractPost}(),
+        Set{AbstractPost}(),
     )
 end
 
