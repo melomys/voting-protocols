@@ -43,7 +43,6 @@ function collect_model_data(
                 ab_model = tmp_model
                 ab_model_df = model_df
                     push!(df, map(x -> x(ab_model, ab_model_df), evaluation_functions))
-                end
             end
         end
     catch e
