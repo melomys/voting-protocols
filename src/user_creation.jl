@@ -6,7 +6,7 @@ function user()
             rand(model.rng_user_posts, model.quality_distribution),
             sigmoid(voting_probability), # sigmoid, da dies ja das quantil angibt
             sigmoid(activity),
-            rand(model.rng_user_posts, model.concentration_scale),
+            Int64(round(rand(model.rng_user_posts, model.concentration_distribution))),
         )
     end
 end
@@ -31,7 +31,7 @@ function uniform_user()
             rand(model.rng_user_posts, [mean(quality_distribution)]),
             sigmoid(voting_probability),
             sigmoid(activity),
-            rand(model.rng_user_posts, model.concentration_scale),
+            Int64(round(rand(model.rng_user_posts, model.concentration_distribution))),
         )
     end
 end

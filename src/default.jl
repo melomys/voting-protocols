@@ -30,7 +30,7 @@ default_evaluation_functions = [
     mean_user_view,
     mean_user_vote,
     @model_property_function(:activity_voting_probability_distribution),
-    @model_property_function(:concentration_scale),
+    @model_property_function(:concentration_distribution),
     @model_property_function(:init_score),
     @model_property_function(:new_posts_per_step),
     @model_property_function(:model_id),

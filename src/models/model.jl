@@ -78,7 +78,7 @@ function standard_model(;
         [2 0.9; 0.9 2],
     ),
     agent_step! = agent_step!,
-    concentration_scale = 30:70,
+    concentration_distribution = Distributions.Uniform(30,70),
     equal_posts = false,
     init_score = 0,
     model_step! = model_step!,
@@ -168,7 +168,7 @@ function standard_model(;
     properties = @dict(
         activity_voting_probability_distribution,
         agent_step!,
-        concentration_scale,
+        concentration_distribution,
         init_score,
         model_id,
         model_step!,
