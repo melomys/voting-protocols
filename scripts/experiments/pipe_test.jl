@@ -26,7 +26,7 @@ timestamp_func = @post_property_function(:timestamp)
 score_func = @post_property_function(:score)
 
 
-step = 50
+step = 100
 
 
 evaluation_functions = default_evaluation_functions
@@ -104,7 +104,7 @@ model_init_params = [(
         model_init_params2,
         default_model_properties,
         default_evaluation_functions,
-        30,
+        1000,
     )
 end
 

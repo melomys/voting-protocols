@@ -15,16 +15,23 @@ model_init_params = [
         standard_model,
         Dict(
             :scoring_function => [scoring_activation],
-            :init_score => [0, 10],
+            :init_score => [10],
         ),
     ),
     (
         downvote_model,
         Dict(
-            :scoring_function => [scoring_reddit_best, scoring_reddit_hot],
+            :scoring_function => [scoring_reddit_hot],
+            :user_rating_function => [user_rating_dist2],
         ),
     ),
-    #(:all_models, Dict(:steps => [5, 10, 30, 50, 100, 300, 500])),
+    (
+        random_model,
+        Dict(
+            :scoring_function => [scoring_hacker_news],
+        )
+    ),
+    (:all_models, Dict(:steps => [5, 10, 30, 50, 100, 300, 500])),
 ]
 
 
@@ -33,7 +40,7 @@ model_init_params = [
         model_init_params,
         default_model_properties,
         default_evaluation_functions,
-        2,
+        500,
     )
 end
 
