@@ -151,7 +151,7 @@ end
 """
 Sigmoid function
 """
-sigmoid(x) = 1/(1+ℯ^(-x*0.5))
+sigmoid(x; a = 1, b = 1, c = 0) = a/(1+ℯ^(-x*0.5*b)) - c
 
 
 function zscore(data)

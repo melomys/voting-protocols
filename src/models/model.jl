@@ -73,9 +73,12 @@ end
 
 
 function standard_model(;
-    activity_voting_probability_distribution = Distributions.MvNormal(
-        [-2, 0],
+    activity_voting_probability_distribution =
+    Distributions.MvLogNormal(
+    Distributions.MvNormal(
+        [1, 0],
         [2 0.9; 0.9 2],
+    )
     ),
     agent_step! = agent_step!,
     concentration_distribution = Distributions.Uniform(30,70),
