@@ -87,6 +87,23 @@ model_init_params2 = [
     ),
 ]
 
+
+model_init_params_user = [(
+    standard_model,
+    Dict(
+    :scoring_function => scoring_activation,
+    :init_score => 10,
+    :user_rating_function => [user_rating_exp, user_rating_exp2, user_rating_dist2],
+    :concentration_distribution => [Uniform(10,70), Uniform(10, 100), Uniform(30,70), Uniform(30,100), Uniform(70,100)],
+    :activity_voting_probability_distribution => [MvLogNormal(MvNormal([-2, 0], [1.0 0.8; 0.8 1.0])),
+    MvLogNormal(MvNormal([-2, 0], [1.0 0.8; 0.8 1.0])),MvLogNormal(MvNormal([-2, 0], [1.0 0.8; 0.8 1.0])),
+    MvLogNormal(MvNormal([0, 0], [1.0 0.8; 0.8 1.0])), MvLogNormal(MvNormal([-2, -2], [1.0 0.8; 0.8 1.0])),
+    ],
+    :quality_dimensions => [1:3...]
+        )
+
+)]
+
 model_init_params = [(
     standard_model,
     Dict(
@@ -101,10 +118,10 @@ model_init_params = [(
 
 @time begin
     model_dfs, corr_df = collect_model_data(
-        model_init_params2,
+        model_init_params_user,
         default_model_properties,
         default_evaluation_functions,
-        1000,
+        30,
     )
 end
 
