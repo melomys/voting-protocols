@@ -104,7 +104,7 @@ function standard_model(;
     UserType = User,
     user_rating_function = user_rating,
     time_exp = 0.5,
-    vote_evaluation = difference,
+    vote_evaluation = vote_difference,
     qargs...,
 )
 

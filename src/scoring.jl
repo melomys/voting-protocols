@@ -48,28 +48,27 @@ end
 
 
 function scoring_activation(post, time,model)
-    (post.votes - post.downvotes - post.score) / (time -post.timestamp + 1)^(model.time_exp)
+    (model.vote_evaluation(post) - post.score) / (time -post.timestamp + 1)^(model.time_exp)
 end
 
 function scoring_votes_divided_score(post, time, model)
-    (post.votes - post.downvotes)/(post.score+1) / (time - post.timestamp + 1)^(model.time_exp)
+    (model.vote_evaluation(post))/(post.score+1) / (time - post.timestamp + 1)^(model.time_exp)
 end
 
 function scoring_votes_times_score(post, time, model)
-    post.votes * (post.score + 1) / (time- post.timestamp + 1)^(model.time_exp)
+    model.vote_evaluation(post) * (post.score + 1) / (time- post.timestamp + 1)^(model.time_exp)
 end
 
 
 """
 vote evaluation
 """
-
-function upvotes(post)
-    return post.votes
+function vote_difference(post)
+    return post.votes - post.downvotes
 end
 
-function difference(post)
-    return post.votes - post.downvotes
+function vote_partition(post)
+    return post.votes/(post.votes - post.downvotes)
 end
 
 # untere Grenze des Konfidenzintervalls des anteils der Upvotes
