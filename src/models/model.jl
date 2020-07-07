@@ -31,18 +31,6 @@ function Post(rng::MersenneTwister, quality_distribution, time, init_score = 0)
     Post(rand(rng, quality_distribution), 0, 0,0, time, init_score)
 end
 
-function EqualPost(
-    quality,
-    rng,
-    quality_distribution,
-    time,
-    PostType,
-    init_score = 0,
-)
-    rand(rng, quality_distribution)
-    PostType(quality, 0, 0, 0, time, init_score)
-end
-
 mutable struct User <: AbstractUser
     id::Int
     quality_perception::Array

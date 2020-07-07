@@ -1,34 +1,6 @@
-
-
-mutable struct ViewPost <: AbstractPost
-    quality::Array
-    votes::Int64
-    views::Int64
-    timestamp::Int64
-    score::Float64
-end
-
-function ViewPost(rng, quality_distribution, time, init_score = 0)
-    ViewPost(rand(rng, quality_distribution), 0, 0, time, init_score)
-end
-
-mutable struct ViewUser <: AbstractUser
-    id::Int
-    quality_perception::Array
-    vote_probability::Float64
-    activity_probability::Float64
-    concentration::Int64
-    voted_on::Array{AbstractPost}
-    viewed::Array{AbstractPost}
-end
-
-
 function view_model(;
-    PostType = Post,
-    UserType = User,
     agent_step! = view_agent_step!,
     scoring_function = scoring_view,
-    rating_factor = 1,
     qargs...,
 )
     standard_model(;
