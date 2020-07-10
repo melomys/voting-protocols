@@ -1,0 +1,41 @@
+\chapter{Rating}
+
+
+Die Funktion anhand welcher User entscheiden, ob und wie sie einen Post bewerten ist unbekannt. 
+
+Es ist zu wünschen, dass die Wahl der Ratingmethode keinen Einfluss auf das Evaluationsergebnis haben.
+Um dies zu validieren wurden mehrere Ratingfunktionen implementiert und getestet.
+
+ 
+
+
+- Auswahl der Ratingmethoden
+
+
+Die beiden ersten Rankingsmethoden gehen davon aus, dass gute Posts eher als diese erkannt werden. Je besser ein Post ist, desto höher ist die Wahrscheinlichkeit eine positive Bewertung zu erhalten (Beiweis?? irgendeinen Faktor ausrechenen der zeigt, dass das so ist, nicht nur intuitiv). Bei dem Abstandrating hingegen ist dies nicht der Fall
+
+Wenn es sich zum Beispiel im ersten Fall eher um ein Rating in einem Techplatform wie Hacker News handelt, wo Beiträge einfach nach Qualität(Neuheit, gut recherchiert, Bahnbrechend) sortiert werden können.  Findet das Abstandsranking eher in einem Diskussionsforum anwendung, indem sich mehrere unterschiedliche Meinungen treffen.
+
+
+- Lineares Rating
+
+Je besser die Qualitätswahrnehmung eines Users und die Qualität eines Posts ist, desto besser ist auch das Userrating.
+
+
+- Exponentielles Rating
+
+Je besser die Qualitätswahrnehmung eines Users ist, desto anspruchsvoller wird er bezüglich der Postqualiät.
+
+Ein User mit schlechter Qualitätswahrnehmung wird so viel mehr Posts  positiv bewerten, als ein User mit einer guten Qualitätswahrnehung
+
+
+
+- Abstands Rating
+
+Dieses Ranking basiert auf einer anderen Qualitätsannahme, als die bereits vorgestellten. User bewerten Posts positiv, wenn sich Qualitätswahrnehmung nah an der Qualität des Posts befindet. Somit ensteht hier 
+
+
+- Ratingmechanismus
+
+
+Über die Ratingfunktion kann ausgerechnet werden, wie gut ein Post einem User gefällt. Über die Bewertungswahrscheinlichkeit eines Users wird definiert, wie gut (oder schlecht) ein User den Post empfinden muss, sodass er diesen bewertet.  Über die Ratingsverteilung kann das Quantil errechnet werden, welche die Ratingfunktion unter- oder überschreiten muss um eine Bewertung des Users hervorzurufen.

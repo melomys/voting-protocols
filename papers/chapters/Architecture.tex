@@ -1,0 +1,52 @@
+\chapter{Architektur}
+
+-agentenbasierte Modellierung beschreiben
+
+
+In der agentenbasierten Modellierung werden die Aktionen und Interaktionen vieler Entitäten, den Agenten, simuliert. Die Agenten erhalten Verhaltensregeln, durch ihre Aktivtät kann ein komplexes System beschrieben werden. Die Auswirkungen auf das System können betrachtet werden.
+
+Wie [Agents.jl] beschreibt können viele komplexe Systeme nicht vollständig durch herkömmliche mathematische Methoden beschrieben werden. Komplexe Systeme hängen von dem Verhalten der Elemente, der Agenten, des Systems ab. Kleine Änderungen am Verhalten der Agenten können große Veränderungen des Gesamtsystems hervorrufen. Durch agentenbasierte Modellierung können nicht lineare Modelle beschrieben.
+
+Agenten können in einem Raum angeordnet werden, sodass sie mit ihren Nachbarn interagieren, wie im Modell von [Shelling], oder als Netzwerk indem jeder Agent mit jedem Agenten interagieren kann. Möglich ist auch, dass die Agenten nicht untereinander, nur mit dem System, interagieren.
+
+
+Die Popularität steigt stetig, agentenbasierte Modelle sind beliebt um unter anderem biologische, ökonomische und soziale Systeme zu modellieren.
+
+-Julia
+
+Julia ist eine High-Level Programmiersprache mit einer Ausführungsgeschwindigkeit, die an die statisch-typisierter Programmiersprachen wie C heranreicht.
+
+Julia verfügt über weitreichende Bibliothek zur Datenanalyse und einen Read-Eval-Print-Loop zur direkten und interaktiven Entwicklung von Code.
+
+Für Julia exisiert die weitentwickelte Framework \texttt{Agents.jl} für agentenbasierte Modellierung
+
+-Agents.jl beschreiben
+
+Die Agenten in \texttt{Agents.jl} werden durch Julia Objekte beschrieben. Das Verhalten der Agenten wird über Schrittfunktion definiert. Wird das Modell ausgeführt wird für eine angegebene Menge an Iterationen für jeden Agenten die Schrittfunktion ausgeführt. Außerdem ist es möglich für eine Modellfunktion zu definieren, welche jeweils am Ende jeder Iteration ausgeführt wird. Es können beliebige Modellparameter definiert werden, welche sowohl in der Agenten- als auch in der Modellschrittfunktion gelesen und geändert werden können. Zur Datenkollektion werden Funktion übergeben, welche als einzigen Parameter das Modell erhalten. Nach jeder Iteration werden sämtliche Evaluationsfunktionen auf das Modell angewendet und die Ergebnisse in einem Feld gespeichert.
+
+
+Die in dieser Arbeit verwendte Version von \texttt{Agents.jl} ist ein weiterentwickelter Fork der Version \texttt{3.0.0}. Es wurden kleine Änderungen an der Kollektion von Modellparametern vorgenommen.
+
+- Platform die modelliert werden soll
+
+In dieser Arbeit wird eine Onlinekommunikationsplatform modelliert. User*innen können Posts veröffentlichen. Diese sind für alle anderen User sichtbar und können bewertet werden. Die Posts werden nach einem Scoringalgorithmus unter Betrachtung der Postparameter, wie die Anzahl und Art der Bewertungen, Betrachtungen und Zeitpunkt der Veröffentlichung bewertet. Auf der Startseite der Platform werden die Posts absteigend nach ihrem Score sortiert in einer vertikalen Liste angezeigt. Je weiter ein*e User*in auf der Seite herunterscrollt, desto mehr Posts werden angezeigt. Die Posts sind nicht auf Seiten aufgeteilt, sondern befinden sich in einer kontinuierlichen Liste. Die Liste der Posts ist für alle User*innen, die zum gleichen Zeitpunkt die Platform besuchen gleich und nicht personalisiert. Vergleichbare Grundstrukturen finden sich bei \texttt{Reddit} und \texttt{Hacker News}.
+
+
+
+- agentenbasierte Modellierung einer Platform zur Onlinekommunikation
+
+Die beschrieben Kommunikationsplatform soll als agentenbasiertes Modell modelliert werden. Dazu werden die User*innen als Agent*innen modelliert.
+Den Agenten*innen werden Parameter zugewiesen, welche ihr Verhalten definieren.
+Für die Agent*innen wird eine Schrittfunktion definiert, in der im wesentlichen entschieden wird, ob die Agent*in Posts bewertet.
+
+Posts werden als Teil des Modells beschrieben. Die Agenten interagieren nur mit den Modell, den Posts, und nicht direkt untereinander.
+In der Modellschrittfunktion wird der Scoringalgorithmus ausgeführt und die Posts nach ihrem entsprechendem Score angeordnet.
+
+Das Modell wird für eine festgelegte Anzahl an Iterationen ausgeführt. In jeder Iteration wir für jede*n Agent*in die Agent*innenschrittfunktion und schließlich die Modellschrittfunktion ausgeführt.
+
+
+
+
+
+
+

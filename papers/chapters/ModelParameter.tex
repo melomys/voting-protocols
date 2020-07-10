@@ -1,0 +1,49 @@
+\chapter{Modellparameter}
+
+\section{Qualität}
+
+Qualität wird im Modell über eine kontinuierliche n-dimensionale Verteilung definiert. Als Modellierung bietet sich eine n-dimensionale Normalverteilung an. Einzelne Qualiätsmerkmale können so einfach in Korrelation gesetzt werden. Aus der Qualitätsverteilung wird sowohl die Qualität der Posts als die Qualitätswahrnehmung der User*innen gewonnen.
+
+
+\section{Bewertungsverteilung}
+
+Die Verteilung, die durch die Bewertungsfunktion von User*innen für Posts erzeugt wird ist nicht bekannt und kann nicht analytisch berechnet werden. Es ist jedoch notwendig Quantil der Bewertungsverteilung zu berechnen um zu entscheiden, ob ein*e User*in einen Post bewertet. Die Verteilung wird empirisch berechnet.
+
+Aus der Qualitätsverteilung werden Pseudoposts mit Qualität und Pseudouser*innen mit Qualitätsperzeption erzeugt. Diese werden über ein kartesisches Produkt in die Bewertungsfunktion eingesetzt. Die so berechneten Bewertungswerte bilden die empirische Verteilung. 
+
+[Vektorrechnung des kartesichen Produktes in die Bewertungsfunktion gestopft]
+
+[Bild mit unterschiedlichen empirischen Bewertungsverteilungen, nach unterschiedlichen Ratingfunktionen]
+
+
+
+\section{User*innenparameter}
+
+
+\subsection{Qualitätsperzeption}
+
+Die Qualitätsperpezeption beschreibt die Qualitätswahrnehmung im n-dimensionalen Qualitätsraum. Sie wird verwendet um mit der Bewertungsfunktion den Bewertungswert von User*innen für betrachtete Posts zu errechnen.
+
+Die Qualitätsperzeption wird aus der Qualitätsverteilung gewonnen.
+
+\subsection{Aktivtität}
+
+In dem implementierten Modell beschreibt jede Iteration das Verstreichen eines Zeitschrittes (30 Minuten). Wie in \cite{Hogg20121} beschrieben sind nicht alle User*innen zu jedem Zeitpunkt aktiv. Die Aktivität von User*innen lässt sich durch eine logarithmische Normalverteilung
+beschreiben. In diesem Modell wird die Aktivität über eine Wahrscheinlichkeit modelliert,  mit welcher ein*e User*in in einem Modellschritt aktiv ist. Da sich die logarithmische Normalverteilung nicht zufriedenstellend auf das Intervall $ [0,1]$ begrenzt werden kann, wird eine $\beta$-Verteilung zur Approximation verwendet.
+
+[Bild mit unterschiedlichen $\beta$-Verteilungen]
+
+\subsection{Bewertungszufriedenheit}
+
+
+Über die Bewertungszufriedenheit wird festgelegt, wie (un)zufrieden ein*e User*in mit einem Post sein muss, um diesen zu bewerten. 
+Die Bewertungszufriedenheit gibt das Quantil der Bewertungsverteilung an, welches von der Bewertungsfunktion der User*innen für Posts über- bzw. unterschritten werden muss um eine negative bzw. positive Bewertung der User*in für den Post hervorzurufen.
+
+Wie die Aktivitätswahrscheinlichkeit wird Bewertungszufriedenheit von einer $\beta$-Verteilung modelliert.
+
+\subsection{Konzentration}
+
+Die Konzentration gibt an, wie viel Posts ein*e User*in betrachtet, falls sie in einem Modellschritt aktiv ist.
+Sie ist diskret-positiv über die User*inne verteilt. Eine geeignete Verteilung stellt die Poissonverteilung.
+
+[Bild mit unterschiedlichen Poissonverteilungen??]

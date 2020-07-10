@@ -1,0 +1,95 @@
+\chapter{Models und Scoring}
+
+Unterschiedliche Scoringprotokolle werden über Modelle und Scoringfunktionen implementiert
+
+- Standard Model
+
+
+
+- Downvote model
+
+
+- random model 
+
+die Scores werden mit etwas random noise bedacht
+
+user können 
+
+
+-  Vote evaluation
+
+	Es können unterschiedliche Ansätze verfolgt werden um die Hoch und Runterbewertungen gegeinander abzuwiegen. 
+	Wie in [Online Paper über Wilson] erläutert wird, wird durch den Quotient und aus Upvotes durch Gesamtvotes sowie die Differenz aus Upvotes und Downvotes in bestimmten Konstellationen unintuitiv bewertet. Da jedoch das Reddit Hot ranking die Differenz als Metrik verwendet, wird diese weiterhin implementiert und verwendet
+	
+- Differenz
+	
+	upvotes - downvotes
+	
+\begin{equation}
+diff(post_{i}) = u_{i} - d_{i}
+\end{equation}
+- Wilson Score
+
+	Eine von [] vorgeschlagene Metrik ist die untere Grenze des Wilson-Konfidenzintervall für die Erfolgswahrscheinlichkeit der Binomialverteilung für den Parameter $p$. Dabei ist $n$ die Gesamtanzahl an abgegeben Votes an einen Post, die Stichprobengröße, und $k$ die Anzahl an positiver Bewertungen eines Postes, die Anzahl an Erfolgen in der Stichprobe.
+	
+\begin{align}
+ c = \Phi^{-1}(1 - \frac{\alpha}{2}) \\
+ n = u_{i} + d_{i} \\
+ \hat{p_{i}} = \frac{u_{i}}{n}  \\
+ wilson(p_{i}) = \frac{1}{1+\frac{c^2}{n}}*(\hat{p_{i}} + \frac{c^2}{2n} - c* \sqrt{\frac{\hat{p_{i}}*(1 - \hat{p_{i}})}{n} + \frac{c^2}{4n^2}})
+\end{align}
+	
+	
+
+- Scoring funktionen
+
+
+Scoringfunktionen erhalten den zu bewertenden Post, das Modell und den aktuellen Schritt der Simulation und geben ein Skalarwert zurück.
+Für jeden Post wird in jedem Schritt der Score ausgerechnet, nach welchem die Posts schließlich sortiert werden.
+
+	
+
+- Scoring funktion hacker news
+
+Die Scoringfunktion von Hacker News
+
+%(model.vote_evaluation(post) - 1) / (time - post.timestamp + 2)^1.8
+
+\begin{equation}
+S_{i} = \frac{eval(p_{i}) - 1}{(age_{i} + 2)^{1.8}}
+\end{equation}
+
+
+- scoring funktion reddit hot
+
+Das Hot Ranking von reddit
+
+\begin{equation}
+z_{i}  = \begin{cases}
+|diff(p_{i})| &\text{falls $|diff(p_{i})| \geq 1$}\\
+1 &\text{sonst}
+\end{cases}
+\end{equation}
+
+\begin{equation}
+S_{i} = sign(diff(p_{i})) * log_{10}(z_{i}) + \frac{t_{i}}{4500}
+\end{equation}
+
+
+- scoring funktion view
+
+
+
+
+
+-scoring funktion activation
+
+Es wird der Score aus dem letzten Schritt mit den aktuellen Bewertungen des Posts verrechnet 
+
+% Möglicherweise auf S_{i,j} als i_ter Post und j_ter Schritt
+
+\begin{equation}
+S_{i} = \frac{eval(p_{i}) - s_{i}}{age_{i}}
+\end{equation}
+
+	
