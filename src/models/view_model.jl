@@ -4,11 +4,8 @@ function view_model(;
     qargs...,
 )
     standard_model(;
-        PostType = PostType,
-        UserType = UserType,
         agent_step! = agent_step!,
         scoring_function = scoring_function,
-        rating_factor = rating_factor,
         model_type = view_model,
         qargs...,
     )
