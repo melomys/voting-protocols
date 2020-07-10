@@ -1,14 +1,10 @@
 function user()
     function add_user!(model)
-        activity, voting_probability = rand(
-            model.rng_user_posts,
-            model.activity_voting_probability_distribution,
-        )
         add_agent!(
             model,
             rand(model.rng_user_posts, model.quality_distribution),
-            sigmoid(voting_probability; a = 2, b = 1 / 2, c = 1), # sigmoid, da dies ja das quantil angibt
-            sigmoid(activity; a = 2, b = 1 / 2, c = 1),
+            rand(model.rng_user_posts, model.activity_distribution),
+            rand(model.rng_user_posts, model.voting_probability_distribution),
             Int64(round(rand(
                 model.rng_user_posts,
                 model.concentration_distribution,
@@ -32,15 +28,11 @@ end
 
 function uniform_user()
     function add_uniform_user!(model)
-        activity, voting_probability = rand(
-            model.rng_user_posts,
-            model.activity_voting_probabiliy_distribution,
-        )
         add_agent!(
             model,
             rand(model.rng_user_posts, [mean(quality_distribution)]),
-            sigmoid(voting_probability; a = 2, b = 1 / 2, c = 1),
-            sigmoid(activity; a = 2, b = 1 / 2, c = 1),
+            rand(model.rng_user_posts, model.activity_distribution),
+            rand(model.rng_user_posts, model.voting_probability_distribution),
             Int64(round(rand(
                 model.rng_user_posts,
                 model.concentration_distribution,

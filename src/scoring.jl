@@ -1,15 +1,7 @@
 using Dates
 
-function scoring(post, time, model)
-    (model.vote_evaluation(post))^1 / (time - post.timestamp + 1)^(0.3)
-end
-
-function scoring_custom(post,time,model)
-    (model.vote_evaluation(post) +1)^model.votes_exp / (time - post.timestamp + 1)^model.time_exp
-end
-
 function scoring_hacker_news(post, time, model)
-    (model.vote_evaluation(post) - 1)^8 / (time - post.timestamp + 1)^1.8
+    (model.vote_evaluation(post) - 1) / (time - post.timestamp + 2)^1.8
 end
 
 epoch = DateTime(1970,1,1)
@@ -19,7 +11,7 @@ function scoring_reddit_hot(post, time, model)
     seconds = Dates.value(start_time - epoch)/1000 - 1134028003 + post.timestamp * 60 * 30 # 60 Sekunden pro 30 Minuten!!
     order = log(10, max(abs(model.vote_evaluation(post
     )),1))
-    round(sign(post.votes)*order + seconds/45000; digits=7)
+    round(sign(post.votes - post.downvotes)*order + seconds/45000; digits=7)
 end
 
 function scoring_reddit_best(post,time,model)

@@ -61,15 +61,9 @@ end
 
 
 function standard_model(;
-    activity_voting_probability_distribution =
-    Distributions.MvLogNormal(
-    Distributions.MvNormal(
-        [1, 0],
-        [2 0.9; 0.9 2],
-    )
-    ),
+    activity_distribution = Beta(2.5,5),
     agent_step! = agent_step!,
-    concentration_distribution = Distributions.Uniform(30,70),
+    concentration_distribution = Poisson(50),
     equal_posts = false,
     init_score = 0,
     model_step! = model_step!,
@@ -93,6 +87,7 @@ function standard_model(;
     user_rating_function = user_rating,
     time_exp = 0.5,
     vote_evaluation = vote_difference,
+    voting_probability_distribution = Beta(2.5,5),
     qargs...,
 )
 
@@ -157,7 +152,7 @@ function standard_model(;
     model_id = rand(1:2147483647)
 
     properties = @dict(
-        activity_voting_probability_distribution,
+        activity_distribution,
         agent_step!,
         concentration_distribution,
         init_score,
@@ -186,7 +181,8 @@ function standard_model(;
         UserType,
         user_ratings,
         user_rating_function,
-        vote_evaluation
+        vote_evaluation,
+        voting_probability_distribution,
     )
 
     for qarg in qargs

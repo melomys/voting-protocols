@@ -104,25 +104,29 @@ model_init_params_user = [(
 
 )]
 
-model_init_params = [(
+model_init_params_rating_function = [(
+    downvote_model,
+    Dict(
+    :scoring_function => scoring_reddit_hot,
+    :user_rating_function => [user_rating, user_rating_exp, user_rating_exp2, user_rating_dist2]
+    )
+)]
+
+model_init_params_concentration = [(
     standard_model,
     Dict(
-        :scoring_function =>
-            [scoring_activation, scoring_reddit_hot, scoring_hacker_news],
-        :activity_voting_probabiltiy_distribution =>
-            [MvNormal([-4, 0], [1.0 0.8; 0.8 1.0])],
-        :init_score => [0, 10, 20],
-        :user_rating_function => [user_rating_exp, user_rating],
-    ),
+    :scoring_function => scoring_reddit_hot,
+    :concentration_distribution => [Uniform(10,70), Uniform(10, 100), Uniform(30,70), Uniform(30,100), Uniform(70,100)],
+    )
 )]
 
 @time begin
     model_dfs, corr_df = collect_model_data(
-        model_init_params_user,
+        model_init_params_concentration,
         default_model_properties,
         default_evaluation_functions,
-        30,
+        1000,
     )
 end
 
-export_rds(corr_df, model_dfs)
+export_rds(corr_df, model_dfs, "concentration")
