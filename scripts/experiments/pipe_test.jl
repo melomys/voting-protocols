@@ -124,7 +124,23 @@ model_init_params_concentration = [(
     )
 )]
 
+iterations = 2
+
+
+for i=1:Threads.nthreads()-2
+    Threads.@spawn begin
+        model_dfs, corr_df = collect_model_data(
+            model_init_params_concentration,
+            default_model_properties,
+            default_evaluation_functions,
+            trunc(Int,iterations/Threads.nthreads()),
+        )
+        export_rds(corr_df, model_dfs, "concentration")
+    end
+end
+"""
 @time begin
+
     model_dfs, corr_df = collect_model_data(
         model_init_params_concentration,
         default_model_properties,
@@ -132,5 +148,4 @@ model_init_params_concentration = [(
         1000,
     )
 end
-
-export_rds(corr_df, model_dfs, "concentration")
+"""

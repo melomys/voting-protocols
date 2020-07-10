@@ -35,6 +35,23 @@ model_init_params = [
 ]
 
 
+
+iterations = 1000
+
+
+for i=1:Threads.nthreads()-2
+    Threads.@spawn begin
+        model_dfs, corr_df = collect_model_data(
+            model_init_params_concentration,
+            default_model_properties,
+            default_evaluation_functions,
+            trunc(Int,iterations/Threads.nthreads()),
+        )
+        export_rds(corr_df, model_dfs, "steps")
+    end
+end
+
+"""
 @time begin
     model_dfs, df = collect_model_data(
         model_init_params,
@@ -45,3 +62,4 @@ model_init_params = [
 end
 
 export_rds(df, model_dfs, "steps")
+"""
