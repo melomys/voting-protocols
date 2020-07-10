@@ -38,17 +38,19 @@ model_init_params = [
 
 iterations = 5
 
-
+println("START")
+println("START2")
 for i=1:trunc(Int, iterations)
-    Threads.@spawn begin
+    #Threads.@spawn begin
 model_dfs, corr_df = collect_model_data(
     model_init_params,
     default_model_properties,
     default_evaluation_functions,
     5)
 export_rds(corr_df, model_dfs, "steps")
-    end
+    #end
 end
+println("ENDE")
 
 """
 @time begin
