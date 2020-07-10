@@ -11,6 +11,7 @@ function collect_model_data(
     iterations = 10,
 )
 
+    run_id = rand(1:2147483647)
     models = create_models(model_init_params)
     df = init_correlation_dataframe(
         evaluation_functions,
@@ -43,6 +44,10 @@ function collect_model_data(
                 ab_model = tmp_model
                 ab_model_df = model_df
                     push!(df, map(x -> x(ab_model, ab_model_df), evaluation_functions))
+            end
+
+            if i%100 == 0
+                export_rds(df, model_dfs, "$(i)_$(run_id)_tmp")
             end
         end
     catch e
