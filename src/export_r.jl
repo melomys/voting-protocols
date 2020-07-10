@@ -5,7 +5,12 @@ function export_rds(df, model_dfs, keyword = "")
     files = cd(readdir,"data")
     numbers = map(x -> parse(Int32,match(r"([0-9]+)",x)[1]),files)
 
-    no = maximum(numbers) + 1
+    if length(numbers == 0)
+        no = 1
+    else
+        no = maximum(numbers) + 1
+    end
+
 
     if keyword == ""
         df_file = "data/df$(no).rds"
