@@ -1,7 +1,8 @@
-
-push!(LOAD_PATH, "./module")
-using VotingProtocols
 using Distributed
+addprocs(1)
+
+@everywhere push!(LOAD_PATH, "./module")
+@everywhere using VotingProtocols
 """
 @everywhere include("/home/ludwig/Bachelorarbeit/voting-protocols/src/models/model.jl")
 @everywhere include("/home/ludwig/Bachelorarbeit/voting-protocols/src/model_factory.jl")
@@ -14,7 +15,7 @@ using Distributed
 @everywhere include("/home/ludwig/Bachelorarbeit/voting-protocols/src/rating.jl")
 @everywhere include("/home/ludwig/Bachelorarbeit/voting-protocols/src/export_r.jl")
 @everywhere include("/home/ludwig/Bachelorarbeit/voting-protocols/src/default.jl")
-"""
+
 
 include("../../src/models/model.jl")
 include("../../src/model_factory.jl")
@@ -28,10 +29,7 @@ include("../../src/rating.jl")
 include("../../src/export_r.jl")
 include("../../src/default.jl")
 
-
-
-using Distributed
-
+"""
 model_init_params = [
     (
         standard_model,
@@ -70,7 +68,7 @@ model_dfs, corr_df = @fetch collect_model_data(
     5)
 export_rds(corr_df, model_dfs, "steps")
     end
-end
+
 
 """
 @time begin
