@@ -37,5 +37,5 @@ export scoring_activation, scoring_best, scoring_hacker_news, scoring_random, sc
 export user_rating, user_rating_dist2, user_rating_dist1, user_rating_exp, user_rating_exp2
 export wilson_score, vote_difference, vote_partition
 export ranking_rating_relative, dcg, ndcg, gini, area_under_curve, area_under_gini, sum_gradient, quality_sum, gain, mean_user_view, mean_user_vote, post_views, post_scores, vote_count, end_position, quality
-
+export export_rds
 end
