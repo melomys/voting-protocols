@@ -28,7 +28,7 @@ model_init_params = [
 
 
 
-iterations = 5
+iterations = 100
 
 #Threads.@threads
 for i=1:iterations
@@ -37,7 +37,7 @@ model_dfs, corr_df = @fetch collect_model_data(
     model_init_params,
     default_model_properties,
     default_evaluation_functions,
-    5)
+    100)
 export_rds(corr_df, model_dfs, "steps")
     end
 
