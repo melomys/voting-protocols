@@ -59,7 +59,7 @@ model_init_params = [
         [standard_model, random_model],
         Dict(
             :scoring_function => [scoring_activation, scoring_hacker_news],
-            :init_score => [0:10:100...],
+            :init_score => [0:10:100... ],
             :deviation_function => [mean_deviation, std_deviation],
         ),
     ),

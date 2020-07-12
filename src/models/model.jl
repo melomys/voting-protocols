@@ -10,11 +10,6 @@ using Distributions
 using LinearAlgebra
 using Random
 
-include("../user_creation.jl")
-
-
-
-
 abstract type AbstractPost end
 abstract type AbstractUser <: AbstractAgent end
 

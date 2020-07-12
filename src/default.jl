@@ -1,5 +1,3 @@
-include("data_collection.jl")
-include("evaluation.jl")
 
 
 default_model_properties = [

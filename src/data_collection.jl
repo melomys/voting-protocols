@@ -1,9 +1,6 @@
 import Base
 using Logging
 
-include("evaluation.jl")
-
-
 function collect_model_data(
     model_init_params,
     model_properties,
