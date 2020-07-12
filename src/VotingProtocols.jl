@@ -1,32 +1,22 @@
 module VotingProtocols
 
+include("user_creation.jl")
 
-"""
-model_files = cd(readdir, "../src/models")
-
-for model_file in model_files
-    include("../src/models/model_file")
-end
-"""
+include("models/model.jl")
+include("models/downvote_model.jl")
+include("models/random_model.jl")
+include("models/view_model.jl")
 
 
-include("../src/user_creation.jl")
+include("model_factory.jl")
+include("rating.jl")
+include("scoring.jl")
+include("evaluation.jl")
+include("data_collection.jl")
 
-include("../src/models/model.jl")
-include("../src/models/downvote_model.jl")
-include("../src/models/random_model.jl")
-include("../src/models/view_model.jl")
+include("default.jl")
 
-
-include("../src/model_factory.jl")
-include("../src/rating.jl")
-include("../src/scoring.jl")
-include("../src/evaluation.jl")
-include("../src/data_collection.jl")
-
-include("../src/default.jl")
-
-include("../src/export_r.jl")
+include("export_r.jl")
 
 
 
