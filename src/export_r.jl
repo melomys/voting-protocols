@@ -20,6 +20,8 @@ function export_rds(df, model_dfs, keyword = "")
         model_dfs_=ile = "data/model_dfs_$(keyword)_$(no).rds"
     end
 
+
+
     R"""
     saveRDS($(robject(df)), file = $df_file)
     """
