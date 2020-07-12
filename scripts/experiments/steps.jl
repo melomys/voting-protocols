@@ -1,14 +1,6 @@
-include("../../src/models/model.jl")
-include("../../src/model_factory.jl")
-include("../../src/models/view_model.jl")
-include("../../src/models/random_model.jl")
-include("../../src/models/downvote_model.jl")
-include("../../src/evaluation.jl")
-include("../../src/data_collection.jl")
-include("../../src/scoring.jl")
-include("../../src/rating.jl")
-include("../../src/export_r.jl")
-include("../../src/default.jl")
+using Distributed
+
+@everywhere using VotingProtocols
 
 model_init_params = [
     (
@@ -38,21 +30,17 @@ model_init_params = [
 
 iterations = 5
 
-println("START")
-println("START2")
-
-#Threads.@threads 
+#Threads.@threads
 for i=1:iterations
 
-model_dfs, corr_df = collect_model_data(
+model_dfs, corr_df = @fetch collect_model_data(
     model_init_params,
     default_model_properties,
     default_evaluation_functions,
     5)
-    global corr_df
 export_rds(corr_df, model_dfs, "steps")
-end
-println("ENDE")
+    end
+
 
 """
 @time begin
