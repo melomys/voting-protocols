@@ -1,5 +1,36 @@
+
 push!(LOAD_PATH, "./module")
 using VotingProtocols
+using Distributed
+"""
+@everywhere include("/home/ludwig/Bachelorarbeit/voting-protocols/src/models/model.jl")
+@everywhere include("/home/ludwig/Bachelorarbeit/voting-protocols/src/model_factory.jl")
+@everywhere include("/home/ludwig/Bachelorarbeit/voting-protocols/src/models/view_model.jl")
+@everywhere include("/home/ludwig/Bachelorarbeit/voting-protocols/src/models/random_model.jl")
+@everywhere include("/home/ludwig/Bachelorarbeit/voting-protocols/src/models/downvote_model.jl")
+@everywhere include("/home/ludwig/Bachelorarbeit/voting-protocols/src/evaluation.jl")
+@everywhere include("/home/ludwig/Bachelorarbeit/voting-protocols/src/data_collection.jl")
+@everywhere include("/home/ludwig/Bachelorarbeit/voting-protocols/src/scoring.jl")
+@everywhere include("/home/ludwig/Bachelorarbeit/voting-protocols/src/rating.jl")
+@everywhere include("/home/ludwig/Bachelorarbeit/voting-protocols/src/export_r.jl")
+@everywhere include("/home/ludwig/Bachelorarbeit/voting-protocols/src/default.jl")
+"""
+
+include("../../src/models/model.jl")
+include("../../src/model_factory.jl")
+include("../../src/models/view_model.jl")
+include("../../src/models/random_model.jl")
+include("../../src/models/downvote_model.jl")
+include("../../src/evaluation.jl")
+@everywhere include("/home/ludwig/Bachelorarbeit/voting-protocols/src/data_collection.jl")
+include("../../src/scoring.jl")
+include("../../src/rating.jl")
+include("../../src/export_r.jl")
+include("../../src/default.jl")
+
+
+
+using Distributed
 
 model_init_params = [
     (
@@ -29,10 +60,10 @@ model_init_params = [
 
 iterations = 5
 
+#Threads.@threads
+for i=1:iterations
 
-for i=1:trunc(Int, iterations)
-    Threads.@spawn begin
-model_dfs, corr_df = collect_model_data(
+model_dfs, corr_df = @fetch collect_model_data(
     model_init_params,
     default_model_properties,
     default_evaluation_functions,
