@@ -1,6 +1,5 @@
 using Distributed
-
-@everywhere using VotingProtocols
+@time @everywhere using VotingProtocols
 
 model_init_params = [
     (
@@ -28,12 +27,12 @@ model_init_params = [
 
 
 
-iterations = 100
+iterations = 50
 @time begin
 #Threads.@threads
-for i=1:iterations
+@sync @distributed for i=1:iterations
 
-model_dfs, corr_df = @fetch collect_model_data(
+model_dfs, corr_df = collect_model_data(
     model_init_params,
     default_model_properties,
     default_evaluation_functions,
