@@ -39,7 +39,7 @@ model_dfs, corr_df = collect_model_data(
     model_init_params,
     default_model_properties,
     default_evaluation_functions,
-    5)
+    100)
 export_rds(corr_df, model_dfs, "steps")
     end
 end
