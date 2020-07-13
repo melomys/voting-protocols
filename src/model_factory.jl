@@ -50,8 +50,7 @@ end
 
 
 
-create_models(model_params; seed = 1) =
-        map(x -> x[1](; x[2]...), grid_params(model_params; seed = seed))
+create_models(model_params; seed = 1) = map(x -> x[1](; x[2]...), grid_params(model_params; seed = seed))
 
 get_params(model_params) = map(x -> x[2], grid_params(model_params))
 

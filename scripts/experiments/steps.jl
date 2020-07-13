@@ -1,5 +1,8 @@
 using Distributed
+#@time using VotingProtocols
+println(nprocs())
 @time @everywhere using VotingProtocols
+
 
 model_init_params = [
     (

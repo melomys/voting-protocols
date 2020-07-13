@@ -1,5 +1,6 @@
 import Base
 using Logging
+using Distributed
 
 function collect_model_data(
     model_init_params,
@@ -20,7 +21,7 @@ function collect_model_data(
     model_dfs = []
     try
         for i = 1:iterations
-            @info "$((i-1)/iterations*100) %"
+            @info "$((i-1)/iterations*100) % | $(myid())"
             seed = abs(rand(Int32))
             models = create_models(model_init_params; seed = seed)
 
