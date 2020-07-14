@@ -9,7 +9,7 @@ model_init_params = [
         standard_model,
         Dict(
             :scoring_function => [scoring_activation],
-            :init_score => [10],
+            :init_score => [30],
         ),
     ),
     (
@@ -25,12 +25,12 @@ model_init_params = [
             :scoring_function => [scoring_hacker_news],
         )
     ),
-    (:all_models, Dict(:steps => [5]))#, 10, 30, 50, 100, 300, 500])),
+    (:all_models, Dict(:steps => [5, 10, 30, 50, 100, 300, 500])),
 ]
 
 
 
-iterations = 50
+iterations = 100
 @time begin
 #Threads.@threads
 @sync @distributed for i=1:iterations

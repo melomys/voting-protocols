@@ -1,17 +1,9 @@
 using Plots
 
-
-include("../../src/models/model.jl")
-include("../../src/model_factory.jl")
-include("../../src/models/view_model.jl")
-include("../../src/models/random_model.jl")
-include("../../src/models/downvote_model.jl")
-include("../../src/evaluation.jl")
-include("../../src/data_collection.jl")
-include("../../src/scoring.jl")
-include("../../src/rating.jl")
-include("../../src/export_r.jl")
-include("../../src/default.jl")
+using VotingProtocols
+using Agents
+using DataFrames
+using LinearAlgebra
 
 model_init_params = [
     (:all_models, Dict(
