@@ -1,4 +1,11 @@
+__precompile__()
+
 module VotingProtocols
+
+using Agents
+#using DataFrames
+#using LineraAlgebra
+#using RCall
 
 include("user_creation.jl")
 
@@ -28,4 +35,7 @@ export user_rating, user_rating_dist2, user_rating_dist1, user_rating_exp, user_
 export wilson_score, vote_difference, vote_partition
 export ranking_rating_relative, dcg, ndcg, gini, area_under_curve, area_under_gini, sum_gradient, quality_sum, gain, mean_user_view, mean_user_vote, post_views, post_scores, vote_count, end_position, quality
 export export_rds
+export user, extreme_user, uniform_user
+export create_models, post_data, relative_post_data
+export sigmoid
 end
