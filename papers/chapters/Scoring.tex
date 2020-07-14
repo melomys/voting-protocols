@@ -1,4 +1,4 @@
-\chapter{Models und Scoring}
+\chapter{Models und Bewertungsmetriken}
 
 Unterschiedliche Scoringprotokolle werden über Modelle und Scoringfunktionen implementiert
 
@@ -41,55 +41,78 @@ diff(post_{i}) = u_{i} - d_{i}
 	
 	
 
-- Scoring funktionen
+\section{Bewertungsmetriken}
 
-
-Scoringfunktionen erhalten den zu bewertenden Post, das Modell und den aktuellen Schritt der Simulation und geben ein Skalarwert zurück.
-Für jeden Post wird in jedem Schritt der Score ausgerechnet, nach welchem die Posts schließlich sortiert werden.
-
+Bewertungsmetriken berechnen den Score $S_{p,t}$ für einen Post unter Betrachtung der Postparameter $x_{p,t}$ eines Postes $p$ zum Zeitpunkt $t$ . Die vorgestellten Bewertungsmetriken von Hacker News und Reddit werden im produktiven Betrieb verwendet. Es werden weitere Metriken eingeführt um diese miteinander zu vergleichen. 
 	
+\section{Hacker News}
+\label{seqHackerNews}
 
-- Scoring funktion hacker news
-
-Die Scoringfunktion von Hacker News
-
-%(model.vote_evaluation(post) - 1) / (time - post.timestamp + 2)^1.8
+Die Bewertungsmetrik von Hacker News in \ref{HackerNews} wird beschrieben durch den Quotienten aus Upvotes eines Postes und dem Alter eines Postes in Stunden. Den Upvotes $u$ wird $1$ abgezogen, um den Upvote der Urheber*in des Posts auszugleichen. $G$ ist die \textit{Gravität} und beschreibt, wie schnell Posts mit der Zeit an Score verlieren. In der Default Hacker News Bewertungsmetrik gilt $G = 1.8$.
 
 \begin{equation}
-S_{i} = \frac{eval(p_{i}) - 1}{(age_{i} + 2)^{1.8}}
+\label{HackerNews}
+S_{p,t} = \frac{u_{p,t} - 1}{(age_{p,t} + 2)^{G}}
 \end{equation}
 
 
-- scoring funktion reddit hot
+\section{Reddit Hot Ranking}
 
-Das Hot Ranking von reddit
+Es werden in \ref{RedditHotT} die Sekunden $s$ die zwischen dem Veröffentlichungszeitpunkt $r$ eines Posts und dem Zeitpunkt $E$ am 8.12.2005 um 07:46:43 liegen berechnet.
 
 \begin{equation}
-z_{i}  = \begin{cases}
-|diff(p_{i})| &\text{falls $|diff(p_{i})| \geq 1$}\\
+\label{RedditHotT}
+s_{p} = r_{p} - E  
+\end{equation}
+
+Im Reddit Hot Ranking fließen die Up- und Downvotes eines Postes als Differenz $d$ in \ref{RedditHotD} ein.  
+
+\begin{equation}
+\label{RedditHotD}
+d_{p,t} = diff(p_t)
+\end{equation}
+\\
+Der Parameter wird $z$ wird in \ref{RedditHotZ} auf das Maximum des Betrages von $d$ und 1 gesetzt.
+
+\begin{equation}
+\label{RedditHotZ}
+z_{p,t}  = \begin{cases}
+|d_{p,t}| &\text{falls $|d_{p,t}| \geq 1$}\\
 1 &\text{sonst}
 \end{cases}
 \end{equation}
 
+In der Bewertungsmetrik des Reddit Hot Ranking in \ref{RedditHot} fließt $z$ logarithmisch unter Beachtung des Vorzeichens von $d$ ein. $t$ wird skaliert addiert.
+
+Somit werden Posts mit fortschreitender Zeit nicht schlechter bewertet, wie bei der Bewertungsmetrik von Hacker News. Neuere Posts erhalten durch das Ansteigen von $t$ eine höhere Bewertung, bei gleichem $d$, als ältere Posts.  
+
+
 \begin{equation}
-S_{i} = sign(diff(p_{i})) * log_{10}(z_{i}) + \frac{t_{i}}{4500}
+\label{RedditHot}
+S_{p,t} = sign(d_{p,t}) * log_{10}(z_{p,t}) + \frac{s_{p}}{4500}
 \end{equation}
 
 
-- scoring funktion view
+
+\section{View Bewertungsmetrik}
+
+Die View Bewertungsmetrik basiert auf der in Kapitel \ref{seqHackerNews} beschriebenen Metrik. Es fließt die Anzahl der Betrachtungen des Posts $v$ mit ein. Daraus ergibt sich die Bewertungsmetrik in \ref{ViewScoring}:
+
+\begin{equation}
+\label{ViewScoring}
+S_{p,t} = \frac{\frac{u_{p,t} - 1}{v_{p,t} + 1}}{(age_{p,t} + 2)^{G}}
+\end{equation}
 
 
+\section{Aktivität}
 
-
-
--scoring funktion activation
-
-Es wird der Score aus dem letzten Schritt mit den aktuellen Bewertungen des Posts verrechnet 
+Die Bewertung des Posts wird der Bewertung der letzten Iteration verrechnet und durch das Alter skaliert. Mit fortschreitender Zeit verlieren Posts in dieser Metrik an Score, so ergibt sich in \ref{Activation}:
 
 % Möglicherweise auf S_{i,j} als i_ter Post und j_ter Schritt
 
 \begin{equation}
-S_{i} = \frac{eval(p_{i}) - s_{i}}{age_{i}}
+\label{Activation}
+S_{p,t} = \frac{eval(p_{t}) - S_{p,t-1}}{(age_{p,t} + 2)^{G}}
 \end{equation}
 
 	
