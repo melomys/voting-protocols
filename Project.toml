@@ -1,9 +1,14 @@
 name = "voting-protocols"
 
 [deps]
+Agents = "9c770888-85c9-4deb-8a6c-0f5e07044025"
+DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
+Distributed = "8ba89e20-285c-5b6f-9357-94700520ee1b"
+Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
 DrWatson = "634d3b9d-ee7a-5ddf-bec9-22491ea816e1"
 LightGraphs = "093fc24a-ae57-5d10-9952-331d41423f4d"
-#Agents = "9c770888-85c9-4deb-8a6c-0f5e07044025"
+LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
+RCall = "6f49c342-dc21-5d91-9882-a32aef131414"
 
 [compat]
 julia = "1.4.0"
