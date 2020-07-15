@@ -1,4 +1,6 @@
 name = "voting-protocols"
+uuid = "1efa051b-4a84-40db-b2d4-53cf946b8400"
+version = "0.0.1"
 
 [deps]
 Agents = "9c770888-85c9-4deb-8a6c-0f5e07044025"
