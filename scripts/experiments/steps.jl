@@ -25,7 +25,7 @@ model_init_params = [
             :scoring_function => [scoring_hacker_news],
         )
     ),
-    (:all_models, Dict(:steps => [5, 10, 30, 50, 100, 300, 500])),
+    (:all_models, Dict(:steps => [5, 10, 30, 50, 100, 300, 500, 1000, 3000, 5000])),
 ]
 
 
