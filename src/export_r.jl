@@ -1,4 +1,26 @@
 using RCall
+using Distributed
+
+function export_data(model_init_params, name;
+    model_properties = default_model_properties,
+    evaluation_functions = default_evaluation_functions,
+    iterations = 1000,
+    pack = 5)
+    @time begin
+    @sync @distributed for i=1:iterations
+
+    model_dfs, corr_df = collect_model_data(
+        model_init_params,
+        model_properties,
+        evaluation_functions,
+        pack)
+    export_rds(corr_df, model_dfs, name)
+        end
+    end
+
+end
+
+
 
 
 function export_rds(df, model_dfs, keyword = "")
