@@ -58,26 +58,3 @@ function view_agent_step!(user, model)
         end
     end
 end
-
-
-function scoring_view(post, time, model)
-    ((model.vote_evaluation(post) - 1) / (post.views + 1)) /
-    (time - post.timestamp + 2)^model.gravity
-end
-
-function scoring_view_exp(post, time, model)
-    post.views^(model.vote_evaluation(post)) / (time - post.timestamp + 1)^model.time_exp
-end
-
-function scoring_view_no_time(post, time, model)
-    ((model.vote_evaluation(post) + 1)^2 / (post.views + 1)^0.2)^0.3 /
-    (time - post.timestamp + 1)^(0.1)
-end
-
-function scoring_unfair_view(post, time, model)
-    (model.vote_evaluation(post)) / (time - post.timestamp + 1)^model.time_exp
-end
-
-function scoring_view_activation(post, time, model)
-    ((model.vote_evaluation(post)) / (post.views) - post.score) / (time - post.timestamp + 1)
-end
