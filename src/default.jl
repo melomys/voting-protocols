@@ -52,3 +52,24 @@ default_evaluation_functions = [
 ]
 
 sort!(default_evaluation_functions, by = x -> string(x))
+
+
+# vielleicht noch ein rating_dist mit reinhauen um das anzuschauen??
+default_models = [(
+    [standard_model, random_model],
+    Dict(
+        :scoring_function => [scoring_hacker_news, scoring_view],
+    ),
+),
+(
+    downvote_model,
+    Dict(:scoring_function => [scoring_reddit_hot],
+    :model_step! => [model_step!, random_model_step!]),
+),
+(
+    [standard_model, random_model],
+    Dict(
+        :scoring_function => [scoring_activation],
+        :init_score => 30
+    )
+)]
