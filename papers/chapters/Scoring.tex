@@ -1,17 +1,98 @@
 \chapter{Models und Bewertungsmetriken}
 
-Unterschiedliche Scoringprotokolle werden über Modelle und Scoringfunktionen implementiert
+\section{Bewertungsmodelle}
 
-- Standard Model
+Eine Online-Plattform kann ein beliebiges Bewertungsmodell verwenden um Objekte auf der Seite zu sortieren. Hacker News erlaubt User*innen Posts mit Upvotes zu bewerten, auf Reddit sind auch Downvotes möglich. Die Bewertungsmetriken unterscheiden sich ebenfalls auf beiden Seiten. In vielen Onlineshops lassen sich Objekte mit 0 bis 5 Sternen bewerten. Hier kommen wieder andere Bewertungsmetriken zum Einsatz.
+
+Unterschiedliche Bewertungsmodelle können über unterschiedliche Agent*innenschrittfunktionen in der agentenbasierten Modellierung definiert werden. 
+
+In der Agent*innenschrittfunktion wird das Verhalten der Agent*innen in einer Modelliteration festgelegt, so kann dort auch modelliert werden, welche Bewertungsmöglichkeiten ein*er Agent*in zur Verfügung stehen und unter welchen Bedingungen eine Bewertung abgegeben wird.
+
+Die Agent*innenschrittfunktionen folgen dabei immer dem gleichen Aufbau wie in Algorithmus 1 beschrieben:
+
+Vorerst wird überprüft, ob die User*in, für die die Agent*innenschrittfunktion ausgeführt wird, in diesem Schritt aktiv ist. Dazu wird eine Zufallszahl im Interval $[0,1]$ gebildet. Falls diese kleiner als diese kleiner als die Aktivätswahrscheinlichkeit der User*in ist, wird sie als "aktiv" angenommen. Nun werden die Posts der durch die Bewertungsmetrik zugeordneten Sortierung betrachtet, soviele, wie die User*in an Konzentration besitzt. Falls die User*in einen Post noch nicht bewertet hat, wird für diesen modellspezifisch entschieden ob und wie dieser Post bewertet werden soll.
+
+%TODO Ist noch English im Dokument, vielleihcht kriege ich das noch umbenannt.
+\begin{algorithm}
+	\label{aschritt}
+	\caption{Agent*innenschritt von Agent $a$ (vereinfacht)}
+	\begin{algorithmic}
+		\If{$rand() < activty_a$}
+			\For{$i\gets 1,c_{a}$}
+				\State $p\gets \text{Post an i-ter Stelle des Rankings} $
+				\If{$at$ hat $p$ noch nicht bewertet}
+				\State modellspezifisch: $a$ bewertet $p$
+				\EndIf
+			\EndFor
+		\EndIf
+	\end{algorithmic}
+\end{algorithm}
+
+In dieser Arbeit wurden zwei unterschiedliche Modelle implementiert.
+
+% TODO Will ich die wirklich so nennen? Noch mal nachforschen,  was Stoddard oder so dazu sagt
+\subsection{1V-Modell}
+
+Das \textit{1V-Modell} bietet User*innen nur die Möglichkeit Posts mit Upvotes zu bewerten. Dieses Modell kommt bei Hacker News zum Einsatz. Wie das \textit{1V-Modell} modelliert wurde wird in Algorithmus 2 beschrieben.
+
+Über die Bewertungsfunktion von User*innen wird die User*innenbewertung berechnet. Über die empirische Bewertungsverteilung und der Bewertungswahrscheinlichkeit wird das Quantil berechnet, den die User*innebewertung überschreiten muss, um eine positive Bewertung hervorzurufen. Falls dieses Quantil durch die Bewertung überschritten wird, erhält der Post einen Upvote.
+
+\begin{algorithm}
+	\label{1vschritt}
+	\caption{1V-Modell: Agent $a$ bewertet Post $p$}
+	\begin{algorithmic}
+		\If{$rating\_function(quality_p,quality\_perception_a > Q_{rating}(1 - voting\_probability_a)$\\}
+			\State $u_p \gets u_p + 1$
+		\EndIf	
+	\end{algorithmic} 
+\end{algorithm}
+
+
+\subsection{2V-Modell}
+
+Im \textit{2V-Modell} können User*innen Posts sowohl mit Upvotes, als auch mit Downvotes bewerten. Eine bekannte Platform, welches dieses Modell verwerwendet ist Reddit. Die Modellierung des \textit{2V-Modells} wird in Algorithmus 3 beschrieben.
+
+Analog zur Schrittfunktion des \textit{1V-Modells} wird das obere Quantil berechnet, welches durch dich User*innenbewertung überschritten werden muss, um eine positive Bewertung hervorzurufen. Zur Berechnung des Quantils wird jedoch die halbierte Bewertungswahrscheinlichkeit der User*in verwendet. Außerdem wird, ebenfalls mit der halbierten Bewertungswahrscheinlichkeit das untere Quantil berechnet, welches unterschritten werden muss, um eine negative Bewertung auszulösen. Wird ein Quantil unter bzw. überschritten, erhält der Post ein Down bzw. Upvote.
+
+
+\begin{algorithm}
+	\label{1vschritt}
+	\caption{1V-Modell: Agent $a$ bewertet Post $p$}
+	\begin{algorithmic}
+		\If{$rating\_function(quality_p, quality\_perception_a) < Q_{rating}(\frac{voting\_probability_a}{2})$\\}
+		\State $d_p \gets d_p + 1$
+		\ElsIf{$rating\_function(quality_p,quality\_perception_a) > Q_{rating}(1 -\frac{voting\_probability_a}{2})$\\}
+		\State $u_p \gets u_p + 1$
+		\EndIf	
+	\end{algorithmic} 
+\end{algorithm}
 
 
 
-- Downvote model
 
+\section{Zufallsbewertung}
 
-- random model 
+Über den Modellschritt kann definiert werden, dass eine Bewertungsmetrik mit Zufall verunreinigt wird. 
 
-die Scores werden mit etwas random noise bedacht
+In dieser Arbeit werden zwei unterschiedliche Methoden zur Verunreinigung implementiert
+
+\subsection{Mittelwertabweichung}
+
+Sei $\mu_s$ der Mittelwert der Scores aller Posts. Für einen Post $p$ mit Score $s_p$ wird die Verunreinigung $d$ als Zufallszahl im Intervall $d_{\mu,p} \in [-|\mu_s - s_p|,|\mu_s - s_p|]$ definiert. So ergibt sich für den verunreinigten Score $\tilde{s}_p$ des Post in Formel \ref{mean_deviation}:
+
+\begin{equation}
+\label{mean_deviation}
+\tilde{s}_{\mu,p} =  s_p + d_{\mu,p}
+\end{equation} 
+
+\subsection{Standardabweichungabweichung}
+
+Für die Standardabweichung der Scores aller Posts $\sigma_s$ sei die Verunreinigung eine Zufallszahl im Intervall $d_{\sigma,p} \in [-\sigma_s,\sigma_s]$, sodass sich der verunreinigte Score eines Postes in Formel \ref{std_deviation} ergibt:
+
+\begin{equation}
+\label{std_deviation}
+\tilde{s}_{\sigma,p} = s_p + d_{\sigma,p}
+\end{equation}
 
 user können 
 
