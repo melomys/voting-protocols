@@ -1,37 +1,5 @@
-using Agents
-using DataFrames
-using StatsPlots
-using RCall
-
-using PyPlot
-
-include("../../src/models/model.jl")
-include("../../src/model_factory.jl")
-include("../../src/models/view_model.jl")
-include("../../src/models/random_model.jl")
-include("../../src/models/downvote_model.jl")
-include("../../src/evaluation.jl")
-include("../../src/data_collection.jl")
-include("../../src/scoring.jl")
-include("../../src/rating.jl")
-include("../../src/export_r.jl")
-include("../../src/default.jl")
-
-timestamp_func = @post_property_function(:timestamp)
-score_func = @post_property_function(:score)
-
-evaluation_functions = default_evaluation_functions
-
-model_properties = [
-    ranking_rating_relative,
-    @model_property_function(:model_id),
-    @model_property_function(:votes_exp),
-    @model_property_function(:time_exp),
-    @model_property_function(:seed),
-    @get_post_data(:score, identity),
-    @get_post_data(:votes, identity),
-    @get_post_data(:quality, identity),
-]
+using Distributed
+using VotingProtocols
 
 model_init_params = [
     (
