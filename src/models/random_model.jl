@@ -59,5 +59,5 @@ end
 
 function std_deviation(model)
     std_scores = std(map(x -> x.score, model.posts))
-    map(x -> rand(model.rng_model,std_scores:0.01:std_scores), model.posts)
+    map(x -> rand(model.rng_model,-std_scores:0.01:std_scores), model.posts)
 end

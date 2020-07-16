@@ -28,7 +28,7 @@ include("export_r.jl")
 
 
 
-export collect_model_data, default_evaluation_functions, default_model_properties
+export collect_model_data, default_evaluation_functions, default_model_properties, default_models
 export standard_model, view_model, downvote_model, random_model
 export scoring_activation, scoring_best, scoring_hacker_news, scoring_random, scoring_reddit_best, scoring_reddit_hot, scoring_unfair_view, scoring_view, scoring_view_activation, scoring_view_exp, scoring_worst
 export user_rating, user_rating_dist2, user_rating_dist1, user_rating_exp, user_rating_exp2
