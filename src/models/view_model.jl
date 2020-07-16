@@ -61,8 +61,8 @@ end
 
 
 function scoring_view(post, time, model)
-    ((model.vote_evaluation(post) + 1)^2 / (post.views + 1)^0.7) /
-    (time - post.timestamp + 1)^(1)
+    ((model.vote_evaluation(post) - 1) / (post.views + 1)) /
+    (time - post.timestamp + 2)^model.gravity
 end
 
 function scoring_view_exp(post, time, model)

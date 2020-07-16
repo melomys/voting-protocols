@@ -1,7 +1,7 @@
 using Dates
 
 function scoring_hacker_news(post, time, model)
-    (model.vote_evaluation(post) - 1) / (time - post.timestamp + 2)^1.8
+    (model.vote_evaluation(post) - 1) / (time - post.timestamp + 2)^model.gravity
 end
 
 epoch = DateTime(1970,1,1)
@@ -40,7 +40,7 @@ end
 
 
 function scoring_activation(post, time,model)
-    (model.vote_evaluation(post) - post.score) / (time -post.timestamp + 1)^(model.time_exp)
+    (model.vote_evaluation(post) - post.score) / (time -post.timestamp + 2)^(model.gravity)
 end
 
 function scoring_votes_divided_score(post, time, model)
@@ -50,6 +50,26 @@ end
 function scoring_votes_times_score(post, time, model)
     model.vote_evaluation(post) * (post.score + 1) / (time- post.timestamp + 1)^(model.time_exp)
 end
+
+
+# Scoring view
+function scoring_view(post, time, model)
+    ((model.vote_evaluation(post) - 1) / (post.views + 1)) /
+    (time - post.timestamp + 2)^model.gravity
+end
+
+function scoring_view_exp(post, time, model)
+    post.views^(model.vote_evaluation(post)) / (time - post.timestamp + 2)^model.gravity
+end
+
+function scoring_unfair_view(post, time, model)
+    (model.vote_evaluation(post)) / (time - post.timestamp + 1)^model.time_exp
+end
+
+function scoring_view_activation(post, time, model)
+    ((model.vote_evaluation(post) - 1) / (post.views + 1) - post.score) / (time - post.timestamp + 2)^model.gravity
+end
+
 
 
 """
