@@ -59,7 +59,7 @@ function standard_model(;
     activity_distribution = Beta(2.5,5),
     agent_step! = agent_step!,
     concentration_distribution = Poisson(50),
-    deviation_function = mean_deviaton,
+    deviation_function = mean_deviation,
     equal_posts = false,
     gravity = 1.8,
     init_score = 0,

@@ -1,9 +1,9 @@
 using Distributed
+using Distributions
 println(nprocs())
 @time @everywhere using VotingProtocols
 
-
-model_init_params = [defaul_models...,
+model_init_params = [default_models...,
     (
         :all_models,
         Dict(
