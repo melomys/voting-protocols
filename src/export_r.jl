@@ -1,5 +1,6 @@
 using RCall
 using Distributed
+export export_data
 
 function export_data(model_init_params, name;
     model_properties = default_model_properties,
