@@ -1,6 +1,3 @@
-
-
-#export User, Post, model_initiation, agent_step!, model_step!, @get_post_data
 using DrWatson
 
 using Agents
@@ -82,7 +79,6 @@ function standard_model(;
     user = user(),
     UserType = User,
     user_rating_function = user_rating,
-    time_exp = 0.5,
     vote_evaluation = vote_difference,
     voting_probability_distribution = Beta(2.5,5),
     qargs...,
@@ -119,18 +115,27 @@ function standard_model(;
     ranking = [1:start_posts...]
     time = 0
 
-    user_ratings = []
 
-    if sorted > 0
-        tmp_properties = @dict(user_rating_function, time, quality_dimensions)
-        tmp_model = ABM(UserType; properties = tmp_properties)
-        scores = []
-        for i = 1:start_posts
-            push!(scores, scoring_best(posts[i], tmp_model.time, tmp_model))
-        end
-        ranking = sortperm(map(x -> x, scores))
-        ranking = partial_shuffle(rng_model, ranking, 1 - sorted)
+    # Presorting posts
+
+    user_ratings = []
+    tmp_properties = @dict(user_rating_function, time, quality_dimensions)
+    tmp_model = ABM(UserType; properties = tmp_properties)
+    scores = []
+    for i = 1:start_posts
+        push!(scores, scoring_best(posts[i], tmp_model.time, tmp_model))
     end
+    s = -1
+    if sorted < 0
+        s = 1
+    end
+    tmp_ranking = sortperm(map(x -> s*x, scores))
+    ranking = partial_shuffle(rng_model, tmp_ranking, 1 - abs(sorted))
+    end
+
+
+    @info "Ranking nach Sortierung: $sorted"
+    @info ranking
 
     # berechne Werte um beim Userrating das Quantil abzuleiten
     nn = 100
@@ -139,7 +144,7 @@ function standard_model(;
     rating_distribution = []
     for i in 1:length(p_qual[1,:])
         for j in 1:length(u_qual[1,:])
-            push!(rating_distribution, user_rating_exp(p_qual[:,i],u_qual[:,j]))
+            push!(rating_distribution, user_rating_function(p_qual[:,i],u_qual[:,j]))
         end
     end
 
@@ -175,7 +180,6 @@ function standard_model(;
         start_users,
         steps,
         time,
-        time_exp,
         user,
         UserType,
         user_ratings,
