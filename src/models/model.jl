@@ -131,8 +131,6 @@ function standard_model(;
     end
     tmp_ranking = sortperm(map(x -> s*x, scores))
     ranking = partial_shuffle(rng_model, tmp_ranking, 1 - abs(sorted))
-    end
-
 
     @info "Ranking nach Sortierung: $sorted"
     @info ranking
