@@ -1,7 +1,11 @@
 using Dates
 
 function scoring_hacker_news(post, time, model)
-    (model.vote_evaluation(post) - 1) / (time - post.timestamp + 2)^model.gravity
+    v = model.vote_evaluation(post) - 1
+    if model.vote_evaluation !== vote_difference
+        v = model.vote_evaluation(post)
+    end
+    v / (time - post.timestamp + 2)^model.gravity
 end
 
 epoch = DateTime(1970,1,1)
