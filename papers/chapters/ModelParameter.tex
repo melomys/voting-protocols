@@ -1,9 +1,12 @@
 \chapter{Modellparameter}
 
-\section{Qualität}
+\section{Qualitätsraum}
 
 Qualität wird im Modell über eine kontinuierliche n-dimensionale Verteilung definiert. Als Modellierung bietet sich eine n-dimensionale Normalverteilung an. Einzelne Qualiätsmerkmale können so einfach in Korrelation gesetzt werden. Aus der Qualitätsverteilung wird sowohl die Qualität der Posts als die Qualitätswahrnehmung der User*innen gewonnen.
 
+\section{Bewertungraum}
+
+Eine Onlineplaform kann einen beliebig dimensionalen Bewertungsraum zur Verfügung stellen um Posts von User*innen bewerten zu lassen. Sind nur Upvotes, wie bei Hacker News, erlaubt, so handelt es sich um einen eindimensionalen Bewertungsraum, Im Reddit Hot Ranking sind auch Downvotes erlaubt, ein zweidimensionaler Bewertungsraum. Viele Onlineshops lassen in einem sechsdimensionalem Raum Artikel mit 0 bis 5 Sternen bewerten.
 
 \section{Bewertungsverteilung}
 
@@ -11,7 +14,7 @@ Die Verteilung, die durch die Bewertungsfunktion von User*innen für Posts erzeu
 
 Aus der Qualitätsverteilung werden Pseudoposts mit Qualität und Pseudouser*innen mit Qualitätsperzeption erzeugt. Diese werden über ein kartesisches Produkt in die Bewertungsfunktion eingesetzt. Die so berechneten Bewertungswerte bilden die empirische Verteilung. 
 
-[Vektorrechnung des kartesichen Produktes in die Bewertungsfunktion gestopft]
+%TODO [Vektorrechnung des kartesichen Produktes in die Bewertungsfunktion gestopft]
 
 [Bild mit unterschiedlichen empirischen Bewertungsverteilungen, nach unterschiedlichen Ratingfunktionen]
 
@@ -47,3 +50,27 @@ Die Konzentration gibt an, wie viel Posts ein*e User*in betrachtet, falls sie in
 Sie ist diskret-positiv über die User*innen verteilt. Eine mögliche Verteilung stellt die Poissonverteilung.
 
 [Bild mit unterschiedlichen Poissonverteilungen??]
+
+
+\section{Postparameter}
+
+%TODO subsections oder paragraphen?
+\subsection{Qualität}
+
+Die Qualität wird als Zufallswert aus der Qualitätsverteilung gesetzt.
+
+\subsection{Bewertungsvektor}
+
+Der Bewertungsvektor eines Posts besitzt die Dimension des Bewertungsraums des Modells. Dort wird gespeichert wie der Post von User*innen bewertet wurde.
+
+\subsection{Score}
+
+Der Score eines Posts enthält den Wert, den der Post durch eine Bewertungsmetrik zugeordnet wurde.
+
+\subsection{Veröffentlichungszeitpunkt}
+
+Speichert den Modellschritt, indem der Post veröffentlicht wurde
+
+\subsection{Betrachtungen}
+
+Die Anzahl der User*innen die den Post gesehen haben.

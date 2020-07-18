@@ -2,79 +2,13 @@
 
 \section{Bewertungsmodelle}
 
-Eine Online-Plattform kann ein beliebiges Bewertungsmodell verwenden um Objekte auf der Seite zu sortieren. Hacker News erlaubt User*innen Posts mit Upvotes zu bewerten, auf Reddit sind auch Downvotes möglich. Die Bewertungsmetriken unterscheiden sich ebenfalls auf beiden Seiten. In vielen Onlineshops lassen sich Objekte mit 0 bis 5 Sternen bewerten. Hier kommen wieder andere Bewertungsmetriken zum Einsatz.
-
-Unterschiedliche Bewertungsmodelle können über unterschiedliche Agent*innenschrittfunktionen in der agentenbasierten Modellierung definiert werden. 
-
-In der Agent*innenschrittfunktion wird das Verhalten der Agent*innen in einer Modelliteration festgelegt, so kann dort auch modelliert werden, welche Bewertungsmöglichkeiten ein*er Agent*in zur Verfügung stehen und unter welchen Bedingungen eine Bewertung abgegeben wird.
-
-Die Agent*innenschrittfunktionen folgen dabei immer dem gleichen Aufbau wie in Algorithmus 1 beschrieben:
-
-Vorerst wird überprüft, ob die User*in, für die die Agent*innenschrittfunktion ausgeführt wird, in diesem Schritt aktiv ist. Dazu wird eine Zufallszahl im Interval $[0,1]$ gebildet. Falls diese kleiner als diese kleiner als die Aktivätswahrscheinlichkeit der User*in ist, wird sie als "aktiv" angenommen. Nun werden die Posts der durch die Bewertungsmetrik zugeordneten Sortierung betrachtet, soviele, wie die User*in an Konzentration besitzt. Falls die User*in einen Post noch nicht bewertet hat, wird für diesen modellspezifisch entschieden ob und wie dieser Post bewertet werden soll.
-
-%TODO Ist noch English im Dokument, vielleihcht kriege ich das noch umbenannt.
-\begin{algorithm}
-	\label{aschritt}
-	\caption{Agent*innenschritt von Agent $a$ (vereinfacht)}
-	\begin{algorithmic}
-		\If{$rand() < activty_a$}
-			\For{$i\gets 1,c_{a}$}
-				\State $p\gets \text{Post an i-ter Stelle des Rankings} $
-				\If{$at$ hat $p$ noch nicht bewertet}
-				\State modellspezifisch: $a$ bewertet $p$
-				\EndIf
-			\EndFor
-		\EndIf
-	\end{algorithmic}
-\end{algorithm}
-
-In dieser Arbeit wurden zwei unterschiedliche Modelle implementiert.
-
-% TODO Will ich die wirklich so nennen? Noch mal nachforschen,  was Stoddard oder so dazu sagt
-\subsection{1V-Modell}
-
-Das \textit{1V-Modell} bietet User*innen nur die Möglichkeit Posts mit Upvotes zu bewerten. Dieses Modell kommt bei Hacker News zum Einsatz. Wie das \textit{1V-Modell} modelliert wurde wird in Algorithmus 2 beschrieben.
-
-Über die Bewertungsfunktion von User*innen wird die User*innenbewertung berechnet. Über die empirische Bewertungsverteilung und der Bewertungswahrscheinlichkeit wird das Quantil berechnet, den die User*innebewertung überschreiten muss, um eine positive Bewertung hervorzurufen. Falls dieses Quantil durch die Bewertung überschritten wird, erhält der Post einen Upvote.
-
-\begin{algorithm}
-	\label{1vschritt}
-	\caption{1V-Modell: Agent $a$ bewertet Post $p$}
-	\begin{algorithmic}
-		\If{$rating\_function(quality_p,quality\_perception_a > Q_{rating}(1 - voting\_probability_a)$\\}
-			\State $u_p \gets u_p + 1$
-		\EndIf	
-	\end{algorithmic} 
-\end{algorithm}
-
-
-\subsection{2V-Modell}
-
-Im \textit{2V-Modell} können User*innen Posts sowohl mit Upvotes, als auch mit Downvotes bewerten. Eine bekannte Platform, welches dieses Modell verwerwendet ist Reddit. Die Modellierung des \textit{2V-Modells} wird in Algorithmus 3 beschrieben.
-
-Analog zur Schrittfunktion des \textit{1V-Modells} wird das obere Quantil berechnet, welches durch dich User*innenbewertung überschritten werden muss, um eine positive Bewertung hervorzurufen. Zur Berechnung des Quantils wird jedoch die halbierte Bewertungswahrscheinlichkeit der User*in verwendet. Außerdem wird, ebenfalls mit der halbierten Bewertungswahrscheinlichkeit das untere Quantil berechnet, welches unterschritten werden muss, um eine negative Bewertung auszulösen. Wird ein Quantil unter bzw. überschritten, erhält der Post ein Down bzw. Upvote.
-
-
-\begin{algorithm}
-	\label{1vschritt}
-	\caption{1V-Modell: Agent $a$ bewertet Post $p$}
-	\begin{algorithmic}
-		\If{$rating\_function(quality_p, quality\_perception_a) < Q_{rating}(\frac{voting\_probability_a}{2})$\\}
-		\State $d_p \gets d_p + 1$
-		\ElsIf{$rating\_function(quality_p,quality\_perception_a) > Q_{rating}(1 -\frac{voting\_probability_a}{2})$\\}
-		\State $u_p \gets u_p + 1$
-		\EndIf	
-	\end{algorithmic} 
-\end{algorithm}
-
+% Siehe Algorithmen im Stack
 
 
 
 \section{Zufallsbewertung}
 
-Über den Modellschritt kann definiert werden, dass eine Bewertungsmetrik mit Zufall verunreinigt wird. 
-
-In dieser Arbeit werden zwei unterschiedliche Methoden zur Verunreinigung implementiert
+Nachdem Posts durch die Bewertungsmetrik bewertet wurden, kann die Bewertung durch Zufall verunreinigt werden um den in \cite{Luu} vorgeschlagenen Lärm zur Bewertung hinzuzufügen. In dieser Arbeit wurden zwei unterschiedliche Ansätze zur zufälligen Verunreinigung gewählt.
 
 \subsection{Mittelwertabweichung}
 
@@ -91,109 +25,134 @@ Für die Standardabweichung der Scores aller Posts $\sigma_s$ sei die Verunreini
 
 \begin{equation}
 \label{std_deviation}
-\tilde{s}_{\sigma,p} = s_p + d_{\sigma,p}
+\tilde{s}_{\sigma,P} = s_P + d_{\sigma,P}
 \end{equation}
 
-user können 
 
 
--  Vote evaluation
 
-	Es können unterschiedliche Ansätze verfolgt werden um die Hoch und Runterbewertungen gegeinander abzuwiegen. 
-	Wie in [Online Paper über Wilson] erläutert wird, wird durch den Quotient und aus Upvotes durch Gesamtvotes sowie die Differenz aus Upvotes und Downvotes in bestimmten Konstellationen unintuitiv bewertet. Da jedoch das Reddit Hot ranking die Differenz als Metrik verwendet, wird diese weiterhin implementiert und verwendet
-	
-- Differenz
-	
-	upvotes - downvotes
-	
+\section{Bewertungstransformation}
+\label{voteevaluation}
+
+Die Bewertungsvektoren liegen im n-dimensionalen Raum vor. Bewertungsmetriken können jedoch nur auf eine eindimensionale Transformation eines Bewertungsvektors angewendet werden. Daher wird eine Bewertungstransformation $v: \mathbb{R}^{n} \rightarrow \mathbb{R}$, welche einem Bewertungsvektor $b_P$ eines Posts einen Skalar zuordnet. 
+
+Für den zweidimensionalen Fall mit Up- und Downvotes ($u_P$,$d_P$) werden im folgenden einige Bewertungstransformationen vorgestellt.
+
+\subsection{Differenz}
+
+Es wird die Differenz aus Up- und Downvotes zu berechnet, so ergibt sich in Formel \ref{diff}:
+
 \begin{equation}
-diff(post_{i}) = u_{i} - d_{i}
+\label{diff}
+diff(b_P) = u_P - d_P
 \end{equation}
-- Wilson Score
 
-	Eine von [] vorgeschlagene Metrik ist die untere Grenze des Wilson-Konfidenzintervall für die Erfolgswahrscheinlichkeit der Binomialverteilung für den Parameter $p$. Dabei ist $n$ die Gesamtanzahl an abgegeben Votes an einen Post, die Stichprobengröße, und $k$ die Anzahl an positiver Bewertungen eines Postes, die Anzahl an Erfolgen in der Stichprobe.
-	
-\begin{align}
- c = \Phi^{-1}(1 - \frac{\alpha}{2}) \\
- n = u_{i} + d_{i} \\
- \hat{p_{i}} = \frac{u_{i}}{n}  \\
- wilson(p_{i}) = \frac{1}{1+\frac{c^2}{n}}*(\hat{p_{i}} + \frac{c^2}{2n} - c* \sqrt{\frac{\hat{p_{i}}*(1 - \hat{p_{i}})}{n} + \frac{c^2}{4n^2}})
-\end{align}
-	
-	
+Die Differenz wird im Reddit Hot Ranking verwendet.
 
+\subsection{Anteil}
+
+Berechnet wird der Anteil der Upvotes zur Gesamtzahl der Votes:
+
+\begin{equation}
+\label{anteil}
+anteil(b_P) = \frac{u_P}{u_P + d_P}
+\end{equation}
+
+
+\subsection{Wilson Score}
+
+Wie in [Online Paper über Wilson] erläutert wird, ist die Verwerdung der beiden vorherig vorgestellten Metriken in bestimmten Konstellationen von Up- und Downvotes unintuitiv. Es wird  die untere Grenze des Wilson-Konfidenzintervall für die Erfolgswahrscheinlichkeit der Binomialverteilung für den Parameter $p$ als Metrik vorgeschlagen. Dabei ist $n$ die Gesamtanzahl an abgegeben Votes an einen Post, die Stichprobengröße, und $k$ die Anzahl an positiver Bewertungen eines Postes, die Anzahl an Erfolgen in der Stichprobe.
+	
+Mit der Gesamtzahl der Bewertungen eines Posts $n_P = u_P + d_P$, dem Punktschätzer $\hat{p}_P = u_P + n_P$ und dem Quantil $c_{\alpha}$ der Normalverteilung zum Irrtumsniveau $\alpha$ ergibt sich in Formel \ref{wilson} der Wilson Score:
+
+\begin{equation}
+\label{wilson}
+ wilson(b_P) = \frac{1}{1+\frac{c_{\alpha}^2}{n_P}}(\hat{p}_P + \frac{c_{\alpha}^2}{2n_P} - c \sqrt{\frac{\hat{p}_P(1 - \hat{p}_P)}{n_P} + \frac{c_{\alpha}^2}{4n_P^2}})
+\end{equation}
+	
 \section{Bewertungsmetriken}
 
-Bewertungsmetriken berechnen den Score $S_{p,t}$ für einen Post unter Betrachtung der Postparameter $x_{p,t}$ eines Postes $p$ zum Zeitpunkt $t$ . Die vorgestellten Bewertungsmetriken von Hacker News und Reddit werden im produktiven Betrieb verwendet. Es werden weitere Metriken eingeführt um diese miteinander zu vergleichen. 
+Bewertungsmetriken berechnen den Score $S_{P,t}$ für einen Post mit transformierten Bewertungsvektor unter Betrachtung der Postparameter eines Postes $P$ zum Zeitpunkt $t$.
 	
-\section{Hacker News}
+\section{Hacker News Ranking}
 \label{seqHackerNews}
 
-Die Bewertungsmetrik von Hacker News in \ref{HackerNews} wird beschrieben durch den Quotienten aus Upvotes eines Postes und dem Alter eines Postes in Stunden. Den Upvotes $u$ wird $1$ abgezogen, um den Upvote der Urheber*in des Posts auszugleichen. $G$ ist die \textit{Gravität} und beschreibt, wie schnell Posts mit der Zeit an Score verlieren. In der Default Hacker News Bewertungsmetrik gilt $G = 1.8$.
 
+Hacker News verwendet eine Metrik, in der die Upvotes $u_{P}$ eines Postes ins Verhältnis zum Alter $a_{P}$ in Stunden zum Zeitpunkt $t$ setzt. Somit besitzt der Bewertungsraum die Dimension 1 .Das Alter wird mit der Gravitätskonstanste $G = 1.8$ potenziert. Die Bewertungstransformation lautet $v(b_P) = u_P - 1$ so ergibt sich die Hacker News Bewertungsmetrik in Formel \ref{HackerNews}:
+ 
 \begin{equation}
 \label{HackerNews}
-S_{p,t} = \frac{u_{p,t} - 1}{(age_{p,t} + 2)^{G}}
+S_{P,t} = \frac{u_{P,t} - 1}{(a_{P,t} + 2)^{G}}
+\end{equation}
+
+\section{Verallgemeinertes Hacker News Ranking}
+\label{seqvHackerNews}
+Das verallgemeinerte Hacker News Ranking verwendet eine beliebige Bewertungstransforamiton $v$ und lässt sich somit auch auf höhere Bewertungsräume anwenden:
+
+\begin{equation}
+\label{vHackerNews}
+S_{P,t} = \frac{v(b_{P,t})}{(a_{P,t} + 2)^{G}}
 \end{equation}
 
 
 \section{Reddit Hot Ranking}
 
-Es werden in \ref{RedditHotT} die Sekunden $s$ die zwischen dem Veröffentlichungszeitpunkt $r$ eines Posts und dem Zeitpunkt $E$ am 8.12.2005 um 07:46:43 liegen berechnet.
+Im Reddit Hot Ranking fließt die evaluierte Voteanzahl $d_P$ eines Postes logarithmisch, und der Zeitpunkt der Veröffentlichung $r_P$ einfach ein. 
+
+Um den Veröffentlichungszeitpunkt $e_P$ zu messen, wird die Differenz in Sekunden von diesem zum Zeitpunkt $E$ am 8.12.2005 um 07:46:43 in Formel \ref{RedditHotT} berechnet.
 
 \begin{equation}
 \label{RedditHotT}
-s_{p} = r_{p} - E  
+e_{P} = r_{P} - E  
 \end{equation}
 
-Im Reddit Hot Ranking fließen die Up- und Downvotes eines Postes als Differenz $d$ in \ref{RedditHotD} ein.  
+Die Default Bewertungstransformation des Reddit Hot Ranking ist die Differenz aus Up- und Downvotes:
 
 \begin{equation}
 \label{RedditHotD}
-d_{p,t} = diff(p_t)
+v(b_{P}) = diff(b_{P})
 \end{equation}
 \\
-Der Parameter wird $z$ wird in \ref{RedditHotZ} auf das Maximum des Betrages von $d$ und 1 gesetzt.
+Der Parameter $z$ wird in \ref{RedditHotZ} auf das Maximum des Betrages von $v(b_{P,t})$ aus Formel \ref{RedditHotD} und 1 gesetzt.
 
 \begin{equation}
 \label{RedditHotZ}
-z_{p,t}  = \begin{cases}
-|d_{p,t}| &\text{falls $|d_{p,t}| \geq 1$}\\
+z_{P,t}  = \begin{cases}
+|v(b_{P,t})| &\text{falls $|v(b_{P,t})| \geq 1$}\\
 1 &\text{sonst}
 \end{cases}
 \end{equation}
 
-In der Bewertungsmetrik des Reddit Hot Ranking in \ref{RedditHot} fließt $z$ logarithmisch unter Beachtung des Vorzeichens von $d$ ein. $t$ wird skaliert addiert.
-
-Somit werden Posts mit fortschreitender Zeit nicht schlechter bewertet, wie bei der Bewertungsmetrik von Hacker News. Neuere Posts erhalten durch das Ansteigen von $t$ eine höhere Bewertung, bei gleichem $d$, als ältere Posts.  
-
+Es ergibt sich die Bewertungsmetrik des Reddit Hot Rankings in Formel \ref{RedditHot}:
 
 \begin{equation}
 \label{RedditHot}
-S_{p,t} = sign(d_{p,t}) * log_{10}(z_{p,t}) + \frac{s_{p}}{4500}
+S_{P,t} = sign(v(b_{P,t})) * log_{10}(z_{P,t}) + \frac{e_{P}}{4500}
 \end{equation}
 
-
+Somit werden Posts mit fortschreitender Zeit nicht schlechter bewertet, wie bei der Bewertungsmetrik von Hacker News. Neuere Posts erhalten durch das Ansteigen von $e_P$ eine höhere Bewertung, bei gleichem $v(b_P)$, als ältere Posts. 
+ 
 
 \section{View Bewertungsmetrik}
 
-Die View Bewertungsmetrik basiert auf der in Kapitel \ref{seqHackerNews} beschriebenen Metrik. Es fließt die Anzahl der Betrachtungen des Posts $v$ mit ein. Daraus ergibt sich die Bewertungsmetrik in \ref{ViewScoring}:
+Die View Bewertungsmetrik basiert auf der in Kapitel \ref{seqvHackerNews} beschriebenen Metrik. Es fließt die Anzahl der Betrachtungen des Posts $w$ mit ein. Daraus ergibt sich die Bewertungsmetrik in \ref{ViewScoring}:
 
 \begin{equation}
 \label{ViewScoring}
-S_{p,t} = \frac{\frac{u_{p,t} - 1}{v_{p,t} + 1}}{(age_{p,t} + 2)^{G}}
+S_{p,t} = \frac{\frac{b_{P,t}}{w_{p,t} + 1}}{(a_{p,t} + 2)^{G}}
 \end{equation}
+
+
+% TODO View Exp und View activation noch hinzufügen?? Vielleicht nicht ist auch so schon viel
 
 
 \section{Aktivität}
 
 Die Bewertung des Posts wird der Bewertung der letzten Iteration verrechnet und durch das Alter skaliert. Mit fortschreitender Zeit verlieren Posts in dieser Metrik an Score, so ergibt sich in \ref{Activation}:
 
-% Möglicherweise auf S_{i,j} als i_ter Post und j_ter Schritt
-
 \begin{equation}
 \label{Activation}
-S_{p,t} = \frac{eval(p_{t}) - S_{p,t-1}}{(age_{p,t} + 2)^{G}}
+S_{p,t} = \frac{v(b_{P,t})) - S_{p,t-1}}{(a_{p,t} + 2)^{G}}
 \end{equation}
 
 	
