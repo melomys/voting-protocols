@@ -17,10 +17,9 @@ function extreme_user(extremeness)
     function add_extreme_user!(model)
         add_agent!(
             model,
-            rand(model.rng_user_posts, model.quality_distribution) -
-            ones(length(model.quality_distribution)) * extremeness,
-            1,
-            1,
+            rand(model.rng_user_posts, model.quality_distribution) - ones(model.quality_dimensions) * extremeness,
+            1.0,
+            1.0,
             rand(model.rng_user_posts, [500]),
         )
     end
