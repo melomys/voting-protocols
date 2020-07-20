@@ -25,7 +25,7 @@ function ranking_rating_relative(model)
 end
 
 function dcg(model)
-    ord = zscore(map(post -> user_rating(post.quality, ones(model.quality_dimensions)), model.posts))
+    ord = (map(post -> user_rating(post.quality, ones(model.quality_dimensions)), model.posts))
     dcg = 0
     for i = 1:model.n
         dcg += (2^(ord[model.ranking[i]]) - 1) / log2( i + 1)
@@ -34,7 +34,7 @@ function dcg(model)
 end
 
 function ndcg(model)
-    ord = zscore(map(post -> user_rating(post.quality, ones(model.quality_dimensions)), model.posts))
+    ord = (map(post -> user_rating(post.quality, ones(model.quality_dimensions)), model.posts))
     by_quality = sortperm(ord, by= x -> -x)
     bdcg = 0
     for i = 1:model.n
@@ -61,10 +61,9 @@ function gini(model)
             s = s + abs(p1.views - p2.views)
         end
     end
-    s/(2*n*length(posts))
+    s/(2*n*(length(posts)-1))
 
 end
-
 # per model
 # parameters: model, model_df
 
