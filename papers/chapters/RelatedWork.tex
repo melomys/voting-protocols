@@ -1,138 +1,99 @@
 \chapter{Verwandte Arbeiten}
 
-MusicLab Experiement 
+Soziale Medien erfreuen sich immer größer User*innenzahlen, die Anzahl der Nutzung steigt und damit auch die Anzahl der geposteten Beiträge. Die Beiträge müssen, durch Bewertungsmetriken vorsortiert, den User*innen angezeigt werden um eine Grundqualität der Seiten zu wahren. Ausgewählte Arbeiten, die sich mit der Fairness von Bewertungsmetriken beschäftigen werden vorgestellt. Agentenbasierte Modellierung findet viel in der Modellierung von Meinungsdynamiken Anwendung. Interessante Arbeiten aus diesem Bereich werden ebenfalls vorgestellt.
 
--Experimental Study of Inequality and Unpredictability in an Artificial Cultural Market
 
 
-- Measuring and Optimizing Cultural Markets
+\section{Meinungsdynamiken}
 
-Ein Experiment in dem Testpersonen unbekannte Lieder bewerten. Die Testpersonen werden in zwei Gruppen aufgeteilt. Eine \textbf{unabhängige} Gruppe und eine unter \textbf{sozialem Einfluss}. die \textbf{unabhängige} Grupee erhält keine weiteren Informationen, alle User kriegen eine zufällige Liste der Lieder angezeigt und können diese downloaden. Die Gruppe unter \textbf{sozialem Einfluss} wird zusätzlich in acht Welten unterteilt, jeder User kriegt eine Liste mit Liedern nach der Downloadzahl sortiert angezeigt. Die Downloadzahlen werden angezeigt. Die Autoren zeigen, dass unter sozialem Einfluss Ungleichheit und Unvorhersehbarkeit der Popularität von Objekten besteht.
+Um Meingungsdynamiken und Meinungsbildungsprozesse zu modellieren werden häufig agentenbasierte Modelle verwendet. Dabei werden Agent*innen als meinungshabende Individuen modelliert, welche andere Agent*innen in ihrer Meinung beinflussen und von anderen selbst beeinflusst werden. [Agent-Based Models for Opinion Formation: A Bibliographic Survey] ist eine Bibliographische Übersicht, welche die wichtigsten Charakteristiken solcher Modelle herausarbeitet.
 
-Gruppenbezogene Fairness
-Fairness ist Quotient aus qualität/sichtbarkeit
+Die Autor*innen von [Mixing beliefs among interacting agents] untersuchen das Verhalten von Individuen, welche eine Meinung aus einem kontinuierlichem Raum besitzen. Es wird ein Modell vorgestellt um Meinungsbildung zu simulieren.
 
+Für eine Gruppe aus Individuen, welche alle eine eigene subjektive Meinung besitzen wird von [Reaching A consensus] ein Modell vorgeschlagen, welches die unterschiedlichen Meinungen zu einem Konsens zusammenführen kann.
 
--Fairness and Transparency in Ranking (NICHT IN SCOPUS)
+In [Opinion Dynamics of Skeptical Agents] wird ein agentenbasiertes Modell vorgestellt, welcken skeptizistische Agent*innnen gegenüber anderen Meinungen beinhaltet. Es wird gezeigt, dass auch in solchen Konstellationen ein Konsens gefunden werden kann.
 
-Stellt fest, dass Fairness zwischen Gruppen hergestellt ist, wenn der Quotient aus Sichtbarkeit und Nutzbarkeit gleich ist.
+\section{Bewertungsmetriken und Fairness}
 
-Definiert Kriterien für ein faires ranking
+Einige Arbeiten beschäftigen sich mit Fairness zwischen \textit{beschützten} Gruppen, Minderheiten, und \textit{nicht geschützten} Gruppen, den Mehrheiten. Es versucht eine Benachteiligung der \textit{geschützten} Gruppen zu vermeiden. Anhand von Experimenten wird erforscht wie sich sozialer Einfluss auf individuelle Fairness in Bewertungsmetriken auswirkt. Für bekannte soziale Medien werden die Bewertungsmetriken analysiert.
 
-- Equity of Attention: Amortizing Individual Fairness in Rankings
+%In [Fairness and Transparency in Ranking (nicht in Scopus)] stellen die Autor*innen fest, dass Fairness zwischen Gruppen hergestellt ist, wenn der Quotient aus Sichtbarkeit und Relevanz von Elementen der beiden Gruppen gleich ist. Es werden Kriterien für ein faires Ranking definiert:
 
+%\begin{enumerate}
+%\item Eine ausreichende Präsenz von Objekten aus unterschiedlichen Gruppen, speziell aus Minderheiten um statistischen Benachteiligung zu vermeiden
+%\item Eine konsistente Behandlung von ähnlichen Elementen, sodass individuelle Fairness gewährleistet ist.
+%\item Eine angemessene Darstellung von Objekten, speziell aus Minderheitsgruppen, um Benachteiligung durch Repräsentation zu vermeiden
+%\end{enumerate}
 
-Wirft den Blick von Gruppen- auf individuelle Fairness. Es wird ein Mechanismus vorgestellt, welcher die Relevanz von Beiträgen über eine Sequenz von Rankings berechnet. 
 
-Hier wird ebenfalls ein ranking für rankings (DCG u. normalisiert) eingeführt.
+%Die Dimensionen von Datenqualität die für User*innen auf Onlineplatformen wichtig sind werden in [Beyond Accuracy: Data Quality] beschrieben. Die 20  gefundenden Qualitätsdimensionen werden in 4 Kategorien in einem Framework zusammengefasst.
 
-- Fairness of Exposure in Rankings
+\subsection{Fairness mit Gruppen}
 
+In [Fairness and Transparency in Ranking (nicht in Scopus)] stellen die Autor*innen fest, dass Fairness zwischen Gruppen hergestellt ist, wenn der Quotient aus Sichtbarkeit und Relevanz von Elementen der beiden Gruppen gleich ist.
 
+[Fairness of Exposure in Rankings] und [Measuring Fairness in Ranked Output] betrachten Fairness in Rankings unter Einbeziehung von \textit{beschützten} und \textit{nicht beschützten} Objekten. Es werden Messfunktionen eingeführt für Fairness eingeführt um die Benachteiligung von \textit{beschützten} Objekten systematisch auszuwerten.
 
-- Measuring Fairness in Ranked Outputs
+Ein Algorithmus, welcher aus einer Menge von \textit{beschützten} und \textit{nicht beschützten} Objekten die relevantesten $k$ Objekte sucht wird in [FA*IR: A Fair Top-k Ranking Algorithm vorgestellt] Für diese $k$ Objekte sind nicht \textit{beschützten} Objekte nicht benachteiligt.
 
+Gruppenbezogene Fairness wird in [Equity of Attention: Amortizing Individual Fairness in Rankings] nur als Spezialfall von individueller Fairness betrachtet. Es wird der \textit{Discounted Cumulative Gain}-Koeffizient (DCG) zur Messung der Fairness der Rankings verwendet. Die Autor*innen stellen fest, dass sich der DCG mit einer einzelnen Bewertungsmetrik nicht optimieren lässt. Sie stellen ein Optimierungsproblem auf, welche durch die Anordnung von unterschiedlichen Bewertungsmetriken Fairness \textit{amorisiert}.
+%TODO das ist ganz schönes waschlappen gesabbel
 
-Betrachtet die Fairness von Rankings mit Einbeziehung der Verteilung von beschützten und nicht beschützten Kandidaten.
-Die eingeführten Messfunktionen von Fairness werden genutzt um die Benachteiligung von nicht beschützten Kanditen systematisch auszuwerten.
 
-- FA*IR: A Fair Top-k Ranking Alogrithm
+\subsection{Individuelle Fairness in sozialen Medien}
 
-Stellt eine Methode vor welche aus beschützten und nicht beschützten Kandidaten die besten k Kanditaten sucht. Für diese sind die nicht beschützten Kanditaten nicht benachteiligt.
+In \cite{Salganik2006854} und [Measuring and Optimizing Cultural Markets] wird ein Experiment durchgeführt in dem Testpersonen unbekannte Lieder bewerten. Die Testpersonen werden in zwei Gruppen aufgeteilt. Eine \textit{unabhängige} Gruppe und eine unter \textit{sozialem Einfluss}. die \textit{unabhängige} Gruppe erhält keine weiteren Informationen, alle User kriegen eine zufällige Liste der Lieder angezeigt und können diese downloaden. Die Gruppe unter \textit{sozialem Einfluss} wird zusätzlich in acht Welten unterteilt, jeder User kriegt eine Liste mit Liedern nach der Downloadzahl sortiert angezeigt. Die Downloadzahlen werden angezeigt. Die Autoren zeigen, dass unter sozialem Einfluss Ungleichheit und Unvorhersehbarkeit der Popularität von Objekten besteht.
 
+In [Leveraging Position Bias to Improve Peer Recommendation] wurde ein Experiment durchgeführt, bei dem Proband*innen Posts anderen Proband*innen empfehlen können, welche schließlich nach 5 unterschiedlichen Bewertungsmetriken gerankt werden: 
+\begin{enumerate}
+	\item Zufall: in zufälliger Reihenfolge
+	\item Popularität: nach der Anzahl der Empfehlungen sortiert
+	\item Aktitvität: nach der Zeit der letzten Empfehlung sortiert
+	\item Fixierung: stets in gleicher Reihenfolge
+	\item Fixierung invertiert: in umgekehrter fixierter Reihenfolge
+\end{enumerate}
 
-- Ranking with Fairness Constraints
+Die Bewertungsmetriken werden mit dem \textit{Gini}-Koeffizienten ausgewertet. Dabei schneidet die Zufallsmetrik, gefolgt von der Aktivitätsmetrik am besten ab, die fixierten Metriken am schlechtesten
+%Die Bewertungsmetriken werden mit dem \textit{Gini}-Koeffizienten ausgewertet. die Ergebnisse sind in \ref{leveraging} zu sehen:
 
-(lineare) Algorithmen zur Findung eines fairen Rankings
+%TODO Grafik
+%----
 
-Hacker News und Reddit Scoring - Stoddard
 
--Popularity Dynamics in Intrinsic Quality in Reddit and Hacker News
+In [How Not To Sort by Average Rating] wird der \textit{Wilson}-Score zur Auswertung von Up- und Downvotes vorgeschlagen. Es wird gezeigt, weshalb andere Methoden schlechter geeignet sind. Der \textit{Wilson}-Score findet im Reddit-"Best"-Kommentarranking Anwendung.
 
+Für Rankings mit den Bewertungsmöglichkeiten "Daumen hoch" und "Daumen runter" stellt [How to Count Thumb-Ups and Thumb-Downs:User-Rating based Ranking of Itemsfrom an Axiomatic Perspective] intuitive Axiome vor, welche ein Auswertung der "Daumen" erfüllen sollte. Bekannte Methoden wie der \textit{Wilson}-Score werden auf die Axiome geprüft. % und eine Methode vorgestellt, welche die Axiome erfüllt.
 
-Vergleich Aktivitätsranking
+Die Autor*innen stellen in [Social dynamics of Digg] und [Using an model of social dynamics to predict popularity of news] ein stochastisches Modell auf um die Popularität von Beiträgen auf der Platform \textit{Digg} vorherzusagen. Modellparameter, wie die Aktivitätsverteilung von User*innen wird durch einen Datensatz von \textit{Digg} gefittet. Das Modell wird validiert und erfasst die Hauptkomponenten der Bewertungsdynamiken von \textit{Digg}
 
-- Leveraging Position Bias to Improve Peer
-Recommendation
+[Stoddard] untersucht die Korrelation zwischen Qualität von Posts und die Anzahl und Art der Bewertungen auf Hacker News und Reddit. Die Qualität eines Posts wird als die Bewertung beschrieben, welche ein Post unter absolut fairen Bedingungen erhalten würde. Sie entwickeln eine Methode um die Qualität von Posts auf den Platformen abzuschätzen.
 
-Beschreibt ein Experiment, in dem Beiträge nach den unterschiedlichen Protokollen \textit{Zufällig},\textit{Popularität}, \textit{Akitvität} und \textit{Fixiert} gerankt werden. Die Verteilung der Bewertung wird mit dem Gini-Koeffizienten angegeben. im \textit{Fixed} und \textit{popularity} ranking herrscht die größte ungerechtigkeit.
+In [Description and Prediction of Slashdot Actitvity] wird versucht die Aktitvität (Kommentierung) die ein Post auf der Platform \textit{Slashdot} erzeugt auf Grundlage der erzeugten Aktivität in den ersten Minuten/Stunden nach Veröffentlichung des Posts. 
 
+Muchnik findet in \cite{Muchnik2013647} heraus, dass sozialer Einfluss Bewertungsdynamiken verzerrt und zur Bildung von Bewertungsblasen führen kann.
+Negativer sozialer Einfluss kann durch die Gruppenintelligenz wieder ausgeglichen werden.
 
-- Randomize HN
+In [How Public Opinion Forms] wird gezeigt, dass die Popularität von Beiträgen Einfluss auf das Bewertungsverhalten hat. So sammeln populäre, gute bewertete Beiträge, zunehmend auch schlechte Bewertungen.
 
-Luu schlägt vor etwas Random Noise in das Ranking von Hacker News einzufügen, um die scharfe Kante zwischen Posts die auf der Startseite landen und diesen, die keine Aufsmerksamkeit erhalten auszuglätten.
+In [Towards Quality Discourse in Online News Comments]  werden Kommentarsystem von Nachrichtenagenturen unteruscht und die Wirkung von Beiträgen mit niedriger Qualität auf Nutzer*innen und Journalist*innen. Es wird gezeigt, wie die individuelle Lesemotivation Einfluss auf die Qualitätswahrnehmung hat.
+Um die Qualität zu verbessern werden unter anderem Moderations- und Markierungsmethoden vorgeschlagen.
 
-Few-get-richer-effekt
+Luu schlägt in [Randomize HN] vor etwas Random Noise in das Ranking von Hacker News einzufügen, um die scharfe Aufmerksamkeitskante zwischen Posts die auf der Startseite landen und diesen, die auf den  auszuglätten.
 
-- The few-get-richer: a surprising consequence ofpopularity-based rankings
+Die Autoren von [Ranking with Fairness Constraints] argumentieren, dass viele Bewertungsmetriken die Diverität verringern und Stereotypen reproduzieren, die Bewertungsmetriken jedoch nicht darauf geprüft werden. Es wird ein Algorithmus vorgeschlagen, welcher ein Optimierung zur Bestimmung eines Objektrankings unter bestimmten Fairnessbedingungen vornimmt.
 
+Diese Arbeit greift Ideen und Kritik zu bestehenden Bewertungsmetriken und deren Evaluation auf. Es wird ein Framework entwickelt, durch welches Bewertungsmetriken durch ein agentenbasiertes Modell simuliert und verglichen werden können. 
 
-Der few-get-richer Effekt beschreibt das Phänomen, dass in einer kleinen Objektklasse, jedes einzelne Objekt mehr Aufmerksamkeit erhält und somit "reicher" werden
 
+%Eine Methode um Beiträge in Q\&A Foren nach Qualität zu klassifizieren wird in [Understanding and Classifiying the Quality of Technical Forum Questions] vorgeschlagen. Die Methode verwendet \textit{Decision Trees}. Sie wird an einem Datensatz von Stack Overflow validiert.
 
-Reddit Kommentare Best Ranking
 
--How Not To Sort By Average Rating (Internet)
 
-Der Reddit "Best" - Kommentar sortierung basiert auf der unteren Grenze des Wilson-Intervalls zur Berechnung des Konfidenzintervalls der Binomialverteilung. Diese wird hier vorgestellt.
+%- Distributed Moderation Systems: An Exploration of Their Utility and the Social Implications of Their Widespread Adoption
 
+%Mill untersucht die Aktivität von Usern auf Reddit und stellt Zusammenhänge mit dem Votingverhalten fest.
 
--Beyond Accuray: Data Quality
+%(Diese Mega ausführliche Doktorarbeit)
 
-Beschreibt die Dimensionen von Datenqualität die für die Nutzer*innen wichtig sind. Die 20  gefundenden Qualitätsdimensionen werden in 4 Kategorien in einem Framework zusammengefasst.
-
-
-- Towards Quality Discourse in Online News Comments
-
-Untersucht Kommentarsysteme von Nachrichtenagenturen und die Wirkung von Beiträgen mit niedriger Qualität auf Nutzer*innen und Journalist*innen. Außerdem wird gezeigt, wie individuelle Lesemotivation Einfluss auf die Qualitätswahrnehmung haben. Um die Qualität zu verbessern werden unter anderem Markierungs- und Moderationsstrategien vorgeschlagen.
-
-- Understanding and Classifying the Quality of Technical Forum Questions
-
-Schlägt eine Methode vor um die Qualität von Beiträgen in Q&A Foren automatisiert zu berechnen. Als Datensatz wird ein Stack Overflow Dump verwendet
-
-
-- How to Count Thumb-Ups and Thumb-Downs:User-Rating based Ranking of Itemsfrom an Axiomatic Perspective
-
-Für Rankings mit den Bewertungsmöglichkeiten "Daumen hoch" und "Daumen runter" stellt [] intuitive Axiome vor, welche eine sinnvolle Scoringfunktion  erfüllen sollte. Bekannte Scoringmethoden werden auf die Axiome geprüft und eine Methode vorgestellt, welche die Axiome erfüllt.
-
-- Distributed Moderation Systems: An Exploration of Their Utility and the Social Implications of Their Widespread Adoption
-
-Mill untersucht die Aktivität von Usern auf Reddit und stellt Zusammenhänge mit dem Votingverhalten fest.
-
-(Diese Mega ausführliche Doktorarbeit)
-
-- How Public Opinion Forms
-
-Das Anzeigen Popularität von Beiträgen hat Einfluss auf das Bewertungsverhalten, so sammeln gute bzw. populäre Beiträge mit steigender Aufmerksamkeit auch zunehmend schlechte Bewertungen.
-
-- Social Influence Bias:A Randomized Experiment Häufig zitiert!
-
-Sagt, dass sozialer Einfluss die Bewertungsdynamiken verzerrt. Negativer sozialer kann von durch die Gruppenintelligenz ausgeglichen werden
-
-
-- Popularity Dynamics and Intrinsic
-Quality in Reddit and Hacker News
-
-
-Definiert Qualität als die Anzahl von Votes, die ein Artikel erhalten würde, wenn die Artikel in zufälliger Reihenfolge ohne sozialen Einfluss, wie der aktuelle Score angezeigt würden. Sie finden heraus, dass in Reddit und Hacker News die Qualität von Posts und die Anzahl an Votes korreliert sind, Mit einem Spearman-Korrelationskoeffizienten von 0.8 bei Hacker News und einem Koeffizienten zwischen 0.54 und 0.75 für unterschiedliche Subreddits
-
-- Social dynamics of Digg / Using a model of social dynamics to predict popularity of news
-
-Bauen ein stochastisches Nutzer*innen model um die Popularität von Beiträägen in Digg vorherzusagen. Modelparameter, wie die Aktivitätsfunktion von Nutzer*innen werden aus einem Datensatz von Digg abgeleitet. Das Modell wird validiert und erfasst die Hauptkomponenten der Bewertungsdynamiken in Digg.
-
-- Description and Prediction of Slashdot Activity
-
-
-OPINION DYNAMICS:
-
-
-Untersucht, meist agentenbasiert, wie die unterschiedlichen Agenten sich auf einen Konsens einigen können.
-
-
--Agent-Based Models for Opinion Formation: A Bibliographic Survey
-
-Bibliographische Analyse zur agentenbasierten Modellierung von Meinungsdynamiken in Netzwerken.
-
-- Opinion Dynamics of Skeptical Agents
-
-Präsentieren ein agentenbasiertes Modell, welches skeptizistische Agenten gegenüber anderen Meinungen beinhaltet. Es wird gezeigt, dass es auch in solchen Konstellationen ein Konsens gefunden werden kann.
+%Definiert Qualität als die Anzahl von Votes, die ein Artikel erhalten würde, wenn die Artikel in zufälliger Reihenfolge ohne sozialen Einfluss, wie der aktuelle Score angezeigt würden. Sie finden heraus, dass in Reddit und Hacker News die Qualität von Posts und die Anzahl an Votes korreliert sind, Mit einem Spearman-Korrelationskoeffizienten von 0.8 bei Hacker News und einem Koeffizienten zwischen 0.54 und 0.75 für unterschiedliche Subreddits

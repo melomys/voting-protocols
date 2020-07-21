@@ -1,48 +1,63 @@
 \chapter{User*innenrating}
 
-In der Realität ist nicht bekannt wie User*innen Posts aufgrund ihrer eigenen Qualitätsperzeption und der Qualität des Posts wahrnehmen und nach welchen Kriterien User*innen entscheiden einen Post zu bewerten. Diese Funktion ist jedoch elementar um User*innenaktivität in einem sozialem Medium zu simulieren. 
+In der Realität ist nicht bekannt wie User*innen Posts aufgrund ihrer eigenen Qualitätsperzeption und der Qualität des Posts wahrnehmen und nach welchen Kriterien User*innen entscheiden einen Post zu bewerten. Diese Ratingfunktion ist jedoch elementar um User*innenaktivität in einem sozialem Medium zu simulieren. 
 
-Es werden zwei Ansätze eingeführt um die User*innenbewertungsfunktion zu approximieren.
+User*innenratingfunktionen sollen folgende Kriterien erfüllen:
+
+\begin{enumerate}
+	\item $R(P,U) \in [0,1]$
+	\item Bei $R(P,U) = 1$ wird der Post von der User*in als maximal gut empfunden
+	\item Bei $R(P,U) = 0$ wird der Post von der User*in als maximal schlecht empfunden
+\end{enumerate}
+
+\section{Transformation der Qualitätsparameter}
+
+Um Kriterium 1 zu gewährleisten wird eine Transformation der Qualitätsparameter vollzogen, welche diese auf das Intervall $[0,1]$ 
+begrenzen. Außerdem ist es möglich das approximierte Ratingfunktionen positive Werte erfordern um zu funktionieren. Die Transformation wird durch die {Sigmoid}-Funktion in Formel \ref{sigmoid} vollzogen:
+
+\begin{equation}
+\label{sigmoid}
+s(x) = \frac{1}{1 + e^{-\frac{1}{2}x}}
+\end{equation}
+
+Somit ergeben sich die transformierten Qualitäts- bwz Qualitätsperzeptionsvektoren der Post und User*innen durch die komponentenweise Anwendung von $s$ auf $q_P$ und $q_U$
+
+\begin{align}
+\tilde{q}_P = s(q_P) \\
+\tilde{q}_U = s(q_U) 
+\end{align}
+
+\section{Approxamtion des User*innenratings}
+
+Im folgenden werden zwei Ansätze eingeführt um die User*innenbewertungsfunktion $R(P,U)$ zu approximieren.
  
- %TODO erklären, dass gut hier benutzt wird als Abstand zum Nullpunkt groß ist.
- 
-\section{Konsensrating}
+\subsection{Konsensrating}
 
 Im Konsensrating wird davon ausgegangen, dass User*innen "gute" Posts eher als diese erkennen. Alle User*innen sind sich über die besonders guten und schlechten Posts einig und erkennen diese richtig. Bei durchschnittlichen Posts kann es auch zu Meinungsverschiedenheiten kommen, je nach der Qualitätsperzeption der User*innen.
 
-Das Konsensrating ist eher auf einen Q\&A Platform oder einem Techforum wie Hacker News denkbar. Konstruktive Beiträge sind eher von destruktiven zu unterscheiden. User*innen die besonders fit in einem Thema sind haben an Beiträge zu diesem Thema möglicherweise höhere Ansprüche.
+Das Konsensrating ist eher auf einen Q\&A Platform oder einem Techforum wie Hacker News denkbar. Konstruktive Beiträge sind eher von destruktiven zu unterscheiden. User*innen die besonders gut in einem Thema sind haben an Beiträge zu diesem Thema möglicherweise höhere Ansprüche.
 
 
-Die beiden ersten Rankingsmethoden gehen davon aus, dass gute Posts eher als diese erkannt werden. Je besser ein Post ist, desto höher ist die Wahrscheinlichkeit eine positive Bewertung zu erhalten (Beiweis?? irgendeinen Faktor ausrechenen der zeigt, dass das so ist, nicht nur intuitiv). Bei dem Abstandrating hingegen ist dies nicht der Fall
+In Formel \ref{konsensexp2} ist ein Ratingfunktion, welche die genannten Punkte ausdrückt:
 
-Wenn es sich zum Beispiel im ersten Fall eher um ein Rating in einem Techplatform wie Hacker News handelt, wo Beiträge einfach nach Qualität(Neuheit, gut recherchiert, Bahnbrechend) sortiert werden können.  Findet das Abstandsranking eher in einem Diskussionsforum anwendung, indem sich mehrere unterschiedliche Meinungen treffen.
+\begin{equation}
+\label{konsensexp2}
+R_K(P,U) = \frac{1}{N}\sum_{i = 1}^{N}\tilde{q}_{P,i}^{\tilde{q}_{U,i}}
+\end{equation}
 
-\section{Dissensrating}
+
+
+\subsection{Dissensrating}
 
 User*innen empfinden Posts als "gut", die nach an ihrer eigenen Qualitätsperzeption liegen. Dadurch sind sich User*innen bei vielen Posts uneinig.
 
 Das Dissensrating ist eher auf einer Diskussionsplattformen denkbar. Dort können die Meinungen auseinander gehen. User*innen haben nicht unbedingt das Interesse die Position der Gegenüber einzunehmen. 
 
-
-- Lineares Rating
-
-Je besser die Qualitätswahrnehmung eines Users und die Qualität eines Posts ist, desto besser ist auch das Userrating.
+Eine Funktion die die genannten Kriterien erfüllt ist die euklidische Distanz, daher ergibt sich in Formel \ref{dissens}:
 
 
-- Exponentielles Rating
-
-Je besser die Qualitätswahrnehmung eines Users ist, desto anspruchsvoller wird er bezüglich der Postqualiät.
-
-Ein User mit schlechter Qualitätswahrnehmung wird so viel mehr Posts  positiv bewerten, als ein User mit einer guten Qualitätswahrnehung
-
-
-
-- Abstands Rating
-
-Dieses Ranking basiert auf einer anderen Qualitätsannahme, als die bereits vorgestellten. User bewerten Posts positiv, wenn sich Qualitätswahrnehmung nah an der Qualität des Posts befindet. Somit ensteht hier 
-
-
-- Ratingmechanismus
-
-
-Über die Ratingfunktion kann ausgerechnet werden, wie gut ein Post einem User gefällt. Über die Bewertungswahrscheinlichkeit eines Users wird definiert, wie gut (oder schlecht) ein User den Post empfinden muss, sodass er diesen bewertet.  Über die Ratingsverteilung kann das Quantil errechnet werden, welche die Ratingfunktion unter- oder überschreiten muss um eine Bewertung des Users hervorzurufen.
+%TODO Dissensrating validieren
+\begin{equation}
+\label{dissens}
+R_D(P,U) = 1 - \sqrt{||(\tilde{q}_P - \tilde{q}_U)||^2}
+\end{equation}

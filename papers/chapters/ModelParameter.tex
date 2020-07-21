@@ -1,12 +1,16 @@
-\chapter{Modellparameter}
+\chapter{Modell}
 
 \section{Qualitätsraum}
 
-Qualität wird im Modell über eine kontinuierliche n-dimensionale Verteilung definiert. Als Modellierung bietet sich eine n-dimensionale Normalverteilung an. Einzelne Qualiätsmerkmale können so einfach in Korrelation gesetzt werden. Aus der Qualitätsverteilung wird sowohl die Qualität der Posts als die Qualitätswahrnehmung der User*innen gewonnen.
+User*innen können Posts nach unterschiedlichen Kriterien und Qualitätsmerkmale betrachten. Auf einer News Platform achten User*innen auf die Informativität und Aktualität. Auf einer Meme-Seite sollen Beiträge vielleicht eher lustig sein. Auf welche  von Beiträgen User*innen achten, lässt sich jedoch nicht bestimmen.
+
+Es wird ein Qualitätsraum $Q$ mit der Dimension $n_Q$ eingeführt. Qualitätsvektoren dieses Raumes können $n_Q$ Qualitätsmerkmale beschreiben.
+
+Qualitätsmerkvektoren werden über eine kontinuierliche $n_Q$-dimensionale Verteilung $V_Q$ mit dem Mittelwert $\mu = 0$ erzeugt. Es bietet sich die Verwendung einer n-dimensionalen Normalverteilung an. Einzelne Qualiätsmerkmale können so einfach in Korrelation gesetzt werden. 
 
 \section{Bewertungraum}
 
-Eine Onlineplaform kann einen beliebig dimensionalen Bewertungsraum zur Verfügung stellen um Posts von User*innen bewerten zu lassen. Sind nur Upvotes, wie bei Hacker News, erlaubt, so handelt es sich um einen eindimensionalen Bewertungsraum, Im Reddit Hot Ranking sind auch Downvotes erlaubt, ein zweidimensionaler Bewertungsraum. Viele Onlineshops lassen in einem sechsdimensionalem Raum Artikel mit 0 bis 5 Sternen bewerten.
+Eine Onlineplaform kann einen Bewertungsraum $B$ mit beliebiger Dimension $n_B$ zur Verfügung stellen um Posts von User*innen bewerten zu lassen. Sind nur Upvotes, wie bei Hacker News, erlaubt, so handelt es sich um einen eindimensionalen Bewertungsraum, Im Reddit Hot Ranking sind auch Downvotes erlaubt, ein Bewertungsraum mit $n_B = 2$. Viele Onlineshops lassen in einem sechsdimensionalem Raum Artikel mit 0 bis 5 Sternen bewerten.
 
 \section{Bewertungsverteilung}
 
@@ -24,10 +28,11 @@ Aus der Qualitätsverteilung werden Pseudoposts mit Qualität und Pseudouser*inn
 
 
 \subsection{Qualitätsperzeption}
+\label{uqualitaet}
 
-Die Qualitätsperpezeption beschreibt die Qualitätswahrnehmung im n-dimensionalen Qualitätsraum. Sie wird verwendet um mit der Bewertungsfunktion den Bewertungswert von User*innen für betrachtete Posts zu errechnen.
+Der $n_Q$-dimensionale Qualitätsperzeptionsvektor $q_U$ beschreibt, wie sehr User*innen auf einzelne Qualitätsmerkmale achten. 
 
-Die Qualitätsperzeption wird aus der Qualitätsverteilung gewonnen.
+Je größer einzelne Einträge von $q_U$, desto mehr achten User*innen auf von diesem Eintrag beschriebene Qualitätsmerkmal von $Q$.
 
 \subsection{Aktivtität}
 
@@ -56,21 +61,24 @@ Sie ist diskret-positiv über die User*innen verteilt. Eine mögliche Verteilung
 
 %TODO subsections oder paragraphen?
 \subsection{Qualität}
+\label{pqualitaet}
 
-Die Qualität wird als Zufallswert aus der Qualitätsverteilung gesetzt.
+Der $n_Q$-dimensionale Qualitätsvektor $q_P$ beschreibt die Qualität eines Posts. Er wird aus der Qualitätsverteilung $V_Q$ erzeugt. 
+
+Je größer einzelne Einträge in $q_P$ sind, desto besser wird das durch diesen Eintrag beschriebene Qualitätsmerkmal in $Q$ des Posts angenommen.
 
 \subsection{Bewertungsvektor}
 
-Der Bewertungsvektor eines Posts besitzt die Dimension des Bewertungsraums des Modells. Dort wird gespeichert wie der Post von User*innen bewertet wurde.
+Der Bewertungsvektor $b_P$ eines Posts besitzt die Dimension $n_B$. In ihm wird Bewertung der User*innen des Postes gespeichert.
 
 \subsection{Score}
 
-Der Score eines Posts enthält den Wert, den der Post durch eine Bewertungsmetrik zugeordnet wurde.
+Der Score $s_P$ eines Posts enthält den Wert, den der Post durch eine Bewertungsmetrik zugeordnet wurde.
 
 \subsection{Veröffentlichungszeitpunkt}
 
-Speichert den Modellschritt, indem der Post veröffentlicht wurde
+Speichert den Modellschritt $a_P$, indem der Post veröffentlicht wurde
 
 \subsection{Betrachtungen}
 
-Die Anzahl der User*innen die den Post gesehen haben.
+Die Anzahl $w_P$ der User*innen  die den Post gesehen haben.
