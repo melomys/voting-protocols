@@ -1,12 +1,29 @@
 \chapter{Evaluationmethode}
 
-\section{Evaluationsfunktionen}
-Sämtliche definierten Modellparameter können in der Auswertung einer agentenbasierten Modellierung betrachtet werden.
-Es wird der \textit{Normalized Discounted Cumulative Gain}-Koeffizient (nDCG) verwendet, um die Güte einer Bewertungsmetrik unter den gegebenen Modellparametern zu berechnen. Außerdem wird der Gini-Koeffizient für jeden Modelllauf berechnet, dieser misst, wie fair die Sichtbarkeit von Posts verteilt ist. Durch den nDCG- und den Gini-Koeffizienten lassen sich unterschiedliche Modellkonfigurationen vergleichen.
+Um die Modelle statistisch auszuwerten werden Evaluationsfunktionen erstellt. Evaluationsfunktionen können Modell-  und Userinnen*parameter auswerten oder auch Funktionen auf Parametern ausführen.
+Es gibt zwei unterschiedliche Arten von Evaluationsfunktionen: %TODO auf drei zurück ändern im Falle
+
+\begin{table}[!htbp]
+	\begin{tabularx}{\textwidth}{lX}
+		\textbf{Iterationsevaluation:} &  Ausführung nach jeder Iteration des Modells\\
+	%	\textbf{Postevaluation:} & Ausführung nach jeder Modellsimulation zur Evaluation von Postparametern \\
+		\textbf{Modellevaluation:} & Ausführung nach jeder Modellsimulation  \\
+	\end{tabularx}
+\end{table}
+
+\section{Iterationsevaluation}
+\label{sec:evaluationsfunktionen}
+
+%TODO wie wird hier qualität verwendet.. transformiert
+
+Iterationsevaluationsfunktionen werden nach jeder Iteration des Modells ausgeführt. Im folgenden werden einige Funktionen vorgestellt, welche Bewertungsmetriken nach unterschiedlichen Kriterien untersuchen.
+
+%Sämtliche definierten Modellparameter können in der Auswertung einer agentenbasierten Modellierung betrachtet werden.
+%Es wird der \textit{Normalized Discounted Cumulative Gain}-Koeffizient (nDCG) verwendet, um die Güte einer Bewertungsmetrik unter den gegebenen Modellparametern zu berechnen. Außerdem wird der Gini-Koeffizient für jeden Modelllauf berechnet, dieser misst, wie fair die Sichtbarkeit von Posts verteilt ist. Durch den nDCG- und den Gini-Koeffizienten lassen sich unterschiedliche Modellkonfigurationen vergleichen.
 
 \subsection{Discounted Cumulative Gain}
 
-Der \textit{Discounted Cumulative Gain}-Koeffizient (DCG) in \cite{Biega2018405} dient zur Bewertung von Bewertungsmetriken. Der DCG in Formel \ref{dcg} bestraft Bewertungsmetriken, welche Posts mit hoher Qualität auf hintere Rankingpositionen einordnet. Die Qualität eines Posts fließt durch den Logarithmus der Rankingposition des Posts ins Verhältnis gesetzt in den DCG ein.
+Der \textit{Discounted Cumulative Gain}-Koeffizient (DCG) in \cite{Biega2018405} dient zur Berechnung der Güte von Bewertungsmetriken. Der DCG in Formel \ref{dcg} bestraft Bewertungsmetriken, welche Posts mit hoher Qualität auf hintere Rankingpositionen einordnet. Die Qualität eines Posts $Q_{P,i}$ fließt durch den Logarithmus der Rankingposition des Posts ins Verhältnis gesetzt in den DCG ein.
 
 \begin{equation}
 \label{dcg}
@@ -24,6 +41,18 @@ nDCG(B) = \frac{DCG(B)}{IDCG}
 
 Eine optimale Bewertungsmetrik erhält damit den Maximalwert $nDCG = 1$.
 
+\subsection{Spearman-$\rho$}
+
+Das Spearman-$\rho$ beschreibt wie stark ein monotoner Zusammenhang zwischen zwei Variablen ausgeprägt ist. Dies kann benfalls genutzt werden um die Güte einer Bewertungsmetrik zu berechnen in Formel \ref{spearman}:
+
+\begin{equation}
+\label{spearman}
+\rho(B) = \frac{cov(r,rg(Q_{P_s}))}{\sigma_r\sigma_{rg(Q_{P_s})}} 
+\end{equation}
+
+Dabei ist $r$ das aktuelle Ranking des Modells, ein Vektor, welcher die Postindeces enthält. An $r_i$ steht den Index des Posts der durch die Bewertungmetrik an Stelle $i$ gerankt wurdet. $rg{Q_{P_s}}$ enthält die Indeces der nach Qualität sortierten Posts. $rg(Q_{P_s})_i$ enthält somit den Index des Posts mit der $i$-tbesten Qualität.
+
+
 \subsection{Gini-Koeffizient}
 
 In \cite{Lerman2014} und \cite{Salganik2006854} gibt der Gini-Koeffizient $G$ an, wie gerecht Aufmerksamkeit der User*innen auf die Posts verteilt ist.
@@ -34,6 +63,35 @@ Bei $G = 0$ ist die Aufmerksamkeit gerecht verteilt. Alle Posts wurden von der g
 \begin{equation}
 G = \frac{1}{2S\sum_{i = 1}^{N}v_{i}}\sum_{i,j}|v_{i} - v_{j} |
 \end{equation}
+
+\paragraph{Top-k Gini-Koeffizient}
+
+Der Top-k Gini-Koeffizient berechnet den Gini-Koeffizient für die k qualitativ besten Posts.
+
+
+%\section{Postevaluation}
+
+\section{Modellevaluation}
+
+Modellevaluationsfunktionen werden nach der vollständigen Simulation eines Modells ausgeführt. 
+Triviale Modellevaluationsfunktionen evaluieren Modellparameter, wie die verwendete Bewertungsmetrik, oder die Anzahl der Startuser*innen. 
+
+
+Für ein Modell mit $N_i$ Iterationsschritten können 
+Modellevaluationsfunktionen über den von Iterationsevaluationsfunktionen erzeugten Datenvektor $x$ aggregieren. 
+
+Die im vorherigen Abschnitt vorgestelllten Iterationsevaluationen werden durch die Trapezregel in Formel \ref{trapezoidial} aggregiert und normiert:
+
+\begin{equation}
+\label{trapezoidial}
+T(x) = \frac{1}{N_i}\sum_{i = 1}^{N_i}x_i - \frac{1}{2}(x_1 + x_N)
+\end{equation} 
+
+
+
+
+
+
 
 
 

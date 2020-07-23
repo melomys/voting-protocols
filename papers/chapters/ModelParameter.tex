@@ -1,63 +1,31 @@
 \chapter{Modell}
 
-\section{Qualitätsraum}
+In diesem Kapitel werden die benötigten Modelleigenschaften beschrieben, welche definiert werden müssen um eine agentenbasierten Modellierung von Votingsystemen zu erstellen. Außerdem für die Modelleigenschaften beschrieben wie sie in dieser Arbeit modelliert werden.
 
-User*innen können Posts nach unterschiedlichen Kriterien und Qualitätsmerkmale betrachten. Auf einer News Platform achten User*innen auf die Informativität und Aktualität. Auf einer Meme-Seite sollen Beiträge vielleicht eher lustig sein. Auf welche  von Beiträgen User*innen achten, lässt sich jedoch nicht bestimmen.
+Das Modell besitzt eine festgelegte Anzahl an Iterationsschritten, in jeder Iteration können User*innen mit der modellierten Onlineplattform interagieren
 
-Es wird ein Qualitätsraum $Q$ mit der Dimension $n_Q$ eingeführt. Qualitätsvektoren dieses Raumes können $n_Q$ Qualitätsmerkmale beschreiben.
+In diesem Kapitel werden zuerst grundlegende Definitionen getätigt, welche für die agentenbasierten Modellierung von Votingsystemen notwendig sind. Anschließend kann die Modellierung von User*innen und Posts beschrieben werden. 
 
-Qualitätsmerkvektoren werden über eine kontinuierliche $n_Q$-dimensionale Verteilung $V_Q$ mit dem Mittelwert $\mu = 0$ erzeugt. Es bietet sich die Verwendung einer n-dimensionalen Normalverteilung an. Einzelne Qualiätsmerkmale können so einfach in Korrelation gesetzt werden. 
+Es handelt sich um ein agentenbasiertes Modell. Das Modell wird für eine festgelegte Anzahl Iterationsschritte simuliert, für jede Iteration werden bestimmte Aktionen durchgeführt. Die User*innen interagieren in jedem Schritt mit dem Modell
+
+In diesem Kapitel werden Modelleigenschaften beschrieben, welche zur Simulation notwendig.
+
+\section{Qualität} %TODO Rüber arbeiten, Qualität im allgemeinen beschreiben
+
+User*innen von sozialen Medien können Posts nach unterschiedlichen Kriterien und Qualitätsmerkmalen betrachten. Auf einer News Platform achten User*innen auf die Informativität und Aktualität. Auf einer Meme-Seite sollen Beiträge vielleicht eher lustig sein. Auf wie viele und welche Qualitätsmerkmale hängt subjektiv von den User*innen ab
+
+Qualität wird über Vektoren der Dimension $n_Q$ modelliert. Jeder Eintrag eines Qualitätsvektor beschreibt die Ausprägung der Qualität in einem Qualitätsmerkmal. Ein Qualitätsvektor der Dimension $n_Q$ beschreibt kann somit ein Objekt mit $n_Q$ Qualitätsmerkmalen beschreiben. 
+
+In einem Modell besitzen sämtliche Qualitätsvektoren die gleiche Dimension. Sie werden über eine kontinuierliche $n_Q$-dimensionale Verteilung $V_Q$ mit dem Mittelwert $\mu = 0$ erzeugt. Es bietet sich die Verwendung einer $n_Q$-dimensionalen Normalverteilung an. Einzelne Qualiätsmerkmale können so einfach in Korrelation gesetzt werden. 
 
 \section{Bewertungraum}
 
-Eine Onlineplaform kann einen Bewertungsraum $B$ mit beliebiger Dimension $n_B$ zur Verfügung stellen um Posts von User*innen bewerten zu lassen. Sind nur Upvotes, wie bei Hacker News, erlaubt, so handelt es sich um einen eindimensionalen Bewertungsraum, Im Reddit Hot Ranking sind auch Downvotes erlaubt, ein Bewertungsraum mit $n_B = 2$. Viele Onlineshops lassen in einem sechsdimensionalem Raum Artikel mit 0 bis 5 Sternen bewerten.
+Ein Votingsystem kann einen Bewertungsraum $B$ mit beliebiger Dimension $n_B$ zur Verfügung stellen um Posts von User*innen bewerten zu lassen. Sind nur Upvotes, wie bei Hacker News, erlaubt, so handelt es sich um einen eindimensionalen Bewertungsraum, Im Reddit Hot Ranking sind auch Downvotes erlaubt, ein Bewertungsraum mit $n_B = 2$. Viele Onlineshops lassen in einem fünfdimensionalem Raum Artikel mit 1 bis 5 Sternen bewerten.
 
-\section{Bewertungsverteilung}
-
-Die Verteilung, die durch die Bewertungsfunktion von User*innen für Posts erzeugt wird ist nicht bekannt und kann nicht analytisch berechnet werden. Es ist jedoch notwendig Quantil der Bewertungsverteilung zu berechnen um zu entscheiden, ob ein*e User*in einen Post bewertet. Die Verteilung wird empirisch berechnet.
-
-Aus der Qualitätsverteilung werden Pseudoposts mit Qualität und Pseudouser*innen mit Qualitätsperzeption erzeugt. Diese werden über ein kartesisches Produkt in die Bewertungsfunktion eingesetzt. Die so berechneten Bewertungswerte bilden die empirische Verteilung. 
-
-%TODO [Vektorrechnung des kartesichen Produktes in die Bewertungsfunktion gestopft]
-
-[Bild mit unterschiedlichen empirischen Bewertungsverteilungen, nach unterschiedlichen Ratingfunktionen]
+Diese Arbeit ist beschränkt auf $n_B = [1,2]$. 
 
 
-
-\section{User*innenparameter}
-
-
-\subsection{Qualitätsperzeption}
-\label{uqualitaet}
-
-Der $n_Q$-dimensionale Qualitätsperzeptionsvektor $q_U$ beschreibt, wie sehr User*innen auf einzelne Qualitätsmerkmale achten. 
-
-Je größer einzelne Einträge von $q_U$, desto mehr achten User*innen auf von diesem Eintrag beschriebene Qualitätsmerkmal von $Q$.
-
-\subsection{Aktivtität}
-
-In dem implementierten Modell beschreibt jede Iteration das Verstreichen eines Zeitschrittes (30 Minuten). Wie in \cite{Hogg20121} beschrieben sind nicht alle User*innen zu jedem Zeitpunkt aktiv. Die Aktivität von User*innen lässt sich durch eine logarithmische Normalverteilung
-beschreiben. In diesem Modell wird die Aktivität über eine Wahrscheinlichkeit modelliert,  mit welcher ein*e User*in in einem Modellschritt aktiv ist. Da sich die logarithmische Normalverteilung nicht zufriedenstellend auf das Intervall $ [0,1]$ begrenzt werden kann, wird eine $\beta$-Verteilung zur Approximation verwendet.
-
-[Bild mit unterschiedlichen $\beta$-Verteilungen]
-
-\subsection{Bewertungszufriedenheit}
-
-
-Über die Bewertungszufriedenheit wird festgelegt, wie (un)zufrieden ein*e User*in mit einem Post sein muss, um diesen zu bewerten. 
-Die Bewertungszufriedenheit gibt das Quantil der Bewertungsverteilung an, welches von der Bewertungsfunktion der User*innen für Posts über- bzw. unterschritten werden muss um eine negative bzw. positive Bewertung der User*in für den Post hervorzurufen.
-
-Wie die Aktivitätswahrscheinlichkeit wird Bewertungszufriedenheit von einer $\beta$-Verteilung modelliert.
-
-\subsection{Konzentration}
-
-Die Konzentration gibt an, wie viel Posts ein*e User*in betrachtet, falls sie in einem Modellschritt aktiv ist. User*innen betrachten in jedem Schritt die gleiche Anzahl an Posts.
-Sie ist diskret-positiv über die User*innen verteilt. Eine mögliche Verteilung stellt die Poissonverteilung.
-
-[Bild mit unterschiedlichen Poissonverteilungen??]
-
-
-\section{Postparameter}
+\section{Posts}
 
 %TODO subsections oder paragraphen?
 \subsection{Qualität}
@@ -65,7 +33,18 @@ Sie ist diskret-positiv über die User*innen verteilt. Eine mögliche Verteilung
 
 Der $n_Q$-dimensionale Qualitätsvektor $q_P$ beschreibt die Qualität eines Posts. Er wird aus der Qualitätsverteilung $V_Q$ erzeugt. 
 
-Je größer einzelne Einträge in $q_P$ sind, desto besser wird das durch diesen Eintrag beschriebene Qualitätsmerkmal in $Q$ des Posts angenommen.
+Je größer einzelne Einträge in $q_P$ sind, desto besser ist die Qualität eines Postes in diesem Qualitätsmerkmal.
+
+Die skalare Gesamtqualität ${q_P}_{ges}$ eines Posts ist die Summe alle Einträge von $q_P$ in Formel \ref{eq:gesqualitaet}:
+\begin{equation}
+\label{eq:gesqualitaet}
+{q_P}_{ges} = \sum_{i=1}^{N_Q} {q_P}_i
+\end{equation}
+
+Es wird keine Unterscheidung zwischen Darstellungsqualität wie in [Felix masterarbeit] gemacht. Diese ist hoch, wenn auf den ersten Blick deutlich wird um was sich der Post handelt. Alle User*innen erfassen auf den ersten Blick den gesamten Qualitätsumfang der Posts.
+
+
+
 
 \subsection{Bewertungsvektor}
 
@@ -73,7 +52,7 @@ Der Bewertungsvektor $b_P$ eines Posts besitzt die Dimension $n_B$. In ihm wird 
 
 \subsection{Score}
 
-Der Score $s_P$ eines Posts enthält den Wert, den der Post durch eine Bewertungsmetrik zugeordnet wurde.
+Der Score $s_P$ eines Posts enthält den Wert, den der Post durch eine Bewertungsmetrik (Abschnit \ref{sec:bewertungsmetrik} zugeordnet wurde.
 
 \subsection{Veröffentlichungszeitpunkt}
 
@@ -82,3 +61,76 @@ Speichert den Modellschritt $a_P$, indem der Post veröffentlicht wurde
 \subsection{Betrachtungen}
 
 Die Anzahl $w_P$ der User*innen  die den Post gesehen haben.
+
+\subsection{Bewertungsmetriken}
+\label{sec:bewertungsmetrik}
+
+Bewertungsmetriken dienen zur Bewertung und anschließenden Sortierung von Posts. Eine Bewertungsmetrik $B(P)$ wertet den Bewertungsvektor von $P$ unter Verwendung weiterer Postparameter aus und ordnet $P$ einen Score zu. Anhand dieses Scores werden die Posts sortiert und auf der Onlineplattform zur Verfügung gestellt. 
+
+Mehr Gedanken zu Bewertungsmetriken befinden sich in Kapitel \ref{chapter:bewertungsmetriken}
+
+
+\section{User*innen}
+
+Um ein agent*innenbasiertes Modell einer Onlinekommunikationsplattform zu entwickeln ist es elmentar das User*innenverhalten zu beschreiben. Leider stehen im Rahmen dieser Arbeit keine Daten zur Verfügung, an denen es möglich ist User*innnenparameter zu fitten.
+
+Die Parameter werden stattdessen durch plausible Verteilungen approximiert.
+
+\subsection{Aktivtität}
+
+
+Die Aktitvität beschreibt, wie oft User*innen aktiv sind, die Kommunikationsplattform besuchen und Posts betrachten. Dabei sind weder alle User*innen durchgehend online noch gleichzeitig. 
+
+Die Aktivität wird als Wahrscheinlichkeit modelliert. Die Aktivität beschreibt wie wahrscheinlich es ist, dass ein*e User*in in einem Iterationsschritt aktiv ist. Die Aktivität ist über die User*innen $\beta$-verteilt.
+
+%In dem implementierten Modell beschreibt jede Iteration das Verstreichen eines Zeitschrittes (30 Minuten). Wie in \cite{Hogg20121} beschrieben sind nicht alle User*innen zu jedem Zeitpunkt aktiv. Die Aktivität von User*innen lässt sich durch eine logarithmische Normalverteilung
+%beschreiben. In diesem Modell wird die Aktivität über eine Wahrscheinlichkeit modelliert,  mit welcher ein*e User*in in einem Modellschritt aktiv ist. Da sich die logarithmische Normalverteilung nicht zufriedenstellend auf das Intervall $ [0,1]$ begrenzt werden kann, wird eine $\beta$-Verteilung zur Approximation verwendet.
+
+[Bild mit unterschiedlichen $\beta$-Verteilungen]
+
+\subsection{Konzentration}
+
+Wenn ein*e User*in aktiv ist wird sie nicht alle Posts der Plattform anschauen. Einerseits weil die Plattform dazu zu viele Posts besitzt und andererseits, weil die Konzentration von User*innen auf die Plattform nicht unendlich ist. Wenn User*innen auf der Plattform aktiv sind werden sie  stets eine endliche Anzahl an Posts betrachten. Diese Anzahl wird durch die Konzentration definiert.
+
+Die Konzentration ist über die User*innen diskret-positiv verteilt.
+
+[Bild mit unterschiedlichen Poissonverteilungen??]
+
+\subsection{Qualitätsperzeption}
+\label{uqualitaet}
+
+Durch die Qualitätsperzeption wird festgelegt wie sehr User*innen Qualität wahrnehmen und wie stark ihre Qualitätswahrnehmung ausgeprägt ist. Die Qualitätsperzeption wird durch einen Vektor mit $n_Q$  Einträgen beschrieben. Jeder Eintrag beschreibt die Qualitätswahrnehmung in dem entsprechenden Qualitätsmerkmal. Je größer ein Eintrag im Qualitätsvektor ist, desto höher ist die Fähigkeit der User*in die wahre Qualität des Posts zu beurteilen.
+
+Die Qualitätsperzeptionsvektoren werden als Zufallswerte aus der Qualitätsverteilung erzeugt.
+
+\subsection{User*innenmeinungsfunktion}
+
+Wenn eine User*in $U$ einen Post $P$ betrachtet, bildet sie sich über den Post anhand der Postqualität und ihrer eigenen Qualiätsperzeption eine eine Meinung. Die Meinungsbildung wird durch die User*innenmeinungsfunktion modelliert. Durch diese Funktion $R(P,U): \R^{n_Q} \rightarrow \R $ werden die beiden $n_Q$-dimensionalen Vektoren der Postqualität und Qualitätsperzeption auf einen skalaren Meinungswert $m_{P,U} = R(P,U)$ reduziert. Dieser drückt aus, wie gut die User*in den betrachteten Post empfindet. Je größer der Meinungswert ist, desto besser empfindet die User*in den Post.
+
+Weitere Überlegungen zur User*innenmeinungsfunktion befinden sich Kapitel \ref{chapter:bewertungsfunktionen}.
+
+\section{User*innenmeinungsverteilung} %TODO geht schon, sollte aber erst nach der Beschreibung von User*innen kommen
+
+
+Werden die Meinungswerte vieler User*innen bezüglich vieler Posts berechnet, dann spannen diese eine Wahrscheinlichkeitsverteilung $M$ auf. Diese wird im Modell dazu verwendet zu entscheiden, ob User*innen Posts bewerten (Siehe dazu Abschnitt \ref{bewertungszufriedenheit}).
+
+Die User*innenmeinungsverteilungfunktion in \ref{eq:meinungsverteilung} wird empririsch berechnet. Dazu werden aus der Qualitätsverteilung $n$ Pseudoposts $Ps$ und Pseudouser*innen $Us$ erzeugt. Diese werden über die Meinungsfunktion $R$ kombiniert. $1_{\{x \leq R(Ps_i,Us_j)\}}$ ist $1$ für $x \leq R(Ps_i,Us_j)$ und sonst $0$.
+
+\begin{equation}
+\label{eq:meinungsverteilung}
+F_M(x) = \frac{1}{n^2}\sum_{i,j = 1}^{n} 1_{\{x \leq R(Ps_i,Us_j)\}}
+\end{equation}
+
+%TODO [Bild mit unterschiedlichen empirischen Bewertungsverteilungen, nach unterschiedlichen Ratingfunktionen]
+
+\subsection{Bewertungszufriedenheit}
+\label{bewertungszufriedenheit}
+%TODO richtige Stelle für diesen Abschnitt finden
+In diesem Modell wird angenommen, dass User*innen Posts nur bewerten, der berechnete Meinungswert über bzw. unter einen bestimmten Grenzwert fällt. Dieser Grenzwert wird mithilfe der Bewertungszufriedenheit $\beta_U$ definiert.
+
+Der Grenzwert wird mit der Umkehrfunktion der User*innenmeinungsverteilungsfunktion $g = F_M^{-1}(\beta_U)$ berechnet.
+$g$ ist somit das $\beta_U$-Quantil der empirischen Dichteverteilung von $M$
+
+Sobald $m_{P,U} < g$ bzw. $m_{P,U} > g$ wird der Post $P$ von der User*in $U$ bewertet. 
+
+Die Bewertungszufriedenheit ist kontiunierlich auf dem Interall $[0,1]$ verteilt. 

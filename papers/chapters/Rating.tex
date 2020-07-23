@@ -1,19 +1,20 @@
-\chapter{User*innenrating}
+\chapter{User*innenmeinung} %TODO Umbenennung in User*innenmeinungsfunktion UND UMZIEHEN IN MODELLPARAMETER
 
-In der Realität ist nicht bekannt wie User*innen Posts aufgrund ihrer eigenen Qualitätsperzeption und der Qualität des Posts wahrnehmen und nach welchen Kriterien User*innen entscheiden einen Post zu bewerten. Diese Ratingfunktion ist jedoch elementar um User*innenaktivität in einem sozialem Medium zu simulieren. 
+Wenn eine User*in in einem Social Media System einen Post betrachtet, bildet sie sich darüber eine Meinung, anhand derer sie entscheidet den Post zu bewerten oder nicht. Diese Meinungsfunktion ist nicht bekannt, aber elementar um ein soziales Medium agent*innenbasiert zu simulieren, denn ohne meinungsbildende User*innen kann keine Bewertungsdynamik entstehen. Im folgenden wird beschrieben über welche Ansätze die User*innenmeinungsfunktion approximiert wird.
 
-User*innenratingfunktionen sollen folgende Kriterien erfüllen:
+
+Für eine User*in $U$ die einen Post $P$ betrachtet ist die Meinungsfunktion $R(q_P,q_U): \R^{N_Q} \rightarrow \R$ welche die beiden $N_Q$-dimensionalen Vektoren der Postqualität und Qualitätsperzeption auf den skalaren Meinungswert $m_{P,U} = R(q_P, q_U)$ reduziert. Dieser drückt aus wie gut die User*in den betrachteten Post empfindet. Dabei soll gelten:
 
 \begin{enumerate}
-	\item $R(P,U) \in [0,1]$
-	\item Bei $R(P,U) = 1$ wird der Post von der User*in als maximal gut empfunden
-	\item Bei $R(P,U) = 0$ wird der Post von der User*in als maximal schlecht empfunden
+	\item $m_{P,U} \in [0,1]$
+	\item Bei $m_{P,U} = 1$ wird der Post von der User*in als maximal gut empfunden
+	\item Bei $m_{P,U} = 0$ wird der Post von der User*in als maximal schlecht empfunden
 \end{enumerate}
 
 \section{Transformation der Qualitätsparameter}
 
-Um Kriterium 1 zu gewährleisten wird eine Transformation der Qualitätsparameter vollzogen, welche diese auf das Intervall $[0,1]$ 
-begrenzen. Außerdem ist es möglich das approximierte Ratingfunktionen positive Werte erfordern um zu funktionieren. Die Transformation wird durch die {Sigmoid}-Funktion in Formel \ref{sigmoid} vollzogen:
+Um die Intervallgrenzen der genannten Kriterien zu beachten wird eine Transormation der Qualitätsparameter vollzogen, welche diese auf das Intervall $[0,1]$ 
+begrenzen. Die Transformation wird durch die {Sigmoid}-Funktion in Formel \ref{sigmoid} vollzogen:
 
 \begin{equation}
 \label{sigmoid}
@@ -29,7 +30,7 @@ Somit ergeben sich die transformierten Qualitäts- bwz Qualitätsperzeptionsvekt
 
 \section{Approxamtion des User*innenratings}
 
-Im folgenden werden zwei Ansätze eingeführt um die User*innenbewertungsfunktion $R(P,U)$ zu approximieren.
+Im folgenden werden zwei Ansätze eingeführt um die User*innenmeinungsfunktion $R(q_P,q_U)$ zu approximieren.
  
 \subsection{Konsensrating}
 
@@ -42,7 +43,7 @@ In Formel \ref{konsensexp2} ist ein Ratingfunktion, welche die genannten Punkte 
 
 \begin{equation}
 \label{konsensexp2}
-R_K(P,U) = \frac{1}{N}\sum_{i = 1}^{N}\tilde{q}_{P,i}^{\tilde{q}_{U,i}}
+R_K(q_P,q_U) = \frac{1}{N}\sum_{i = 1}^{N}\tilde{q}_{P,i}^{\tilde{q}_{U,i}}
 \end{equation}
 
 
@@ -59,5 +60,5 @@ Eine Funktion die die genannten Kriterien erfüllt ist die euklidische Distanz, 
 %TODO Dissensrating validieren
 \begin{equation}
 \label{dissens}
-R_D(P,U) = 1 - \sqrt{||(\tilde{q}_P - \tilde{q}_U)||^2}
+R_D(q_P,q_U) = 1 - \sqrt{||(\tilde{q}_P - \tilde{q}_U)||^2}
 \end{equation}

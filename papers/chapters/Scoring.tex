@@ -1,40 +1,21 @@
-\chapter{Models und Bewertungsmetriken}
+\chapter{Bewertungsmetriken}
+\label{chapter:bewertungsmetriken}
 
-\section{Bewertungsmodelle}
+Bewertungsmetriken werden verwendet um die große Menge an Posts zu strukturieren. Den Posts wird anhand ihrer aktuellen Parameter, wie die Art und Anzahl der Bewertungen, oder dem Veröffntlichungszeitpunkt ein Score zugeordnet. 
+Sortiert nach diesem Score werden die Posts auf der Plattform angeordnet.
 
-% Siehe Algorithmen im Stack
-% TODO Was zeichnet ein faires Ranking aus!!
+Eine Bewertungsmetrik soll fair sein. Eine faire Bewertungsmetrik $S$ zeichnet sich durch folgende Punkte aus:
 
-
-\section{Zufallsbewertung}
-
-Nachdem Posts durch die Bewertungsmetrik bewertet wurden, kann die Bewertung durch Zufall verunreinigt werden um den in \cite{Luu} vorgeschlagenen Lärm zur Bewertung hinzuzufügen. In dieser Arbeit wurden zwei unterschiedliche Ansätze zur zufälligen Verunreinigung gewählt.
-
-\subsection{Mittelwertabweichung}
-
-Sei $\mu_s$ der Mittelwert der Scores aller Posts. Für einen Post $p$ mit Score $s_p$ wird die Verunreinigung $d$ als Zufallszahl im Intervall $d_{\mu,p} \in [-|\mu_s - s_p|,|\mu_s - s_p|]$ definiert. So ergibt sich für den verunreinigten Score $\tilde{s}_p$ des Post in Formel \ref{mean_deviation}:
-
-\begin{equation}
-\label{mean_deviation}
-\tilde{s}_{\mu,p} =  s_p + d_{\mu,p}
-\end{equation} 
-
-\subsection{Standardabweichungabweichung}
-
-Für die Standardabweichung der Scores aller Posts $\sigma_s$ sei die Verunreinigung eine Zufallszahl im Intervall $d_{\sigma,p} \in [-\sigma_s,\sigma_s]$, sodass sich der verunreinigte Score eines Postes in Formel \ref{std_deviation} ergibt:
-
-\begin{equation}
-\label{std_deviation}
-\tilde{s}_{\sigma,P} = s_P + d_{\sigma,P}
-\end{equation}
-
-
-
+\begin{itemize}
+	\item Für zwei Posts $P_1$ und $P_2$ mit $a_{P_1} = a_{P_2}$ und ${q_{P_1}}_{ges} > {q_{P_2}}_{ges}$ ist $S(P_1) > S(P_2)$ in jedem Iterationsschritt
+	\item Für jeden Post $P_i$ gilt $w_{P_i} > 1$, er wurde von mindestens eine*r User*in wahrgenommen
+\end{itemize}
 
 \section{Bewertungstransformation}
 \label{voteevaluation}
 
-Die Bewertungsvektoren liegen im n-dimensionalen Raum vor. Bewertungsmetriken können jedoch nur auf eine eindimensionale Transformation eines Bewertungsvektors angewendet werden. Daher wird eine Bewertungstransformation $v: \mathbb{R}^{n} \rightarrow \mathbb{R}$, welche einem Bewertungsvektor $b_P$ eines Posts einen Skalar zuordnet. 
+Die Bewertungsvektoren liegen im $N_B$-dimensionalen Raum vor. Innerhalb von Bewertungsmetriken werden die $N_B$ dimensionalen Bewertungsvektren von Posts auf einen Skalar transformiert. Dies geschieht mit einer Bewertungstransformationsfunktion $v: \mathbb{R}^{n} \rightarrow \mathbb{R}$.
+
 
 Für den zweidimensionalen Fall mit Up- und Downvotes ($u_P$,$d_P$) werden im folgenden einige Bewertungstransformationen vorgestellt.
 
@@ -44,7 +25,7 @@ Es wird die Differenz aus Up- und Downvotes zu berechnet, so ergibt sich in Form
 
 \begin{equation}
 \label{diff}
-diff(b_P) = u_P - d_P
+v_{diff}(b_P) = u_P - d_P
 \end{equation}
 
 Die Differenz wird im Reddit Hot Ranking verwendet.
@@ -55,7 +36,7 @@ Berechnet wird der Anteil der Upvotes zur Gesamtzahl der Votes:
 
 \begin{equation}
 \label{anteil}
-anteil(b_P) = \frac{u_P}{u_P + d_P}
+v_{anteil}(b_P) = \frac{u_P}{u_P + d_P}
 \end{equation}
 
 
@@ -67,18 +48,17 @@ Mit der Gesamtzahl der Bewertungen eines Posts $n_P = u_P + d_P$, dem Punktschä
 
 \begin{equation}
 \label{wilson}
- wilson(b_P) = \frac{1}{1+\frac{c_{\alpha}^2}{n_P}}(\hat{p}_P + \frac{c_{\alpha}^2}{2n_P} - c \sqrt{\frac{\hat{p}_P(1 - \hat{p}_P)}{n_P} + \frac{c_{\alpha}^2}{4n_P^2}})
+ v_{wilson}(b_P) = \frac{1}{1+\frac{c_{\alpha}^2}{n_P}}(\hat{p}_P + \frac{c_{\alpha}^2}{2n_P} - c \sqrt{\frac{\hat{p}_P(1 - \hat{p}_P)}{n_P} + \frac{c_{\alpha}^2}{4n_P^2}})
 \end{equation}
 	
 \section{Bewertungsmetriken}
 
-Bewertungsmetriken berechnen den Score $S_{P,t}$ für einen Post mit transformierten Bewertungsvektor unter Betrachtung der Postparameter eines Postes $P$ zum Zeitpunkt $t$.
+Bewertungsmetriken berechnen den Score $S_{P,t}$ für einen Post unter Betrachtung der Postparameter eines Postes $P$ zum Modellschritt $t$.
 	
-% TODO Ziel der Bewertungsmetriken
-\section{Hacker News Ranking}
+\subsection{Hacker News Ranking}
 \label{seqHackerNews}
 
-
+%TODO nochmal über die Notation S_{P,t} klar werden, vielleicht auch S_t(P) ??
 Hacker News verwendet eine Metrik, in der die Upvotes $u_{P}$ eines Postes ins Verhältnis zum Alter $a_{P}$ in Stunden zum Zeitpunkt $t$ setzt. Somit besitzt der Bewertungsraum die Dimension 1 .Das Alter wird mit der Gravitätskonstanste $G = 1.8$ potenziert. Die Bewertungstransformation lautet $v(b_P) = u_P - 1$ so ergibt sich die Hacker News Bewertungsmetrik in Formel \ref{HackerNews}:
  
 \begin{equation}
@@ -113,7 +93,7 @@ Die Default Bewertungstransformation des Reddit Hot Ranking ist die Differenz au
 
 \begin{equation}
 \label{RedditHotD}
-v(b_{P}) = diff(b_{P})
+v(b_{P}) = v_{diff}(b_{P})
 \end{equation}
 \\
 Der Parameter $z$ wird in \ref{RedditHotZ} auf das Maximum des Betrages von $v(b_{P,t})$ aus Formel \ref{RedditHotD} und 1 gesetzt.
@@ -156,6 +136,29 @@ Die Bewertung des Posts wird der Bewertung der letzten Iteration verrechnet und 
 \begin{equation}
 \label{Activation}
 S_{p,t} = \frac{v(b_{P,t})) - S_{p,t-1}}{(a_{p,t} + 2)^{G}}
+\end{equation}
+
+
+\section{Zufallsbewertung}
+
+Nachdem Posts durch die Bewertungsmetrik bewertet wurden, kann die Bewertung durch Zufall verunreinigt werden um den in \cite{Luu} vorgeschlagenen Lärm zur Bewertung hinzuzufügen. In dieser Arbeit wurden zwei unterschiedliche Ansätze zur zufälligen Verunreinigung gewählt.
+
+\subsection{Mittelwertabweichung}
+
+Sei $\mu_s$ der Mittelwert der Scores aller Posts. Für einen Post $p$ mit Score $s_p$ wird die Verunreinigung $d$ als Zufallszahl im Intervall $d_{\mu,p} \in [-|\mu_s - s_p|,|\mu_s - s_p|]$ definiert. So ergibt sich für den verunreinigten Score $\tilde{s}_p$ des Post in Formel \ref{mean_deviation}:
+
+\begin{equation}
+\label{mean_deviation}
+\tilde{s}_{\mu,p} =  s_p + d_{\mu,p}
+\end{equation} 
+
+\subsection{Standardabweichungabweichung}
+
+Für die Standardabweichung der Scores aller Posts $\sigma_s$ sei die Verunreinigung eine Zufallszahl im Intervall $d_{\sigma,p} \in [-\sigma_s,\sigma_s]$, sodass sich der verunreinigte Score eines Postes in Formel \ref{std_deviation} ergibt:
+
+\begin{equation}
+\label{std_deviation}
+\tilde{s}_{\sigma,P} = s_P + d_{\sigma,P}
 \end{equation}
 
 	
