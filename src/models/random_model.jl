@@ -14,6 +14,11 @@ function random_model(;
 end
 
 function random_model_step!(model)
+    for i = 1:model.n
+        model.posts[i].score =
+            model.scoring_function(model.posts[i], model.time, model)
+    end
+
     for i = 1:model.new_posts_per_step
         push!(
             model.posts,
@@ -25,11 +30,6 @@ function random_model_step!(model)
             ),
         )
         model.n += 1
-    end
-
-    for i = 1:model.n
-        model.posts[i].score =
-            model.scoring_function(model.posts[i], model.time, model)
     end
 
     for i = 1:model.new_users_per_step
@@ -47,6 +47,9 @@ function random_model_step!(model)
 
 end
 
+function no_deviation(model)
+    zeros(length(posts))
+end
 
 function mean_deviation(model)
     mean_scores = mean(map(x -> x.score, model.posts))

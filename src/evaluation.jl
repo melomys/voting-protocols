@@ -43,6 +43,12 @@ function ndcg(model)
     dcg(model)/bdcg
 end
 
+function spearman(model)
+    ord = (map(post -> user_rating(post.quality, ones(model.quality_dimensions)), model.posts))
+    by_quality = sortperm(ord, by= x -> -x)
+    cor(model.ranking, by_quality)
+end
+
 function gini(model)
 
     posts = model.posts
@@ -93,8 +99,20 @@ function area_under_curve(model, model_df)
     trapezoidial_rule(model_df[!, :ndcg])/model.steps
 end
 
+function area_under_spearman(model,model_f)
+    trapezoidial_rule(model_df[!,:spearman])/model.steps
+end
+
+
 function area_under_gini(model, model_df)
     trapezoidial_rule(model_df[!, :gini])/model.steps
+end
+
+macro area_under_gini_top_k(k)
+    name = Symbol("area_under_gini_top_",eval(k))
+    return :(function $name(model, model_df)
+        trapezoidial_rule(model_df[!, Symbol("gini_top_", $k)])/model.steps
+    end)
 end
 
 
@@ -157,7 +175,7 @@ function end_position(post, model, model_df)
 end
 
 function quality(post,model,model_df)
-    model.user_rating_function(post.quality, ones(model.quality_dimensions))
+    model.rating_function(post.quality, ones(model.quality_dimensions))
 end
 
 # Helpers

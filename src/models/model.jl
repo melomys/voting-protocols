@@ -56,7 +56,7 @@ function standard_model(;
     activity_distribution = Beta(2.5,5),
     agent_step! = agent_step!,
     concentration_distribution = Poisson(50),
-    deviation_function = mean_deviation,
+    deviation_function = no_deviation,
     equal_posts = false,
     gravity = 1.8,
     init_score = 0,
@@ -260,6 +260,12 @@ function model_step!(model)
 
     for i = 1:model.new_users_per_step
         model.user()(model)
+    end
+
+    random_deviation = model.deviation_function(model)
+
+    for (index,post) in enumerate(model.posts)
+        post.score += random_deviation[index]
     end
 
     model.ranking = sortperm(map(x -> -x.score, model.posts))
