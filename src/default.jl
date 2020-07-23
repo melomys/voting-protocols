@@ -34,6 +34,7 @@ default_evaluation_functions = [
     post_views,
     mean_user_view,
     mean_user_vote,
+    posts_with_no_views,
     @model_property_function(:activity_distribution),
     @model_property_function(:concentration_distribution),
     @model_property_function(:init_score),
@@ -49,6 +50,7 @@ default_evaluation_functions = [
     @model_property_function(:gravity),
     @model_property_function(:user_rating_function),
     @model_property_function(:voting_probability_distribution),
+    @model_property_function(:deviation_function),
     @rating_correlation(quality, end_position),
     @rating_correlation(timestamp_func, score_func),
     @model_df_column(:gini),
@@ -62,8 +64,9 @@ sort!(default_evaluation_functions, by = x -> string(x))
 
 # vielleicht noch ein rating_dist mit reinhauen um das anzuschauen??
 default_models = [(
-    [standard_model, random_model],
+    standard_model,
     Dict(
+        :deviaton_function => [no_deviation, mean_deviation]
         :scoring_function => [scoring_hacker_news, scoring_view],
     ),
 ),
@@ -73,8 +76,9 @@ default_models = [(
     :model_step! => [model_step!, random_model_step!]),
 ),
 (
-    [standard_model, random_model],
+    [standard_model],
     Dict(
+        :deviatio_function => [no_deviation, mean_deviation],
         :scoring_function => [scoring_activation],
         :init_score => 30
     )

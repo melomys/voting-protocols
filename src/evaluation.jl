@@ -114,6 +114,11 @@ macro area_under_gini_top_k(k)
     end)
 end
 
+function posts_with_no_views(model, model_df)
+    no_views = filter(x -> x.views == 0, model.posts)
+    return length(no_views)
+end
+
 
 function sum_gradient(model, model_df)
     ranking = model_df[!, :ranking_rating_relative]
