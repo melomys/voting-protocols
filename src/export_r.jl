@@ -18,7 +18,6 @@ function export_data(model_init_params, name;
         export_rds(corr_df, model_dfs, name)
         end
     end
-
 end
 
 

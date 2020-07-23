@@ -179,7 +179,7 @@ function end_position(post, model, model_df)
 end
 
 function quality(post,model,model_df)
-    rating_function(post.quality, ones(model.quality_dimensions))
+    user_rating(post.quality, ones(model.quality_dimensions))
 end
 
 # Helpers
