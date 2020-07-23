@@ -98,7 +98,7 @@ function area_under_curve(model, model_df)
     trapezoidial_rule(model_df[!, :ndcg])/model.steps
 end
 
-function area_under_spearman(model,model_f)
+function area_under_spearman(model,model_df)
     trapezoidial_rule(model_df[!,:spearman])/model.steps
 end
 
