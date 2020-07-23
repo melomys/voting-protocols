@@ -1,23 +1,46 @@
 using Plots
 
-using VotingProtocols
 using Agents
 using DataFrames
 using LinearAlgebra
+using Logging
+
+
+include("../../src/user_creation.jl")
+
+include("../../src/models/model.jl")
+include("../../src/models/downvote_model.jl")
+include("../../src/models/random_model.jl")
+include("../../src/models/view_model.jl")
+
+
+include("../../src/model_factory.jl")
+include("../../src/rating.jl")
+include("../../src/scoring.jl")
+include("../../src/evaluation.jl")
+include("../../src/data_collection.jl")
+
+include("../../src/default.jl")
+
+include("../../src/export_r.jl")
+
+#sigmoid(x) = 1/(1+ℯ^((0.5)*(-x)))
 
 model_init_params = [
     (:all_models, Dict(
     :steps => 100,
+    #:user => [[(0.9, user()),(0.1, extreme_user(1))], [(0.9,user()),(0.1, extreme_user(-1))]]
+    :quality_distribution => MvNormal(zeros(3), I(3)*10.0)
     )),
     (
         [downvote_model],
         Dict(:scoring_function => [scoring_reddit_hot],
 
-        :user_rating_function => [user_rating_exp],
+        :user_rating_function => [user_rating_dist2],
     )),
     (standard_model, Dict(
     :scoring_function => scoring_activation,
-    :user_rating_function => [user_rating_exp],
+    :user_rating_function => [user_rating_exp2],
     :init_score => [30]
     ))
     ]
@@ -25,8 +48,9 @@ model_init_params = [
 
 seed_ = abs(rand(Int))
 
+seed_ = 3
 
-models = create_models(model_init_params)
+models = create_models(model_init_params;seed = seed_)
 
 data = []
 plots = []
@@ -83,7 +107,7 @@ for model in models
         plot!(
             rp,
             model_df[!, :step],
-            model_df[!, :ndcg],
+            model_df[!, :gini_top_50],
             label = string(model.scoring_function) *
                     "_" *
                     string(model.agent_step!),

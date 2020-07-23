@@ -77,7 +77,6 @@ macro top_k_gini(k)
     return :(function $name(model)
         by_quality = sortperm(model.posts, by=x -> - user_rating(x.quality,ones(model.quality_dimensions)))
         posts = model.posts[by_quality[1:$k]]
-        println(by_quality[1:$k])
         s = 0
         n = sum(map(post -> post.views, posts))
         if n == 0

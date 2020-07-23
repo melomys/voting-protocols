@@ -48,7 +48,7 @@ function random_model_step!(model)
 end
 
 function no_deviation(model)
-    zeros(length(posts))
+    zeros(length(model.posts))
 end
 
 function mean_deviation(model)
