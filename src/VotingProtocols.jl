@@ -1,11 +1,9 @@
-__precompile__()
-
 module VotingProtocols
 
 using Agents
 using Distributions
 using DataFrames
-using LineraAlgebra
+using LinearAlgebra
 using RCall
 
 include("user_creation.jl")
