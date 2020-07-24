@@ -36,13 +36,13 @@ model_init_params = [
         [downvote_model],
         Dict(:scoring_function => [scoring_reddit_hot],
 
-        :user_rating_function => [user_rating_dist2],
+        :user_rating_function => [user_rating_exp,user_rating_dist2],
     )),
-    (standard_model, Dict(
-    :scoring_function => scoring_activation,
-    :user_rating_function => [user_rating_exp2],
-    :init_score => [30]
-    ))
+    #(standard_model, Dict(
+#    :scoring_function => scoring_activation,
+#    :user_rating_function => [user_rating_exp2],
+#    :init_score => [30]
+#    ))
     ]
 
 

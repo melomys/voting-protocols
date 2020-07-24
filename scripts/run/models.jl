@@ -9,7 +9,7 @@ model_init_params = [
                 user_rating_exp,
                 user_rating,
                 user_rating_exp2,
-                user_rating_dist1,
+                user_rating_dist2,
             ],
             #:activity_distribution => [Beta(2,5,5), Beta(1,5), Beta(1, 10), Beta(2.5,10, Beta(5,10), Beta(7.5,10))],
             #:voting_probability_distribution => [Beta(2,5,5), Beta(1,5), Beta(1, 10), Beta(2.5,10, Beta(5,10), Beta(7.5,10))]

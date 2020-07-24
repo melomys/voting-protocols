@@ -5,7 +5,7 @@ println(nprocs())
 
 model_init_params = [
     (
-        [standard_model,random_model],
+        [standard_model],
         Dict(
             :scoring_function => [scoring_hacker_news,scoring_activation],
             :init_score => [-10, 0, 10, 20, 30],
@@ -13,6 +13,7 @@ model_init_params = [
             :start_users => [50,100, 300],
             :start_posts => [50,100, 300],
             :new_posts_per_step => [1,5,10,20,30],
+            :deviation_function => [no_deviation, mean_deviation]
 
 
         ),
