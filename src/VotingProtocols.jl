@@ -3,7 +3,7 @@ __precompile__()
 module VotingProtocols
 
 using Agents
-using Distributins
+using Distributions
 using DataFrames
 using LineraAlgebra
 using RCall
