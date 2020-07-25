@@ -5,7 +5,7 @@ export export_data
 function export_data(model_init_params, name;
     model_properties = default_model_properties,
     evaluation_functions = default_evaluation_functions,
-    iterations = 5,
+    iterations = 45,
     pack = 5)
     @time begin
     @sync @distributed for i=1:iterations
