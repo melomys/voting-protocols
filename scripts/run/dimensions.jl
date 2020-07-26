@@ -7,7 +7,7 @@ model_init_params = [default_models...,
     (
         :all_models,
         Dict(
-            :quality_dimensions => [1,3,10,50,100],
+            :quality_dimensions => [1,3,10,50],
         ),
     ),
 ]
