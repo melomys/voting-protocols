@@ -66,7 +66,7 @@ sort!(default_evaluation_functions, by = x -> string(x))
 default_models = [(
     standard_model,
     Dict(
-        :deviaton_function => [no_deviation, mean_deviation],
+        :deviation_function => [no_deviation, mean_deviation],
         :scoring_function => [scoring_hacker_news, scoring_view],
     ),
 ),
@@ -78,8 +78,11 @@ default_models = [(
 (
     [standard_model],
     Dict(
-        :deviatio_function => [no_deviation, mean_deviation],
+        :deviation_function => [no_deviation, mean_deviation],
         :scoring_function => [scoring_activation],
         :init_score => 30
     )
-)]
+),
+( :all_models, Dict(
+:user_rating_function => [user_rating_exp2, user_rating_dist2]
+))]

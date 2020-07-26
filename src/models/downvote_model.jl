@@ -1,5 +1,5 @@
 function downvote_model(;
-    user_rating_function = downvote_user_rating,
+    user_rating_function = user_rating_exp2,
     agent_step! = downvote_agent_step!,
     qargs...,
 )

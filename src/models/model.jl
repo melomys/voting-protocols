@@ -78,7 +78,7 @@ function standard_model(;
     steps = 100,
     user = user(),
     UserType = User,
-    user_rating_function = user_rating,
+    user_rating_function = user_rating_exp2,
     vote_evaluation = vote_difference,
     voting_probability_distribution = Beta(2.5,5),
     qargs...,
