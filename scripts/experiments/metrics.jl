@@ -6,23 +6,22 @@ using LinearAlgebra
 using Logging
 
 
-include("../../src/user_creation.jl")
+include("src/user_creation.jl")
 
-include("../../src/models/model.jl")
-include("../../src/models/downvote_model.jl")
-include("../../src/models/random_model.jl")
-include("../../src/models/view_model.jl")
+include("src/models/model.jl")
+include("src/models/downvote_model.jl")
+include("src/models/random_model.jl")
+include("src/models/view_model.jl")
 
 
-include("../../src/model_factory.jl")
-include("../../src/rating.jl")
-include("../../src/scoring.jl")
-include("../../src/evaluation.jl")
-include("../../src/data_collection.jl")
+include("src/model_factory.jl")
+include("src/rating.jl")
+include("src/scoring.jl")
+include("src/evaluation.jl")
+include("src/data_collection.jl")
 
-include("../../src/default.jl")
-
-include("../../src/export_r.jl")
+include("src/default.jl")
+include("src/export_r.jl")
 
 #sigmoid(x) = 1/(1+ℯ^((0.5)*(-x)))
 

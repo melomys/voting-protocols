@@ -17,5 +17,5 @@ function user_rating_dist1(post_quality, user_quality_perception)
 end
 
 function user_rating_dist2(post_quality, user_quality_perception)
-    1 - sqrt(sum((sigmoid.(post_quality) - sigmoid.(user_quality_perception)).^ 2)) /sqrt(length(post_quality))
+    1 - sqrt(sum((sigmoid.(post_quality) - sigmoid.(user_quality_perception)).^ 2))/sqrt(length(post_quality))
 end
