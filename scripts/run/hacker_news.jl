@@ -14,24 +14,8 @@ model_init_params = [
             :start_posts => [50,100, 300],
             :new_posts_per_step => [1,5,10,20,30],
             :deviation_function => [no_deviation, mean_deviation]
-
-
         ),
     ),
 ]
 
-
-
-iterations = 1000
-@time begin
-#Threads.@threads
-@sync @distributed for i=1:iterations
-
-model_dfs, corr_df = collect_model_data(
-    model_init_params,
-    default_model_properties,
-    default_evaluation_functions,
-    5)
-export_rds(corr_df, model_dfs, "hacker_news")
-    end
-end
+export_data(model_init_params,"hacker_news")

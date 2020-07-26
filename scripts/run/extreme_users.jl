@@ -12,4 +12,4 @@ model_init_params = [default_models...,
     ),
 ]
 
-export_data(model_init_params,"dimensions")
+export_data(model_init_params,"extreme_users")
