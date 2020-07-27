@@ -5,25 +5,37 @@ using Distributions
 println(nprocs())
 @time @everywhere using VotingProtocols
 
+
+
 model_init_params = [
-    (:all_models, Dict(
-    :steps => 100,
-    #:user => [[(0.9, user()),(0.1, extreme_user(1))], [(0.9,user()),(0.1, extreme_user(-1))]]
-    :quality_distribution => MvNormal(zeros(3), I(3)*10.0)
-    )),
     (
-        [downvote_model],
-        Dict(:scoring_function => [scoring_reddit_hot],
-
-        :user_rating_function => [user_rating_exp,user_rating_dist2],
-    )),
-    #(standard_model, Dict(
-#    :scoring_function => scoring_activation,
-#    :user_rating_function => [user_rating_exp2],
-#    :init_score => [30]
-#    ))
-    ]
-
+        :all_models,
+        Dict(
+            :user_rating_function => [user_rating_exp2, user_rating_dist2],
+        ),
+    ),
+    (
+        standard_model,
+        Dict(
+            :scoring_function => [scoring_activation, scoring_hacker_news, scoring_view, scoring_view_activation, scoring_view_exp],
+            :init_score => [-10:10:30...],
+            :deviaton_function => [no_deviation, mean_deviation]
+        ),
+    ),
+    (
+        downvote_model,
+        Dict(
+            :scoring_function => [scoring_reddit_hot, scoring_reddit_best],
+            :deviaton_function => [no_deviation, mean_deviation]
+        )
+    ),
+    (
+        standard_model,
+        Dict(
+            :scoring_function => [scoring_random],
+        ),
+    ),
+]
 
 model_properties = default_model_properties
 evaluation_functions = default_evaluation_functions
