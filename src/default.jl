@@ -49,6 +49,7 @@ default_evaluation_functions = [
     @model_property_function(:start_users),
     @model_property_function(:steps),
     @model_property_function(:gravity),
+    @model_property_function(:user),
     @model_property_function(:user_rating_function),
     @model_property_function(:voting_probability_distribution),
     @model_property_function(:deviation_function),
@@ -85,5 +86,5 @@ default_models = [(
     )
 ),
 ( :all_models, Dict(
-:user_rating_function => [user_rating_exp2, user_rating_dist2]
+    :user_rating_function => [user_rating_exp2, user_rating_dist2]
 ))]
