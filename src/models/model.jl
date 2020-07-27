@@ -171,6 +171,7 @@ function standard_model(;
         rng_user_posts,
         scoring_function,
         seed,
+        sorted,
         start_posts,
         start_users,
         steps,
