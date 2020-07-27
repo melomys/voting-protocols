@@ -24,8 +24,9 @@ function ranking_rating_relative(model)
     ranking_rating(model)/rating
 end
 
+fac = 1
 function dcg(model)
-    ord = (map(post -> user_rating(post.quality, ones(model.quality_dimensions)), model.posts))
+    ord = (map(post -> fac *user_rating(post.quality, ones(model.quality_dimensions)), model.posts))
     dcg = 0
     for i = 1:model.n
         dcg += (2^(ord[model.ranking[i]]) - 1) / log2( i + 1)
@@ -34,7 +35,7 @@ function dcg(model)
 end
 
 function ndcg(model)
-    ord = (map(post -> user_rating(post.quality, ones(model.quality_dimensions)), model.posts))
+    ord = (map(post -> fac* user_rating(post.quality, ones(model.quality_dimensions)), model.posts))
     by_quality = sortperm(ord, by= x -> -x)
     bdcg = 0
     for i = 1:model.n

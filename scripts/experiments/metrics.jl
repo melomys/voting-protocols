@@ -25,7 +25,7 @@ include("../../src/default.jl")
 include("../../src/export_r.jl")
 
 #sigmoid(x) = 1/(1+ℯ^((0.5)*(-x)))
-"""
+
 model_init_params = [
     (:all_models, Dict(
     :steps => 100,
@@ -36,7 +36,7 @@ model_init_params = [
         [downvote_model],
         Dict(:scoring_function => [scoring_reddit_hot],
 
-        :user_rating_function => [user_rating_exp,user_rating_dist2],
+        :deviation_function => [no_deviation, mean_deviation],
     )),
     #(standard_model, Dict(
 #    :scoring_function => scoring_activation,
@@ -45,7 +45,6 @@ model_init_params = [
 #    ))
     ]
 """
-
 model_init_params = [
     (
         :all_models,
@@ -75,14 +74,14 @@ model_init_params = [
         ),
     ),
 ]
-
+"""
 seed_ = abs(rand(Int))
 
 seed_ = 3
 
 models = create_models(model_init_params;seed = seed_)
 
-"""
+
 model_dfs, corr_df = collect_model_data(
 model_init_params,
 default_model_properties,
@@ -167,3 +166,4 @@ for model in models
 end
 
 plot(rpr,rp ,layout = (2, 1), legend = false)
+"""
