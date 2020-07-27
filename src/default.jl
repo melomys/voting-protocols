@@ -44,6 +44,7 @@ default_evaluation_functions = [
     @model_property_function(:quality_dimensions),
     @model_property_function(:scoring_function),
     @model_property_function(:seed),
+    @model_property_function(:sorted),
     @model_property_function(:start_posts),
     @model_property_function(:start_users),
     @model_property_function(:steps),
