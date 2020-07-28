@@ -1,20 +1,29 @@
 \chapter{Bewertungsmetriken}
 \label{chapter:bewertungsmetriken}
 
-Bewertungsmetriken werden verwendet um die große Menge an Posts zu strukturieren. Den Posts wird anhand ihrer aktuellen Parameter, wie die Art und Anzahl der Bewertungen, oder dem Veröffntlichungszeitpunkt ein Score zugeordnet. 
-Sortiert nach diesem Score werden die Posts auf der Plattform angeordnet.
 
-Eine Bewertungsmetrik soll fair sein. Eine faire Bewertungsmetrik $S$ zeichnet sich durch folgende Punkte aus:
+Mit Bewertungsmetriken sollen Posts anhand ihrer Relevanz sortiert werden. Ein Post $P$ erhält durch eine Bewertungsmetrik den Score $s_P = B(P)$ zugewiesen. Die Posts werden anhand des zugewiesenen Scores sortiert und auf der Plattform zur Verfügung gestellt.
+
+ Die wahre Relevanz $R_P$ steht in der Berechnung der Bewertungsmetrik nicht zur Verfügung, daher müssen die "sichtbaren" Parameter von $P$ verwendet werden um die Relevanz anzunähern.
 
 \begin{itemize}
-	\item Für zwei Posts $P_1$ und $P_2$ mit $a_{P_1} = a_{P_2}$ und ${q_{P_1}}_{ges} > {q_{P_2}}_{ges}$ ist $S(P_1) > S(P_2)$ in jedem Iterationsschritt
+	\item $a_P$, Veröffentlichungzeitpunkt
+	\item $b_P$, Bewertungsvektor
+	\item $s_P$, Score
+	\item $w_P$, Anzahl der Betrachtungen
+\end{itemize}
+
+Eine ideale Bewertungsmetrik ist fair, die folgenden Punkte sind erfüllt:
+
+\begin{itemize}
+	\item für zwei Posts $P_1$ und $P_2$ mit $R_{P_1} > R_{P_2}$ ist $B(P_1) > B(P_2)$
 	\item Für jeden Post $P_i$ gilt $w_{P_i} > 1$, er wurde von mindestens eine*r User*in wahrgenommen
 \end{itemize}
 
 \section{Bewertungstransformation}
 \label{voteevaluation}
 
-Die Bewertungsvektoren liegen im $N_B$-dimensionalen Raum vor. Innerhalb von Bewertungsmetriken werden die $N_B$ dimensionalen Bewertungsvektren von Posts auf einen Skalar transformiert. Dies geschieht mit einer Bewertungstransformationsfunktion $v: \mathbb{R}^{n} \rightarrow \mathbb{R}$.
+Die Bewertungsvektoren liegen im $N_B$-dimensionalen Raum vor. Innerhalb von Bewertungsmetriken werden die $N_B$ dimensionalen Bewertungsvektoren von Posts auf einen Skalar transformiert. Dies geschieht mit einer Bewertungstransformationsfunktion $v: \mathbb{R}^{n} \rightarrow \mathbb{R}$.
 
 
 Für den zweidimensionalen Fall mit Up- und Downvotes ($u_P$,$d_P$) werden im folgenden einige Bewertungstransformationen vorgestellt.
@@ -42,7 +51,7 @@ v_{anteil}(b_P) = \frac{u_P}{u_P + d_P}
 
 \subsection{Wilson Score}
 
-Wie in [Online Paper über Wilson] erläutert wird, ist die Verwerdung der beiden vorherig vorgestellten Metriken in bestimmten Konstellationen von Up- und Downvotes unintuitiv. Es wird  die untere Grenze des Wilson-Konfidenzintervall für die Erfolgswahrscheinlichkeit der Binomialverteilung für den Parameter $p$ als Metrik vorgeschlagen. Dabei ist $n$ die Gesamtanzahl an abgegeben Votes an einen Post, die Stichprobengröße, und $k$ die Anzahl an positiver Bewertungen eines Postes, die Anzahl an Erfolgen in der Stichprobe.
+Wie in [Online Paper über Wilson] erläutert wird, ist die Verwendung der beiden vorherig vorgestellten Metriken in bestimmten Konstellationen von Up- und Downvotes unintuitiv. Es wird  die untere Grenze des Wilson-Konfidenzintervall für die Erfolgswahrscheinlichkeit der Binomialverteilung für den Parameter $p$ als Metrik vorgeschlagen. Dabei ist $n$ die Gesamtanzahl an abgegeben Votes an einen Post, die Stichprobengröße, und $k$ die Anzahl an positiver Bewertungen eines Postes, die Anzahl an Erfolgen in der Stichprobe.
 	
 Mit der Gesamtzahl der Bewertungen eines Posts $n_P = u_P + d_P$, dem Punktschätzer $\hat{p}_P = u_P + n_P$ und dem Quantil $c_{\alpha}$ der Normalverteilung zum Irrtumsniveau $\alpha$ ergibt sich in Formel \ref{wilson} der Wilson Score:
 
@@ -59,7 +68,7 @@ Bewertungsmetriken berechnen den Score $S_{P,t}$ für einen Post unter Betrachtu
 \label{seqHackerNews}
 
 %TODO nochmal über die Notation S_{P,t} klar werden, vielleicht auch S_t(P) ??
-Hacker News verwendet eine Metrik, in der die Upvotes $u_{P}$ eines Postes ins Verhältnis zum Alter $a_{P}$ in Stunden zum Zeitpunkt $t$ setzt. Somit besitzt der Bewertungsraum die Dimension 1 .Das Alter wird mit der Gravitätskonstanste $G = 1.8$ potenziert. Die Bewertungstransformation lautet $v(b_P) = u_P - 1$ so ergibt sich die Hacker News Bewertungsmetrik in Formel \ref{HackerNews}:
+Hacker News verwendet eine Metrik, in der die Upvotes $u_{P}$ eines Postes ins Verhältnis zum Alter $a_{P}$ in Stunden zum Zeitpunkt $t$ setzt. Somit besitzt der Bewertungsraum die Dimension $1$. Das Alter wird mit der Gravitätskonstanste $G = 1.8$ potenziert. Die Bewertungstransformation lautet $v(b_P) = u_P - 1$ so ergibt sich die Hacker News Bewertungsmetrik in Formel \ref{HackerNews}:
  
 \begin{equation}
 \label{HackerNews}
@@ -160,5 +169,11 @@ Für die Standardabweichung der Scores aller Posts $\sigma_s$ sei die Verunreini
 \label{std_deviation}
 \tilde{s}_{\sigma,P} = s_P + d_{\sigma,P}
 \end{equation}
+
+\section{Initialwert}
+
+Für Post kann der Initialwert $I_P$ angegeben werden. Jeder neuerstellte Post $P_{neu}$ erhält $s_{P_{neu}} = I_P$.
+
+
 
 	

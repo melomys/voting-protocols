@@ -6,13 +6,12 @@ Das Modell besitzt eine festgelegte Anzahl an Iterationsschritten, in jeder Iter
 
 In diesem Kapitel werden zuerst grundlegende Definitionen getätigt, welche für die agentenbasierten Modellierung von Votingsystemen notwendig sind. Anschließend kann die Modellierung von User*innen und Posts beschrieben werden. 
 
-Es handelt sich um ein agentenbasiertes Modell. Das Modell wird für eine festgelegte Anzahl Iterationsschritte simuliert, für jede Iteration werden bestimmte Aktionen durchgeführt. Die User*innen interagieren in jedem Schritt mit dem Modell
+Es handelt sich um ein agentenbasiertes Modell. Das Modell $M$ wird für eine festgelegte Anzahl Iterationsschritte $N_M$ simuliert, für jede Iteration $i_M$ werden bestimmte Aktionen durchgeführt. Die User*innen interagieren in jedem Schritt mit dem Modell.
 
-In diesem Kapitel werden Modelleigenschaften beschrieben, welche zur Simulation notwendig.
+In diesem Kapitel werden Modelleigenschaften beschrieben, welche zur Simulation notwendig sind.
 
-\section{Qualität} %TODO Rüber arbeiten, Qualität im allgemeinen beschreiben
-
-User*innen von sozialen Medien können Posts nach unterschiedlichen Kriterien und Qualitätsmerkmalen betrachten. Auf einer News Platform achten User*innen auf die Informativität und Aktualität. Auf einer Meme-Seite sollen Beiträge vielleicht eher lustig sein. Auf wie viele und welche Qualitätsmerkmale hängt subjektiv von den User*innen ab
+\section{Qualität}
+User*innen von sozialen Medien können Posts nach unterschiedlichen Kriterien und Qualitätsmerkmalen betrachten. Auf einer News Plattform achten User*innen auf die Informativität und Aktualität. Auf einer Fotoseite werden Beiträge vielleicht eher nach Ästhetik und Originalität bewertet. Auf welche und wie viele Qualitätsmerkmale die User*innen letztlich achten ist nicht bekannt.
 
 Qualität wird über Vektoren der Dimension $n_Q$ modelliert. Jeder Eintrag eines Qualitätsvektor beschreibt die Ausprägung der Qualität in einem Qualitätsmerkmal. Ein Qualitätsvektor der Dimension $n_Q$ beschreibt kann somit ein Objekt mit $n_Q$ Qualitätsmerkmalen beschreiben. 
 
@@ -27,48 +26,51 @@ Diese Arbeit ist beschränkt auf $n_B = [1,2]$.
 
 \section{Posts}
 
-%TODO subsections oder paragraphen?
-\subsection{Qualität}
+\paragraph{Veröffentlichungszeitpunkt}
+Der Veröffentlichungszeitpunkt $a_P = i_M$ ist der Modellschritt $i_M$, in welchem der Post veröffentlicht wurde.
+
+\paragraph{Bewertungsvektor}
+
+Der Bewertungsvektor $b_P$ eines Posts besitzt die Dimension $n_B$. In ihm wird Bewertung der User*innen des Postes gespeichert.
+
+\paragraph{Score}
+
+Der Score $s_P$ eines Posts enthält den Wert, den der Post durch eine Bewertungsmetrik (Abschnit \ref{chapter:bewertungsmetriken} zugeordnet wurde.
+
+\paragraph{Betrachtungen}
+
+Die Anzahl $w_P$ der User*innen  die den Post gesehen haben.
+
+Der Bewertungsvektor $b_P$ eines Posts besitzt die Dimension $n_B$. In ihm wird Bewertung der User*innen des Postes gespeichert.
+
+\paragraph{Qualität}
 \label{pqualitaet}
 
 Der $n_Q$-dimensionale Qualitätsvektor $q_P$ beschreibt die Qualität eines Posts. Er wird aus der Qualitätsverteilung $V_Q$ erzeugt. 
 
 Je größer einzelne Einträge in $q_P$ sind, desto besser ist die Qualität eines Postes in diesem Qualitätsmerkmal.
 
+Die Qualität eines Posts kann sich mit der Zeit ändern. Auf einer Newsplattform spielt Aktualität eine wichtige Rolle. Posts welche gerade erst veröffentlicht wurden besitzen vermutlich eine höhere Relevanz als als ältere Posts. Hingegen auf einer Q\&A-Seite verlieren Beiträge mit verstreichender Zeit weniger an Relevanz. Denn die beste Antwort auf eine Frage bleibt dies meistens auch für längere Zeit.
+
+\paragraph{Relevanz}
+
+Die skalare Relevanz $R_P$ eines Posts ergibt sich somit durch die Summe aller Einträge vo $q_P$ dividiert durch das in Gravität gesetzte Alter des Posts. Durch die Gravität $G_T$ wird festgelegt wie schnell die Posts an Relevanz verlieren:
 Die skalare Gesamtqualität ${q_P}_{ges}$ eines Posts ist die Summe alle Einträge von $q_P$ in Formel \ref{eq:gesqualitaet}:
 \begin{equation}
 \label{eq:gesqualitaet}
-{q_P}_{ges} = \sum_{i=1}^{N_Q} {q_P}_i
+{R_P} = \frac{1}{(i_M - a_P)^{G_R}}\sum_{i=1}^{N_Q} {q_P}_i
 \end{equation}
 
 Es wird keine Unterscheidung zwischen Darstellungsqualität wie in [Felix masterarbeit] gemacht. Diese ist hoch, wenn auf den ersten Blick deutlich wird um was sich der Post handelt. Alle User*innen erfassen auf den ersten Blick den gesamten Qualitätsumfang der Posts.
 
-
-
-
-\subsection{Bewertungsvektor}
-
-Der Bewertungsvektor $b_P$ eines Posts besitzt die Dimension $n_B$. In ihm wird Bewertung der User*innen des Postes gespeichert.
-
-\subsection{Score}
-
-Der Score $s_P$ eines Posts enthält den Wert, den der Post durch eine Bewertungsmetrik (Abschnit \ref{sec:bewertungsmetrik} zugeordnet wurde.
-
-\subsection{Veröffentlichungszeitpunkt}
-
-Speichert den Modellschritt $a_P$, indem der Post veröffentlicht wurde
-
-\subsection{Betrachtungen}
-
-Die Anzahl $w_P$ der User*innen  die den Post gesehen haben.
-
 \subsection{Bewertungsmetriken}
 \label{sec:bewertungsmetrik}
 
-Bewertungsmetriken dienen zur Bewertung und anschließenden Sortierung von Posts. Eine Bewertungsmetrik $B(P)$ wertet den Bewertungsvektor von $P$ unter Verwendung weiterer Postparameter aus und ordnet $P$ einen Score zu. Anhand dieses Scores werden die Posts sortiert und auf der Onlineplattform zur Verfügung gestellt. 
+Bewertungsmetriken sollen Posts anhand ihrer Relevanz sortieren. Da die wahre Relevanz von Posts bei der Verwendung von Bewertungsmetriken nicht bekannt ist, muss diese durch die Postparameter approximiert werden: 
+
+Eine Bewertungsmetrik $B(P)$ wertet den Bewertungsvektor $b_P$ von $P$ unter Verwendung weiterer Postparameter aus und ordnet $P$ den Score $s_P$ zu. Anhand dieses Scores werden die Posts sortiert und auf der Plattform angezeigt. 
 
 Mehr Gedanken zu Bewertungsmetriken befinden sich in Kapitel \ref{chapter:bewertungsmetriken}
-
 
 \section{User*innen}
 
@@ -134,3 +136,26 @@ $g$ ist somit das $\beta_U$-Quantil der empirischen Dichteverteilung von $M$
 Sobald $m_{P,U} < g$ bzw. $m_{P,U} > g$ wird der Post $P$ von der User*in $U$ bewertet. 
 
 Die Bewertungszufriedenheit ist kontiunierlich auf dem Interall $[0,1]$ verteilt. 
+
+
+\section{User*innen und Postanzahl}
+
+In der folgenden Tabelle sind die Modellparameter zur Steuerung der User*innen- und Postanzahl angegeben:
+
+\begin{table}[!htbp]
+	\begin{tabularx}{\textwidth}{lX}
+		$N_U$&  Anzahl der User*innen\\
+		${N_P}_{start}$ & Anzahl der Posts zu Beginn der Simulation \\
+		${N_P}_{iter}$ & Anzahl der neuen Posts pro Iteration\\
+	\end{tabularx}
+\end{table}
+
+
+\subsection{Vorsortierung der Posts}
+
+Bei der Simulation einer Kommunikationsplatform besteht die Problematik des \textit{Cold Starts}. Diese besagt, dass es in einer realen Umgebung den Zeitpunkt $0$ der Simulation nicht gibt. Zum Zeitpunkt $0$ sind die Posts zufällig angeordnet. Kein Posts wurde betrachtet oder bewertet.
+
+Um dem \textit{Cold Start} entgegen zu wirken können die Posts nach Qualität vor der Simulation sortiert werden.
+Der Sortierungskoeffizient $s$ befindet sich im Intervall $[-1,1]$. Bei $s=0$ findet keine Vorsortierung statt. Bei $s=1$ sind die Posts vollständig nach Qualität sortiert, bei $s=-1$ sind die Posts vollständig umgekehrt nach Qualität sortiert.
+
+%\subsection{Extreme User*innen}

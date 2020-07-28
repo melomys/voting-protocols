@@ -1,4 +1,5 @@
 \chapter{Evaluationmethode}
+\label{chap:evaluationsmethode}
 
 Um die Modelle statistisch auszuwerten werden Evaluationsfunktionen erstellt. Evaluationsfunktionen können Modell-  und Userinnen*parameter auswerten oder auch Funktionen auf Parametern ausführen.
 Es gibt zwei unterschiedliche Arten von Evaluationsfunktionen: %TODO auf drei zurück ändern im Falle
@@ -21,6 +22,8 @@ Iterationsevaluationsfunktionen werden nach jeder Iteration des Modells ausgefü
 %Sämtliche definierten Modellparameter können in der Auswertung einer agentenbasierten Modellierung betrachtet werden.
 %Es wird der \textit{Normalized Discounted Cumulative Gain}-Koeffizient (nDCG) verwendet, um die Güte einer Bewertungsmetrik unter den gegebenen Modellparametern zu berechnen. Außerdem wird der Gini-Koeffizient für jeden Modelllauf berechnet, dieser misst, wie fair die Sichtbarkeit von Posts verteilt ist. Durch den nDCG- und den Gini-Koeffizienten lassen sich unterschiedliche Modellkonfigurationen vergleichen.
 
+
+%TODO Normalisierung der Daten
 \subsection{Discounted Cumulative Gain}
 
 Der \textit{Discounted Cumulative Gain}-Koeffizient (DCG) in \cite{Biega2018405} dient zur Berechnung der Güte von Bewertungsmetriken. Der DCG in Formel \ref{dcg} bestraft Bewertungsmetriken, welche Posts mit hoher Qualität auf hintere Rankingpositionen einordnet. Die Qualität eines Posts $Q_{P,i}$ fließt durch den Logarithmus der Rankingposition des Posts ins Verhältnis gesetzt in den DCG ein.
@@ -41,16 +44,18 @@ nDCG(B) = \frac{DCG(B)}{IDCG}
 
 Eine optimale Bewertungsmetrik erhält damit den Maximalwert $nDCG = 1$.
 
-\subsection{Spearman-$\rho$}
+% Spearman rho fabriziert nur blödsinn
 
-Das Spearman-$\rho$ beschreibt wie stark ein monotoner Zusammenhang zwischen zwei Variablen ausgeprägt ist. Dies kann benfalls genutzt werden um die Güte einer Bewertungsmetrik zu berechnen in Formel \ref{spearman}:
+%\subsection{Spearman-$\rho$}
 
-\begin{equation}
-\label{spearman}
-\rho(B) = \frac{cov(r,rg(Q_{P_s}))}{\sigma_r\sigma_{rg(Q_{P_s})}} 
-\end{equation}
+%Das Spearman-$\rho$ beschreibt wie stark ein monotoner Zusammenhang zwischen zwei Variablen ausgeprägt ist. Dies kann benfalls genutzt werden um die Güte einer Bewertungsmetrik zu berechnen in Formel \ref{spearman}:
 
-Dabei ist $r$ das aktuelle Ranking des Modells, ein Vektor, welcher die Postindeces enthält. An $r_i$ steht den Index des Posts der durch die Bewertungmetrik an Stelle $i$ gerankt wurdet. $rg{Q_{P_s}}$ enthält die Indeces der nach Qualität sortierten Posts. $rg(Q_{P_s})_i$ enthält somit den Index des Posts mit der $i$-tbesten Qualität.
+%\begin{equation}
+%\label{spearman}
+%\rho(B) = \frac{cov(r,rg(Q_{P_s}))}{\sigma_r\sigma_{rg(Q_{P_s})}} 
+%\end{equation}
+
+%Dabei ist $r$ das aktuelle Ranking des Modells, ein Vektor, welcher die Postindeces enthält. An $r_i$ steht den Index des Posts der durch die Bewertungmetrik an Stelle $i$ gerankt wurdet. $rg{Q_{P_s}}$ enthält die Indeces der nach Qualität sortierten Posts. $rg(Q_{P_s})_i$ enthält somit den Index des Posts mit der $i$-tbesten Qualität.
 
 
 \subsection{Gini-Koeffizient}
@@ -73,9 +78,13 @@ Der Top-k Gini-Koeffizient berechnet den Gini-Koeffizient für die k qualitativ 
 
 \section{Modellevaluation}
 
-Modellevaluationsfunktionen werden nach der vollständigen Simulation eines Modells ausgeführt. 
-Triviale Modellevaluationsfunktionen evaluieren Modellparameter, wie die verwendete Bewertungsmetrik, oder die Anzahl der Startuser*innen. 
+Modellevaluationsfunktionen werden nach der vollständigen Simulation eines Modells ausgeführt.
 
+\paragraph{Modellparameter} 
+
+Da sich Modellparameter im Laufe des Modells nicht ändern können, werden diese durch Modellevaluationsfunktionen ausgewertet.
+
+\subsection{Aggregation von Iterationsevaluationsfunktionen}
 
 Für ein Modell mit $N_i$ Iterationsschritten können 
 Modellevaluationsfunktionen über den von Iterationsevaluationsfunktionen erzeugten Datenvektor $x$ aggregieren. 
@@ -85,7 +94,20 @@ Die im vorherigen Abschnitt vorgestelllten Iterationsevaluationen werden durch d
 \begin{equation}
 \label{trapezoidial}
 T(x) = \frac{1}{N_i}\sum_{i = 1}^{N_i}x_i - \frac{1}{2}(x_1 + x_N)
-\end{equation} 
+\end{equation}
+
+\subsection{Posts ohne Betrachtungen}
+
+Der Prozentsatz an Posts welche von keine*r einzig*en User*in betrachtet wurden werden durch die Funktion in Formel \ref{eq:PoB} gezählt:
+
+\begin{equation}
+\label{eq:PoB}
+P_{v = 0} = \frac{1}{P_N}\sum_{N = 1}^{P_N} 1_{v_{P_i} = 0}
+\end{equation}
+
+wobei $1_{v_{P_i}} = 1$, falls der Post $P_i$ $0$ Betrachtungen besitzt, sonst ist $1_{v_{P_i}} = 0$.
+
+ 
 
 
 
