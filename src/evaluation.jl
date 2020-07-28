@@ -1,32 +1,8 @@
 # Per iteration
 # parameters: model
 
-
-function ranking_rating(model)
-    rating = 0
-    for i = 1:model.n
-        rating +=
-            1 / i * user_rating(
-                model.posts[model.ranking[i]].quality,
-                ones(model.quality_dimensions),
-            )
-    end
-    return rating
-end
-
-
-function ranking_rating_relative(model)
-    by_quality = sortperm(model.posts, by=x -> - user_rating(x.quality,ones(model.quality_dimensions)))
-    rating = 0
-    for i = 1:model.n
-        rating += 1/i * user_rating(model.posts[by_quality[i]].quality,ones(model.quality_dimensions))
-    end
-    ranking_rating(model)/rating
-end
-
-fac = 1
 function dcg(model)
-    ord = (map(post -> fac *user_rating(post.quality, ones(model.quality_dimensions)), model.posts))
+    ord = zscore(map(post -> relevance(post, model), model.posts))
     dcg = 0
     for i = 1:model.n
         dcg += (2^(ord[model.ranking[i]]) - 1) / log2( i + 1)
@@ -35,7 +11,7 @@ function dcg(model)
 end
 
 function ndcg(model)
-    ord = (map(post -> fac* user_rating(post.quality, ones(model.quality_dimensions)), model.posts))
+    ord = zscore(map(post -> relevance(post,model), model.posts))
     by_quality = sortperm(ord, by= x -> -x)
     bdcg = 0
     for i = 1:model.n
@@ -45,8 +21,13 @@ function ndcg(model)
 end
 
 function spearman(model)
-    ord = (map(post -> user_rating(post.quality, ones(model.quality_dimensions)), model.posts))
+    ord = (map(post -> relevance(post, model), model.posts))
+
     by_quality = sortperm(ord, by= x -> -x)
+    if model.time < 3
+        @info "Ranking: $(model.ranking)"
+        @info "ByQualtiy: $by_quality"
+    end
     cor(model.ranking, by_quality)
 end
 
@@ -76,7 +57,7 @@ end
 macro top_k_gini(k)
     name = Symbol("gini_top_",eval(k))
     return :(function $name(model)
-        by_quality = sortperm(model.posts, by=x -> - user_rating(x.quality,ones(model.quality_dimensions)))
+        by_quality = sortperm(model.posts, by=x -> - relevance(x,model))
         posts = model.posts[by_quality[1:minimum([$k,length(model.posts)])]]
         s = 0
         n = sum(map(post -> post.views, posts))
@@ -93,6 +74,13 @@ macro top_k_gini(k)
 end
 # per model
 # parameters: model, model_df
+
+macro area_under(parameter)
+    name = Symbol("area_under_", eval(parameter))
+    return :(function $name(model,model_df)
+            return trapezoidial_rule(model_df[!, $parameter])/model.steps
+        end)
+end
 
 
 function area_under_curve(model, model_df)
@@ -117,13 +105,7 @@ end
 
 function posts_with_no_views(model, model_df)
     no_views = filter(x -> x.views == 0, model.posts)
-    return length(no_views)
-end
-
-
-function sum_gradient(model, model_df)
-    ranking = model_df[!, :ranking_rating_relative]
-    sum(map(i ->  ranking[i+1] - ranking[i] ,1:length(ranking)-1))
+    return length(no_views)/length(model.posts)
 end
 
 quality_sum(model, model_df) = sum(map(
@@ -131,10 +113,6 @@ quality_sum(model, model_df) = sum(map(
     model.posts,
 ))
 
-function gain(model, model_df)
-    model_df[end, :ranking_rating_relative] -
-    model_df[1, :ranking_rating_relative]
-end
 
 function mean_user_view(model, model_df)
     mean(x -> length(x.viewed)/model.n, allagents(model))
@@ -157,19 +135,6 @@ end
 vote_count(model, model_df) = sum(map(x -> x.votes, model.posts))
 
 
-# evaluation of rich get richer effects only
-function quality_first_quantile(model, model_df)
-    max_score = model.posts[model.ranking[1]].score
-    min_score = model.posts[model.ranking[end]].score
-    quality_quantile = 0
-    for post in model.posts
-        if  post.score >= 0.75*(max_score-min_score)
-            quality_quantile += model.user_rating_function(post.quality, ones(model.quality_dimensions))
-        end
-    end
-    return quality_quantile/quality_sum(model,model_df)
-end
-
 
 # per post in models
 # parameters: post, model, model_df
@@ -180,7 +145,7 @@ function end_position(post, model, model_df)
 end
 
 function quality(post,model,model_df)
-    user_rating(post.quality, ones(model.quality_dimensions))
+    relevance(post,model)
 end
 
 # Helpers
