@@ -1,15 +1,12 @@
 
 
 default_model_properties = [
-    ranking_rating,
-    ranking_rating_relative,
     dcg,
     ndcg,
     gini,
     @top_k_gini(10),
     @top_k_gini(50),
     @top_k_gini(100),
-    spearman,
     @model_property_function(:model_id),
     @model_property_function(:gravity),
     @model_property_function(:seed),
@@ -21,16 +18,13 @@ default_model_properties = [
 
 
 default_evaluation_functions = [
-    area_under_curve,
-    area_under_gini,
-    @area_under_gini_top_k(10),
-    @area_under_gini_top_k(50),
-    @area_under_gini_top_k(100),
-    area_under_spearman,
+    @area_under(:ndcg),
+    @area_under(:gini),
+    @area_under(:gini_top_10),
+    @area_under(:gini_top_50),
+    @area_under(:gini_top_100),
     vote_count,
     quality_sum,
-    gain,
-    sum_gradient,
     post_views,
     mean_user_view,
     mean_user_vote,
@@ -49,6 +43,7 @@ default_evaluation_functions = [
     @model_property_function(:start_users),
     @model_property_function(:steps),
     @model_property_function(:gravity),
+    @model_property_function(:relevance_gravity),
     @model_property_function(:user),
     @model_property_function(:user_rating_function),
     @model_property_function(:voting_probability_distribution),
@@ -56,7 +51,6 @@ default_evaluation_functions = [
     @rating_correlation(quality, end_position),
     @rating_correlation(timestamp_func, score_func),
     @model_df_column(:gini),
-    @model_df_column(:ranking_rating_relative),
     @model_df_column(:dcg),
     @model_df_column(:ndcg),
 ]
