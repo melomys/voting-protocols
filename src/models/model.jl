@@ -70,6 +70,7 @@ function standard_model(;
         zeros(quality_dimensions),
         I(quality_dimensions),
     ),
+    relevance_gravity = 0,
     scoring_function = scoring,
     seed = 0,
     sorted = 0,
@@ -119,7 +120,7 @@ function standard_model(;
     # Presorting posts
 
     user_ratings = []
-    tmp_properties = @dict(user_rating_function, time, quality_dimensions)
+    tmp_properties = @dict(user_rating_function, time, quality_dimensions, relevance_gravity)
     tmp_model = ABM(UserType; properties = tmp_properties)
     scores = []
     for i = 1:start_posts
@@ -131,7 +132,6 @@ function standard_model(;
     end
     tmp_ranking = sortperm(map(x -> s*x, scores))
     ranking = partial_shuffle(rng_model, tmp_ranking, 1 - abs(sorted))
-
     # berechne Werte um beim Userrating das Quantil abzuleiten
     nn = 100
     p_qual = rand(rng_user_posts, quality_distribution, nn)
@@ -167,6 +167,7 @@ function standard_model(;
         quality_distribution,
         ranking,
         rating_distribution,
+        relevance_gravity,
         rng_model,
         rng_user_posts,
         scoring_function,
@@ -293,6 +294,11 @@ function partial_shuffle(rng, v::AbstractArray, percent)
     end
     ret
 end
+
+function relevance(post, model)
+    sum(sigmoid.(post.quality))/(maximum([model.time-post.timestamp,1]))^(model.relevance_gravity)
+end
+
 
 function rating_quantile(model, quantile)
     model.rating_distribution[maximum([1,Int64(round(length(model.rating_distribution)*quantile))])]

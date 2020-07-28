@@ -35,7 +35,7 @@ function scoring_random(post, time, model)
 end
 
 function scoring_best(post, time, model)
-    model.user_rating_function(post.quality, ones(model.quality_dimensions))
+    relevance(post,model)
 end
 
 function scoring_worst(post, time, model)
