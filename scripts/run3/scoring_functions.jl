@@ -6,6 +6,7 @@ model_init_params = [
         :all_models,
         Dict(
             :user_rating_function => [user_rating_exp2, user_rating_dist2],
+            :relevance_gravity => [0, 1.8]
         ),
     ),
     (
