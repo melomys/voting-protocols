@@ -225,15 +225,6 @@ function unary_columns(df)
     df[!, filter(x -> (typeof(df[1, x]) <: Union{Float64,Int,Bool}), names(df))]
 end
 
-default_model_properties = [
-    ranking_rating_relative,
-    @get_post_data(:score, identity),
-    @get_post_data(:votes, identity),
-]
-
-default_view_model_properties =
-    [default_model_properties..., @get_post_data(:views, identity)]
-
 
 """
 Default Parameters
