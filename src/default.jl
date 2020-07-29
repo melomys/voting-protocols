@@ -58,14 +58,7 @@ default_evaluation_functions = [
 sort!(default_evaluation_functions, by = x -> string(x))
 
 
-# vielleicht noch ein rating_dist mit reinhauen um das anzuschauen??
 default_models = [(
-    standard_model,
-    Dict(
-        :deviation_function => [no_deviation, mean_deviation],
-        :scoring_function => [scoring_hacker_news, scoring_view],
-    ),
-),
 (
     downvote_model,
     Dict(:scoring_function => [scoring_reddit_hot],
@@ -75,10 +68,11 @@ default_models = [(
     [standard_model],
     Dict(
         :deviation_function => [no_deviation, mean_deviation],
-        :scoring_function => [scoring_activation],
-        :init_score => 30
+        :scoring_function => [scoring_activation,scoring_hacker_news, scoring_view],
+        :init_score => 20
     )
 ),
 ( :all_models, Dict(
     :user_rating_function => [user_rating_exp2, user_rating_dist2]
+    :relevance_gravity => [0,1.8]
 ))]
