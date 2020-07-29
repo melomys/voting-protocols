@@ -1,14 +1,8 @@
 \chapter{Modell}
 
-In diesem Kapitel werden die benötigten Modelleigenschaften beschrieben, welche definiert werden müssen um eine agentenbasierten Modellierung von Votingsystemen zu erstellen. Außerdem für die Modelleigenschaften beschrieben wie sie in dieser Arbeit modelliert werden.
+Das agent*innenbasierte Modell \ac{M} wird für eine festgelegte Anzahl Iterationsschritte $N_M$ simuliert. Für jeden Iterationsschritt $i_M$ werden bestimmte Aktionen durchgeführt. Die User*innen interagieren in jedem Schritt mit dem Modell.
 
-Das Modell besitzt eine festgelegte Anzahl an Iterationsschritten, in jeder Iteration können User*innen mit der modellierten Onlineplattform interagieren
-
-In diesem Kapitel werden zuerst grundlegende Definitionen getätigt, welche für die agentenbasierten Modellierung von Votingsystemen notwendig sind. Anschließend kann die Modellierung von User*innen und Posts beschrieben werden. 
-
-Es handelt sich um ein agentenbasiertes Modell. Das Modell $M$ wird für eine festgelegte Anzahl Iterationsschritte $N_M$ simuliert, für jede Iteration $i_M$ werden bestimmte Aktionen durchgeführt. Die User*innen interagieren in jedem Schritt mit dem Modell.
-
-In diesem Kapitel werden Modelleigenschaften beschrieben, welche zur Simulation notwendig sind.
+In diesem Kapitel werden die in der Simulation benötigten Modellparameter beschrieben.
 
 \section{Qualität}
 User*innen von sozialen Medien können Posts nach unterschiedlichen Kriterien und Qualitätsmerkmalen betrachten. Auf einer News Plattform achten User*innen auf die Informativität und Aktualität. Auf einer Fotoseite werden Beiträge vielleicht eher nach Ästhetik und Originalität bewertet. Auf welche und wie viele Qualitätsmerkmale die User*innen letztlich achten ist nicht bekannt.
@@ -23,8 +17,9 @@ Ein Votingsystem kann einen Bewertungsraum $B$ mit beliebiger Dimension $n_B$ zu
 
 Diese Arbeit ist beschränkt auf $n_B = [1,2]$. 
 
-
 \section{Posts}
+
+Im folgenden sind die Parameter der im Modell verwendeten Posts beschrieben.
 
 \paragraph{Veröffentlichungszeitpunkt}
 Der Veröffentlichungszeitpunkt $a_P = i_M$ ist der Modellschritt $i_M$, in welchem der Post veröffentlicht wurde.
@@ -37,11 +32,12 @@ Der Bewertungsvektor $b_P$ eines Posts besitzt die Dimension $n_B$. In ihm wird 
 
 Der Score $s_P$ eines Posts enthält den Wert, den der Post durch eine Bewertungsmetrik (Abschnit \ref{chapter:bewertungsmetriken} zugeordnet wurde.
 
+Der Initialscore $s_{0}$ aller Posts kann varriert werden.
+
 \paragraph{Betrachtungen}
 
 Die Anzahl $w_P$ der User*innen  die den Post gesehen haben.
 
-Der Bewertungsvektor $b_P$ eines Posts besitzt die Dimension $n_B$. In ihm wird Bewertung der User*innen des Postes gespeichert.
 
 \paragraph{Qualität}
 \label{pqualitaet}
@@ -50,38 +46,47 @@ Der $n_Q$-dimensionale Qualitätsvektor $q_P$ beschreibt die Qualität eines Pos
 
 Je größer einzelne Einträge in $q_P$ sind, desto besser ist die Qualität eines Postes in diesem Qualitätsmerkmal.
 
-Die Qualität eines Posts kann sich mit der Zeit ändern. Auf einer Newsplattform spielt Aktualität eine wichtige Rolle. Posts welche gerade erst veröffentlicht wurden besitzen vermutlich eine höhere Relevanz als als ältere Posts. Hingegen auf einer Q\&A-Seite verlieren Beiträge mit verstreichender Zeit weniger an Relevanz. Denn die beste Antwort auf eine Frage bleibt dies meistens auch für längere Zeit.
+Es wird keine Unterscheidung zwischen Darstellungsqualität wie in [Felix masterarbeit] gemacht. Diese ist hoch, wenn auf den ersten Blick deutlich wird um was sich der Post handelt. Alle User*innen erfassen auf den ersten Blick den gesamten Qualitätsumfang der Posts.
 
 \paragraph{Relevanz}
 
-Die skalare Relevanz $R_P$ eines Posts ergibt sich somit durch die Summe aller Einträge vo $q_P$ dividiert durch das in Gravität gesetzte Alter des Posts. Durch die Gravität $G_T$ wird festgelegt wie schnell die Posts an Relevanz verlieren:
-Die skalare Gesamtqualität ${q_P}_{ges}$ eines Posts ist die Summe alle Einträge von $q_P$ in Formel \ref{eq:gesqualitaet}:
+Die Relevanz gibt an, wie interessant ein Post ist. Relevante Posts sollen auf einer Kommunikationsplattform weit oben angezeigt werden.
+
+Die Relevanz eines Posts kann sich mit der Zeit ändern. Auf ein Newsplattform spielt Akualität eine wichtige Rolle. Posts welche gerade erst veröffentlicht wurden besitzen meist eine höhere Relevanz als Posts, welche vor langer Zeit veröffentlicht wurden. Auf eine Q\&A-Seite verlieren Beiträge mit versteichender Zeit weniger an Relevanz. Die beste Antwort auf eine Frage bleibt dies meistens auch für längere Zeit.
+
+Die Relevanz $R_P$ eines Posts ergibt sich somit durch die Summe aller Einträge vo $q_P$ dividiert durch das in Gravität gesetzte Alter des Posts. Durch die Gravität $G_R$ wird festgelegt wie schnell die Posts an Relevanz verlieren:
+
+ \ref{eq:gesqualitaet}:
 \begin{equation}
 \label{eq:gesqualitaet}
 {R_P} = \frac{1}{(i_M - a_P)^{G_R}}\sum_{i=1}^{N_Q} {q_P}_i
 \end{equation}
 
-Es wird keine Unterscheidung zwischen Darstellungsqualität wie in [Felix masterarbeit] gemacht. Diese ist hoch, wenn auf den ersten Blick deutlich wird um was sich der Post handelt. Alle User*innen erfassen auf den ersten Blick den gesamten Qualitätsumfang der Posts.
-
-\subsection{Bewertungsmetriken}
+\section{Bewertungsmetriken}
 \label{sec:bewertungsmetrik}
 
-Bewertungsmetriken sollen Posts anhand ihrer Relevanz sortieren. Da die wahre Relevanz von Posts bei der Verwendung von Bewertungsmetriken nicht bekannt ist, muss diese durch die Postparameter approximiert werden: 
+Bewertungsmetriken sollen Posts anhand ihrer Relevanz sortieren. Da die wahre Relevanz von Posts bei der Verwendung von Bewertungsmetriken nicht bekannt ist, muss diese durch die weiteren Postparameter approximiert werden.
 
-Eine Bewertungsmetrik $B(P)$ wertet den Bewertungsvektor $b_P$ von $P$ unter Verwendung weiterer Postparameter aus und ordnet $P$ den Score $s_P$ zu. Anhand dieses Scores werden die Posts sortiert und auf der Plattform angezeigt. 
+Das Kapitel \ref{chapter:bewertungsmetriken} beschäftigt sich ausführlich mit Bewertungsmetriken.
 
-Mehr Gedanken zu Bewertungsmetriken befinden sich in Kapitel \ref{chapter:bewertungsmetriken}
+\subsection{Vorsortierung der Posts}
+
+Bei der Simulation einer Kommunikationsplatform besteht die Problematik des \textit{Cold Starts}. Diese besagt, dass es in einer realen Umgebung den Zeitpunkt $0$ der Simulation nicht gibt. Zum Zeitpunkt $0$ der Simulation sind die Posts zufällig angeordnet. Kein Posts wurde betrachtet oder bewertet.
+
+Um dem \textit{Cold Start} entgegen zu wirken können die Posts nach Qualität vor der Simulation sortiert werden.
+Der Sortierungskoeffizient $\omega$ befindet sich im Intervall $[-1,1]$. Bei $\omega=0$ findet keine Vorsortierung statt. Bei $\omega=1$ sind die Posts vollständig nach Qualität sortiert, bei $\omega=-1$ sind die Posts vollständig umgekehrt nach Qualität sortiert.
+
 
 \section{User*innen}
 
-Um ein agent*innenbasiertes Modell einer Onlinekommunikationsplattform zu entwickeln ist es elmentar das User*innenverhalten zu beschreiben. Leider stehen im Rahmen dieser Arbeit keine Daten zur Verfügung, an denen es möglich ist User*innnenparameter zu fitten.
+Um ein agent*innenbasiertes Modell einer Onlinekommunikationsplattform zu entwickeln ist es elementar das User*innenverhalten zu beschreiben. Leider stehen im Rahmen dieser Arbeit keine Daten zur Verfügung, an denen es möglich ist User*innnenparameter zu fitten.
 
 Die Parameter werden stattdessen durch plausible Verteilungen approximiert.
 
 \subsection{Aktivtität}
 
 
-Die Aktitvität beschreibt, wie oft User*innen aktiv sind, die Kommunikationsplattform besuchen und Posts betrachten. Dabei sind weder alle User*innen durchgehend online noch gleichzeitig. 
+Die Aktitvität  $a_P$ beschreibt, wie oft User*innen aktiv sind, die Kommunikationsplattform besuchen und Posts betrachten. Dabei sind weder alle User*innen durchgehend online noch gleichzeitig. 
 
 Die Aktivität wird als Wahrscheinlichkeit modelliert. Die Aktivität beschreibt wie wahrscheinlich es ist, dass ein*e User*in in einem Iterationsschritt aktiv ist. Die Aktivität ist über die User*innen $\beta$-verteilt.
 
@@ -92,70 +97,79 @@ Die Aktivität wird als Wahrscheinlichkeit modelliert. Die Aktivität beschreibt
 
 \subsection{Konzentration}
 
-Wenn ein*e User*in aktiv ist wird sie nicht alle Posts der Plattform anschauen. Einerseits weil die Plattform dazu zu viele Posts besitzt und andererseits, weil die Konzentration von User*innen auf die Plattform nicht unendlich ist. Wenn User*innen auf der Plattform aktiv sind werden sie  stets eine endliche Anzahl an Posts betrachten. Diese Anzahl wird durch die Konzentration definiert.
+Wenn ein*e User*in aktiv ist wird sie nicht alle Posts der Plattform anschauen. Einerseits weil die Plattform dazu zu viele Posts besitzt und andererseits, weil die Konzentration von User*innen auf der Plattform nicht unendlich ist. Wenn User*innen auf der Plattform aktiv sind werden sie stets eine endliche Anzahl an Posts betrachten. Diese Anzahl wird durch die Konzentration definiert.
 
-Die Konzentration ist über die User*innen diskret-positiv verteilt.
+Die Konzentration $k_P$ ist über die User*innen diskret-positiv verteilt und wird über eine Poisson-Verteilung modelliert.
 
 [Bild mit unterschiedlichen Poissonverteilungen??]
 
 \subsection{Qualitätsperzeption}
 \label{uqualitaet}
 
-Durch die Qualitätsperzeption wird festgelegt wie sehr User*innen Qualität wahrnehmen und wie stark ihre Qualitätswahrnehmung ausgeprägt ist. Die Qualitätsperzeption wird durch einen Vektor mit $n_Q$  Einträgen beschrieben. Jeder Eintrag beschreibt die Qualitätswahrnehmung in dem entsprechenden Qualitätsmerkmal. Je größer ein Eintrag im Qualitätsvektor ist, desto höher ist die Fähigkeit der User*in die wahre Qualität des Posts zu beurteilen.
+Durch die Qualitätsperzeption wird festgelegt wie sehr User*innen Qualität wahrnehmen und wie stark ihre Qualitätswahrnehmung ausgeprägt ist. Die Qualitätsperzeption wird durch einen Vektor $q_U$ mit $n_Q$  Einträgen beschrieben. Jeder Eintrag beschreibt die Qualitätswahrnehmung in dem entsprechenden Qualitätsmerkmal. Je größer ein Eintrag im Qualitätsvektor ist, desto höher ist die Fähigkeit der User*in die wahre Qualität des Posts zu beurteilen.
 
-Die Qualitätsperzeptionsvektoren werden als Zufallswerte aus der Qualitätsverteilung erzeugt.
+$q_U$ wird als Zufallswert aus der Qualitätsverteilung erzeugt.
 
 \subsection{User*innenmeinungsfunktion}
 
-Wenn eine User*in $U$ einen Post $P$ betrachtet, bildet sie sich über den Post anhand der Postqualität und ihrer eigenen Qualiätsperzeption eine eine Meinung. Die Meinungsbildung wird durch die User*innenmeinungsfunktion modelliert. Durch diese Funktion $R(P,U): \R^{n_Q} \rightarrow \R $ werden die beiden $n_Q$-dimensionalen Vektoren der Postqualität und Qualitätsperzeption auf einen skalaren Meinungswert $m_{P,U} = R(P,U)$ reduziert. Dieser drückt aus, wie gut die User*in den betrachteten Post empfindet. Je größer der Meinungswert ist, desto besser empfindet die User*in den Post.
+Wenn eine User*in $U$ einen Post $P$ betrachtet, bildet sie sich über den Post anhand der Postqualität und ihrer eigenen Qualitätsperzeption eine Meinung. Die Meinungsbildung wird durch die User*innenmeinungsfunktion modelliert. Durch diese Funktion $R(P,U): \R^{n_Q} \rightarrow \R $ werden die beiden $n_Q$-dimensionalen Vektoren der Postqualität und Qualitätsperzeption auf einen skalaren Meinungswert $m_{P,U} = R(P,U)$ reduziert. Dieser drückt aus, wie gut die User*in den betrachteten Post empfindet. Je größer der Meinungswert ist, desto besser empfindet die User*in den Post.
 
 Weitere Überlegungen zur User*innenmeinungsfunktion befinden sich Kapitel \ref{chapter:bewertungsfunktionen}.
 
-\section{User*innenmeinungsverteilung} %TODO geht schon, sollte aber erst nach der Beschreibung von User*innen kommen
+\section{User*innenmeinungsverteilung}
 
 
-Werden die Meinungswerte vieler User*innen bezüglich vieler Posts berechnet, dann spannen diese eine Wahrscheinlichkeitsverteilung $M$ auf. Diese wird im Modell dazu verwendet zu entscheiden, ob User*innen Posts bewerten (Siehe dazu Abschnitt \ref{bewertungszufriedenheit}).
+Werden die Meinungswerte vieler User*innen bezüglich vieler Posts berechnet, dann spannen diese eine Wahrscheinlichkeitsverteilung $W$ auf. Diese wird im Modell dazu verwendet zu entscheiden, ob User*innen Posts bewerten. (Siehe dazu Abschnitt \ref{bewertungszufriedenheit}).
 
-Die User*innenmeinungsverteilungfunktion in \ref{eq:meinungsverteilung} wird empririsch berechnet. Dazu werden aus der Qualitätsverteilung $n$ Pseudoposts $Ps$ und Pseudouser*innen $Us$ erzeugt. Diese werden über die Meinungsfunktion $R$ kombiniert. $1_{\{x \leq R(Ps_i,Us_j)\}}$ ist $1$ für $x \leq R(Ps_i,Us_j)$ und sonst $0$.
+Die User*innenmeinungsverteilungfunktion in \ref{eq:meinungsverteilung} wird empririsch berechnet. Dazu werden aus der Qualitätsverteilung jeweils $n$ Pseudoposts $Ps$ und Pseudouser*innen $Us$ erzeugt. Diese werden über die Meinungsfunktion $R$ kombiniert. $1_{\{x \leq R(Ps_i,Us_j)\}}$ ist $1$ für $x \leq R(Ps_i,Us_j)$ und sonst $0$.
 
 \begin{equation}
 \label{eq:meinungsverteilung}
-F_M(x) = \frac{1}{n^2}\sum_{i,j = 1}^{n} 1_{\{x \leq R(Ps_i,Us_j)\}}
+F_W(x) = \frac{1}{n^2}\sum_{i,j = 1}^{n} 1_{\{x \leq R(Ps_i,Us_j)\}}
 \end{equation}
 
 %TODO [Bild mit unterschiedlichen empirischen Bewertungsverteilungen, nach unterschiedlichen Ratingfunktionen]
 
 \subsection{Bewertungszufriedenheit}
 \label{bewertungszufriedenheit}
-%TODO richtige Stelle für diesen Abschnitt finden
-In diesem Modell wird angenommen, dass User*innen Posts nur bewerten, der berechnete Meinungswert über bzw. unter einen bestimmten Grenzwert fällt. Dieser Grenzwert wird mithilfe der Bewertungszufriedenheit $\beta_U$ definiert.
+Im Modell wird angenommen, dass User*innen Posts nur bewerten, wenn der berechnete Meinungswert über bzw. unter einen bestimmten Grenzwert fällt. Dieser Grenzwert wird mithilfe der Bewertungszufriedenheit $\beta_U$ definiert.
 
-Der Grenzwert wird mit der Umkehrfunktion der User*innenmeinungsverteilungsfunktion $g = F_M^{-1}(\beta_U)$ berechnet.
+Der Grenzwert wird mit der Umkehrfunktion der User*innenmeinungsverteilungsfunktion $g = F_W^{-1}(\beta_U)$ berechnet.
 $g$ ist somit das $\beta_U$-Quantil der empirischen Dichteverteilung von $M$
+
+%TODO GRAFIK IST HIER GUT
 
 Sobald $m_{P,U} < g$ bzw. $m_{P,U} > g$ wird der Post $P$ von der User*in $U$ bewertet. 
 
-Die Bewertungszufriedenheit ist kontiunierlich auf dem Interall $[0,1]$ verteilt. 
+Die Bewertungszufriedenheit ist kontinuierlich auf dem Intervall $[0,1]$ verteilt und wird mit einer $\beta$-Verteilung modelliert.
 
+\subsection{Extreme User*innen}
+
+Extreme User*innen besitzen eine sehr starke Meinung. Die Qualiätsperzeption ist $q_{U_E} = q_P + E$. Wobei $E$ angibt, wie extrem die Meinung ist. Extreme User*innen sind in jedem Modellschritt aktiv und bewerten jeden Post: $a_{U_E}= \beta_{U_E} = 1$. Außerdem besitzen extreme User*innen eine sehr hohe Konzentration:  $k_{U_E} = 500$.
+
+$E_M$ ist eine Matrix, Anzahl und Art der extremen User*innen definiert. In Formel \ref{eq:em} ist eine Beispielmatrix gezeigt.
+
+\begin{equation}
+\label{eq:em}
+{E_M}_{Bsp} = 
+\begin{pmatrix}
+0.02 & 20 \\
+0.05 & -10 \\
+\end{pmatrix}
+\end{equation}
+
+In der ersten Spalte befindet sich der Anteil an der gesamten User*innenzahl mit dem $E$-Wert in der zweiten Spalte. In diesem Beispiel sind 2\% extreme User*innen mit $E=20$ und 5\% extreme User*innen mit $E = -10$. Die restlichen 93\% User*innen sind "normal".
 
 \section{User*innen und Postanzahl}
 
-In der folgenden Tabelle sind die Modellparameter zur Steuerung der User*innen- und Postanzahl angegeben:
+In der folgenden Tabelle sind die Modellparameter der User*innen- und Postanzahl angegeben:
 
 \begin{table}[!htbp]
 	\begin{tabularx}{\textwidth}{lX}
 		$N_U$&  Anzahl der User*innen\\
 		${N_P}_{start}$ & Anzahl der Posts zu Beginn der Simulation \\
-		${N_P}_{iter}$ & Anzahl der neuen Posts pro Iteration\\
+		${N_P}_{iter}$ & Anzahl der neuen Posts pro Iteration\\ 
+		${N_P}$ & Gesamtanzahl der Posts, $N_P = {N_P}_{start} + i_M * {N_P}_{iter}$
 	\end{tabularx}
 \end{table}
 
-
-\subsection{Vorsortierung der Posts}
-
-Bei der Simulation einer Kommunikationsplatform besteht die Problematik des \textit{Cold Starts}. Diese besagt, dass es in einer realen Umgebung den Zeitpunkt $0$ der Simulation nicht gibt. Zum Zeitpunkt $0$ sind die Posts zufällig angeordnet. Kein Posts wurde betrachtet oder bewertet.
-
-Um dem \textit{Cold Start} entgegen zu wirken können die Posts nach Qualität vor der Simulation sortiert werden.
-Der Sortierungskoeffizient $s$ befindet sich im Intervall $[-1,1]$. Bei $s=0$ findet keine Vorsortierung statt. Bei $s=1$ sind die Posts vollständig nach Qualität sortiert, bei $s=-1$ sind die Posts vollständig umgekehrt nach Qualität sortiert.
-
-%\subsection{Extreme User*innen}

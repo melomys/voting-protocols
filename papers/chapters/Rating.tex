@@ -1,9 +1,8 @@
-\chapter{User*innenmeinung} %TODO Umbenennung in User*innenmeinungsfunktion UND UMZIEHEN IN MODELLPARAMETER
+\chapter{User*innenmeinung}
+\label{chapter:bewertungsfunktionen}
 
-Wenn eine User*in in einem Social Media System einen Post betrachtet, bildet sie sich darüber eine Meinung, anhand derer sie entscheidet den Post zu bewerten oder nicht. Diese Meinungsfunktion ist nicht bekannt, aber elementar um ein soziales Medium agent*innenbasiert zu simulieren, denn ohne meinungsbildende User*innen kann keine Bewertungsdynamik entstehen. Im folgenden wird beschrieben über welche Ansätze die User*innenmeinungsfunktion approximiert wird.
 
-
-Für eine User*in $U$ die einen Post $P$ betrachtet ist die Meinungsfunktion $R(q_P,q_U): \R^{N_Q} \rightarrow \R$ welche die beiden $N_Q$-dimensionalen Vektoren der Postqualität und Qualitätsperzeption auf den skalaren Meinungswert $m_{P,U} = R(q_P, q_U)$ reduziert. Dieser drückt aus wie gut die User*in den betrachteten Post empfindet. Dabei soll gelten:
+Für eine User*in $U$ die einen Post $P$ betrachtet ist die Meinungsfunktion $R(P,U): \R^{N_Q} \rightarrow \R$, welche die beiden $N_Q$-dimensionalen Vektoren der Postqualität und Qualitätsperzeption auf den skalaren Meinungswert $m_{P,U} = R(P, U)$ reduziert. Dieser drückt aus wie gut die User*in den betrachteten Post empfindet. Dabei soll gelten:
 
 \begin{enumerate}
 	\item $m_{P,U} \in [0,1]$
@@ -13,24 +12,27 @@ Für eine User*in $U$ die einen Post $P$ betrachtet ist die Meinungsfunktion $R(
 
 \section{Transformation der Qualitätsparameter}
 
-Um die Intervallgrenzen der genannten Kriterien zu beachten wird eine Transormation der Qualitätsparameter vollzogen, welche diese auf das Intervall $[0,1]$ 
-begrenzen. Die Transformation wird durch die {Sigmoid}-Funktion in Formel \ref{sigmoid} vollzogen:
+Um die Intervallgrenzen der genannten Kriterien zu beachten wird eine Transormation der Qualitätsparameter vollzogen, welche diese auf das Intervall $[0,1]$ begrenzen. Die Transformation wird durch die logistische Funktion $l$ in Formel \ref{sigmoid} vollzogen:
+
+
 
 \begin{equation}
 \label{sigmoid}
-s(x) = \frac{1}{1 + e^{-\frac{1}{2}x}}
+l(x) = \frac{1}{1 + e^{-\frac{1}{2}x}}
 \end{equation}
+
+%TODO grafik der logistischen funktion
 
 Somit ergeben sich die transformierten Qualitäts- bwz Qualitätsperzeptionsvektoren der Post und User*innen durch die komponentenweise Anwendung von $s$ auf $q_P$ und $q_U$
 
 \begin{align}
-\tilde{q}_P = s(q_P) \\
-\tilde{q}_U = s(q_U) 
+\tilde{q}_P = l(q_P) \\
+\tilde{q}_U = l(q_U) 
 \end{align}
 
 \section{Approxamtion des User*innenratings}
 
-Im folgenden werden zwei Ansätze eingeführt um die User*innenmeinungsfunktion $R(q_P,q_U)$ zu approximieren.
+Im folgenden werden zwei Ansätze eingeführt um die User*innenmeinungsfunktion $R(P,U)$ zu approximieren.
  
 \subsection{Konsensrating}
 
@@ -38,27 +40,29 @@ Im Konsensrating wird davon ausgegangen, dass User*innen "gute" Posts eher als d
 
 Das Konsensrating ist eher auf einen Q\&A Platform oder einem Techforum wie Hacker News denkbar. Konstruktive Beiträge sind eher von destruktiven zu unterscheiden. User*innen die besonders gut in einem Thema sind haben an Beiträge zu diesem Thema möglicherweise höhere Ansprüche.
 
-
 In Formel \ref{konsensexp2} ist ein Ratingfunktion, welche die genannten Punkte ausdrückt:
 
 \begin{equation}
 \label{konsensexp2}
-R_K(q_P,q_U) = \frac{1}{N}\sum_{i = 1}^{N}\tilde{q}_{P,i}^{\tilde{q}_{U,i}}
+R_K(P,U) = \frac{1}{N}\sum_{i = 1}^{N}\tilde{q}_{P,i}^{\tilde{q}_{U,i}}
 \end{equation}
 
 
 
 \subsection{Dissensrating}
 
-User*innen empfinden Posts als "gut", die nach an ihrer eigenen Qualitätsperzeption liegen. Dadurch sind sich User*innen bei vielen Posts uneinig.
+User*innen empfinden Posts als "gut", die nah an ihrer eigenen Qualitätsperzeption liegen. Dadurch sind sich User*innen bei vielen Posts uneinig.
 
 Das Dissensrating ist eher auf einer Diskussionsplattformen denkbar. Dort können die Meinungen auseinander gehen. User*innen haben nicht unbedingt das Interesse die Position der Gegenüber einzunehmen. 
 
-Eine Funktion die die genannten Kriterien erfüllt ist die euklidische Distanz, daher ergibt sich in Formel \ref{dissens}:
+Eine Funktion die die genannten Kriterien erfüllt verwendet die euklidische Distanz, es ergibt sich in Formel \ref{dissens}:
 
 
 %TODO Dissensrating validieren
 \begin{equation}
 \label{dissens}
-R_D(q_P,q_U) = 1 - \frac{||(\tilde{q}_P - \tilde{q}_U)||_2}{\sqrt{N_Q}}
+R_D(P,U) = 1 - \frac{||(\tilde{q}_P - \tilde{q}_U)||_2}{\sqrt{N_Q}}
 \end{equation}
+
+
+
