@@ -12,7 +12,7 @@ model_init_params = [(
             :user_rating_function => [user_rating_exp2],
             :deviation_function => [no_deviation, mean_deviation],
             #:vote_evaluation => [vote_difference, vote_partition, wilson_score],
-            :relevance_gravity[0,1,2]
+            :relevance_gravity => [0,1,2]
         ),
     ),
 ]
