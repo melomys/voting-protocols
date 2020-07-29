@@ -12,7 +12,7 @@ model_init_params = [
     (
         standard_model,
         Dict(
-            :scoring_function => [scoring_activation, scoring_hacker_news, scoring_view, scoring_view_activation, scoring_view_exp],
+            :scoring_function => [scoring_activation, scoring_hacker_news, scoring_view, scoring_view_activation],
             :init_score => [-10:10:30...],
             :deviation_function => [no_deviation, mean_deviation]
         ),
