@@ -67,7 +67,6 @@ default_models = [
 (
     standard_model,
     Dict(
-        :deviation_function => [no_deviation, mean_deviation],
         :scoring_function => [scoring_activation,scoring_hacker_news, scoring_view],
         :init_score => 20,
     )
