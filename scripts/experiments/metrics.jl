@@ -46,18 +46,6 @@ model_init_params = [
 #    :init_score => [30]
 #    ))
     ]
-
-model_init_params = [
-    (
-        standard_model,
-        Dict(
-            :scoring_function => [scoring_view_exp],
-            :init_score => [-10:10:30...],
-            :deviation_function => [no_deviation, mean_deviation]
-        ),
-    )
-]
-
 seed_ = abs(rand(Int))
 
 seed_ = 3
@@ -147,4 +135,4 @@ for model in models
         push!(plots, vp)
 end
 
-plot(plots..., rpr,rp ,layout = (length(plots) + 2, 1), legend = false)
+plot(rpr,rp ,layout = (2, 1), legend = false)
