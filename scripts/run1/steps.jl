@@ -6,7 +6,7 @@ println(nprocs())
 
 model_init_params = [
     default_models...,
-    (:all_models, Dict(:steps => [100, 300, 500, 1000, 3000])),
+    (:all_models, Dict(:steps => [100, 300, 500, 1000])),
 ]
 
 
