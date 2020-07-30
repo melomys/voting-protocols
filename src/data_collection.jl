@@ -41,7 +41,7 @@ function collect_model_data(
 
                 ab_model = tmp_model
                 ab_model_df = model_df
-                    push!(df, map(x -> x(ab_model, ab_model_df), evaluation_functions))
+                push!(df, map(x -> x(ab_model, ab_model_df), evaluation_functions))
             end
 
             if i%100 == 0
@@ -184,7 +184,11 @@ function init_correlation_dataframe(functions, models, model_properties)
     for func in functions
         r = func(tmp_model, model_df)
         #if typeof(r) <: Union{Int, Float64, Array, Symbol, String}
-        corr_dict[Symbol(func)] = typeof(r)[]
+        if typeof(r) <: Int
+            corr_dict[Symbol(func)] = Float64[]
+        else
+            corr_dict[Symbol(func)] = typeof(r)[]
+        end
         #else
         #    corr_dict[Symbol(func)] = String[]
         #end

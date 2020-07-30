@@ -68,20 +68,23 @@ model_init_params = [(
 ]
 
 model_init_params = [(
-        [standard_model,downvote_model],
+        downvote_model,
         Dict(
-            :scoring_function => [scoring_view, scoring_hacker_news, scoring_activation, scoring_reddit_hot],
-            :init_score => [0, 70, 30000],
+            :scoring_function => [scoring_view],
+            :init_score => [3000000],
+            :gravity => [2],
         ),
 
     ),
+    (downvote_model,
+    Dict(
+        :scoring_function => scoring_reddit_hot,
+        :init_score => [0],
+    )
+    ),
     (
     :all_models, Dict(
-        :deviation_function => [no_deviation, mean_deviation],
-        :vote_evaluation => [vote_difference, vote_partition, wilson_score],
-        :relevance_gravity => [0,2],
-        :gravity => [0,2],
-        :user_rating_function => [user_rating_exp2, user_rating_dist2],
+        :deviation_function => [no_deviation],
     ),
     )
 ]
