@@ -84,7 +84,10 @@ function vote_difference(post)
 end
 
 function vote_partition(post)
-    return post.votes/(post.votes - post.downvotes)
+    if post.votes + post.downvotes == 0
+        return 0
+    end
+    return post.votes/(post.votes + post.downvotes)
 end
 
 # untere Grenze des Konfidenzintervalls des anteils der Upvotes

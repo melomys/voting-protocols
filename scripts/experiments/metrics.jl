@@ -46,6 +46,41 @@ model_init_params = [
 #    :init_score => [30]
 #    ))
     ]
+
+
+model_init_params = [(
+        [standard_model,downvote_model],
+        Dict(
+            :scoring_function => [scoring_view, scoring_hacker_news, scoring_activation, scoring_reddit_hot],
+            :init_score => [0, 70, 30000],
+        ),
+
+    ),
+    (
+    :all_models, Dict(
+        :deviation_function => [no_deviation, mean_deviation],
+        :vote_evaluation => [vote_difference, vote_partition, wilson_score],
+        :relevance_gravity => [0,2],
+        :gravity => [0,2],
+        :user_rating_function => [user_rating_exp2, user_rating_dist2],
+    ),
+    )
+]
+
+model_init_params = [(
+    standard_model,
+    Dict(
+        :scoring_function => scoring_view,
+        :init_score => 0,
+        :deviation_function => mean_deviation,
+        :vote_evaluation => vote_partition,
+        :relevance_gravity => 0,
+        :gravity => 0,
+        :user_rating_function => user_rating_exp2,
+    )
+)]
+
+
 seed_ = abs(rand(Int))
 
 seed_ = 3

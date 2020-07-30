@@ -65,6 +65,7 @@ evaluation_functions = [
     @model_property_function(:user_rating_function),
     @model_property_function(:voting_probability_distribution),
     @model_property_function(:deviation_function),
+    @model_property_function(:vote_evaluation),
     @rating_correlation(quality, end_position),
     @rating_correlation(timestamp_func, score_func),
     @model_df_column(:gini),
