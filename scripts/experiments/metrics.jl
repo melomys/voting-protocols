@@ -94,7 +94,7 @@ seed_ = abs(rand(Int))
 
 seed_ = 3
 
-models = create_models(model_init_params;seed = seed_)
+models = create_models(default_models;seed = seed_)
 
 model_dfs, corr_df = collect_model_data(
 model_init_params,
