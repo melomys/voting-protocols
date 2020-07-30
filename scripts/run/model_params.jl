@@ -77,4 +77,4 @@ sort!(evaluation_functions, by = x -> string(x))
 
 
 
-export_data(model_init_params,"model_full";model_properties= model_properties, evaluation_functions= evaluation_functions, pack = 1, iterations = 1)
+export_data(model_init_params,"model_full";model_properties= model_properties, evaluation_functions= evaluation_functions, pack = 1)
