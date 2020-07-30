@@ -37,5 +37,5 @@ export export_rds, export_data
 export user, extreme_user, uniform_user
 export create_models, post_data, relative_post_data
 export sigmoid, @model_property_function, @get_post_data, @area_under, @rating_correlation, @model_df_column
-export no_deviation, std_deviation, mean_deviation
+export no_deviation, std_deviation, mean_deviation, posts_with_no_views
 end

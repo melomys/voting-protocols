@@ -23,7 +23,7 @@ model_init_params = [(
 ]
 
 
-default_model_properties = [
+model_properties = [
     dcg,
     ndcg,
     gini,
@@ -37,7 +37,7 @@ default_model_properties = [
 ]
 
 
-default_evaluation_functions = [
+evaluation_functions = [
     @area_under(:ndcg),
     @area_under(:gini),
     vote_count,
@@ -72,8 +72,8 @@ default_evaluation_functions = [
     @model_df_column(:ndcg),
 ]
 
-sort!(default_evaluation_functions, by = x -> string(x))
+sort!(evaluation_functions, by = x -> string(x))
 
 
 
-export_data(model_init_params,"init_score_gravity";pack = 1)
+export_data(model_init_params,"init_score_gravity";model_properties= model_properties, evaluation_fucnctions= evaluation_functions, pack = 1)
