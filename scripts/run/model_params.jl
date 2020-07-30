@@ -17,7 +17,7 @@ model_init_params = [(
         :scoring_function => scoring_reddit_hot,
         :init_score => [0,30000],
     )
-    )
+    ),
     (
     :all_models, Dict(
         :deviation_function => [no_deviation, mean_deviation],
