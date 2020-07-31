@@ -134,10 +134,6 @@ Die View Bewertungsmetrik basiert auf der in Kapitel \ref{seqvHackerNews} beschr
 S_{p,t} = \frac{\frac{b_{P,t}}{w_{p,t} + 1}}{(a_{p,t} + 2)^{G}}
 \end{equation}
 
-
-% TODO View Exp und View activation noch hinzufügen?? Vielleicht nicht ist auch so schon viel
-
-
 \section{Aktivität}
 
 Die Bewertung des Posts wird der Bewertung der letzten Iteration verrechnet und durch das Alter skaliert. Mit fortschreitender Zeit verlieren Posts in dieser Metrik an Score, so ergibt sich in \ref{Activation}:
@@ -152,7 +148,7 @@ S_{p,t} = \frac{v(b_{P,t})) - S_{p,t-1}}{(a_{p,t} + 2)^{G}}
 
 Nachdem Posts durch die Bewertungsmetrik bewertet wurden, kann die Bewertung durch Zufall verunreinigt werden um den in \cite{Luu} vorgeschlagenen Lärm zur Bewertung hinzuzufügen. In dieser Arbeit wurden zwei unterschiedliche Ansätze zur zufälligen Verunreinigung gewählt.
 
-\subsection{Mittelwertabweichung}
+\subsection{$\mu$-Abweichung}
 
 Sei $\mu_s$ der Mittelwert der Scores aller Posts. Für einen Post $p$ mit Score $s_p$ wird die Verunreinigung $d$ als Zufallszahl im Intervall $d_{\mu,p} \in [-|\mu_s - s_p|,|\mu_s - s_p|]$ definiert. So ergibt sich für den verunreinigten Score $\tilde{s}_p$ des Post in Formel \ref{mean_deviation}:
 
@@ -161,7 +157,7 @@ Sei $\mu_s$ der Mittelwert der Scores aller Posts. Für einen Post $p$ mit Score
 \tilde{s}_{\mu,p} =  s_p + d_{\mu,p}
 \end{equation} 
 
-\subsection{Standardabweichungabweichung}
+\subsection{$\sigma$-Abweichung}
 
 Für die Standardabweichung der Scores aller Posts $\sigma_s$ sei die Verunreinigung eine Zufallszahl im Intervall $d_{\sigma,p} \in [-\sigma_s,\sigma_s]$, sodass sich der verunreinigte Score eines Postes in Formel \ref{std_deviation} ergibt:
 
@@ -169,13 +165,5 @@ Für die Standardabweichung der Scores aller Posts $\sigma_s$ sei die Verunreini
 \label{std_deviation}
 \tilde{s}_{\sigma,P} = s_P + d_{\sigma,P}
 \end{equation}
-
-\section{Initialwert}
-
-Für Post kann der Initialwert $I_P$ angegeben werden. Jeder neuerstellte Post $P_{neu}$ erhält $s_{P_{neu}} = I_P$.
-
-
-
-
 
 	
