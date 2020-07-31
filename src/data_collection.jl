@@ -102,7 +102,7 @@ macro model_property_function(property, func = identity)
     return :(function $name(model, model_df = Nothing)
         if hasproperty(model, Symbol($name))
             val = model.$(eval(property))
-            if typeof(val) <: Union{Function,Distribution}
+            if typeof(val) <: Union{Function,Distribution, Array, Tuple}
                 string(val)
             else
                 $func(model.$(eval(property)))

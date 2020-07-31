@@ -13,4 +13,4 @@ model_init_params = [default_models...,
 ]
 
 
-export_data(model_init_params,"start_users")
+export_data(model_init_params,"start_posts")
