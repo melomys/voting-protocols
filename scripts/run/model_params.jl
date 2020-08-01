@@ -4,7 +4,7 @@ println(nprocs())
 
 
 model_init_params = [(
-        [standard_model,downvote_model]
+        [standard_model,downvote_model],
         Dict(
             :scoring_function => [scoring_view, scoring_hacker_news, scoring_activation],
             :init_score => [0,10, 20, 30, 50, 70, 90, 110, 3000],
@@ -12,7 +12,7 @@ model_init_params = [(
         ),
 
     ),
-    ([standard_model,downvote_model]
+    ([standard_model,downvote_model],
     Dict(
         :scoring_function => scoring_reddit_hot,
         :init_score => [0,30000],
