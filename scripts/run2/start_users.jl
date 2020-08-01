@@ -7,14 +7,11 @@ model_init_params = [default_models...,
     (
         :all_models,
         Dict(
-            :start_users => [50,100, 300],
-            :start_posts => [50,100, 300],
-            :new_posts_per_step => [1,5,10,20,30],
-
-
+            :start_users => [50,100, 300, 500],
         ),
     ),
 ]
 
 
-export_data(model_init_params,"start_user_posts")
+
+export_data(model_init_params,"start_users")
