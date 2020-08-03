@@ -1,0 +1,38 @@
+\chapter{Einleitung}
+
+
+\section{Bewertungsdynamiken}
+Durch immer weiter fortschreitende Ausbreitung des Internets, wächst die Anzahl der User*innen von sozialen Medien und anderen Onlineplattformen, damit einhergehend die Anzahl der veröffentlichten Beiträge. Es werden so viele Beiträge veröffentlicht, dass es nicht möglich ist allen User*innen alle Beiträge anzuzeigen. Es werden bewertungsmetrische Algorithmen eingeführt, welche Beiträge bewerten und anschließend filtern und vorsortieren. Im Idealfall werden durch die angewendeten Algorithmen schlechte Beiträge, weil sie z.B. diskriminierend, langweilig oder irrelevant sind, aussortiert und nur wenigen User*innen angezeigt, jedoch gut und relevante Beiträge vielen User*innen sichtbar gemacht werden. 
+
+Onlineplattformen verwenden unterschiedliche Votingsysteme mit welchen User*innen Beiträge bewerten können und anhand derer Bewertungsmetriken Beiträge sortieren. Hacker News\footnote{\texttt{news.ycombinator.com}} erlaubt User*innen Posts nur positiv, mit Upvotes, zu bewerten. Auf Reddit\footnote{\texttt{reddit.com}} ist es ebenfalls möglich Posts mit Downvotes runterzuwerten. Onlineshops wie TheCubicle\footnote{\texttt{thecubicle.com}} verwenden ein 1 bis 5 Sterne System um Artikel zu bewerten. 
+
+Wie in [Page quality: In search of an unbiased web ranking] für Websuchalgorithmen beschrieben unterliegen viele Bewertungsmetriken dem \textit{rich-get-richer}-Effekt, welcher dem Idealfall entgegen wirkt. Der \textit{rich-get-richer}-Effekt führt dazu, dass Beiträge welche viel Aufmerksamkeit und dadurch viel Aktivität in Form von Kommentaren oder Bewertungen erhalten werden weiteren User*innen angezeigt. Beiträge hingegen mit wenig Aufmerksamkeit erhalten auch zukünftig wenig Aktitvität, weil sie von wenigen User*innen wahrgenommen werden. Wie in [Description and Prediction of Slashdot Activity] gezeigt wird ist es entscheidend wie viel Aktivität ein Beitrag in einer kurzen Zeitspanne erzeugen kann. Ist es viel Aktivität wird der Beitrag insgesamt viel Aufmerksamkeit erhalten, ist es jedoch wenig Aktivität wird der Beitrag auch insgesamt wenig Aufmerksamkeit erfahren.
+
+% TODO Grafik nach Slashdot Activtiy ranking nachempfinden
+
+Es ist wünschenswert eine Bewertungsmetrik zu finden, welche \textit{rich-get-richer}-Effekte minimiert und qualitativ hochwertige Beiträge sichtbarer macht als qualitativ minderwertige Beiträge.
+
+Es ist nicht ausgeschlossen, dass die Qualität einer Bewertungsmetrik vom gewählten Votingsystem abhängig ist, daher soll bei der Suche nach einer optimalen Bewertungsmetrik das Votingsystem einbezogen werden.
+
+In dieser Arbeit wird ein agentenbasiertes Modell entwickelt um unterschiedliche Bewertungsmetriken auf der Grundlage unterschiedlicher Votingsysteme zu vergleichen.
+
+
+
+%Keine Möglichkeit ein Experiment durchzuführen wie in dieser Arbeit von Salganik oder Lerman
+
+\section{agentenbasierte Modellierung}
+
+In der agentenbasierten Modellierung werden die Aktionen und Interaktionen vieler Entitäten, den Agenten, simuliert. Die Agenten erhalten Verhaltensregeln, durch ihre Aktivtät kann ein komplexes System beschrieben werden. Die Auswirkungen auf das System können betrachtet werden.
+
+Wie [Agents.jl] beschreibt können viele komplexe Systeme nicht vollständig durch herkömmliche mathematische Methoden beschrieben werden. Komplexe Systeme hängen von dem Verhalten der Elemente, der Agenten, des Systems ab. Kleine Änderungen am Verhalten der Agenten können große Veränderungen des Gesamtsystems hervorrufen. Durch agentenbasierte Modellierung können nicht lineare Modelle beschrieben.
+
+Agenten können in einem Raum angeordnet werden, sodass sie mit ihren Nachbarn interagieren, wie im Modell von [Shelling], oder als Netzwerk indem jeder Agent mit jedem Agenten interagieren kann. Möglich ist auch, dass die Agenten nicht untereinander, nur mit dem System, interagieren.
+
+Die Popularität steigt stetig, agentenbasierte Modelle sind beliebt um unter anderem biologische, ökonomische und soziale Systeme zu modellieren.
+
+\section{Die modellierte Kommunikationsplattform}
+
+User*innen können Posts veröffentlichen. Diese sind für alle anderen User*innen sichtbar und können bewertet werden. Die Posts werden nach einer Bewertungsmetrik unter Betrachtung der Postparameter, wie die Anzahl und Art der Bewertungen, Betrachtungen und Zeitpunkt der Veröffentlichung bewertet. Auf der Startseite der Plattform werden die Posts absteigend nach ihrer Bewertung sortiert in einer vertikalen Liste angezeigt. Je weiter ein*e User*in auf der Seite herunterscrollt, desto mehr Posts werden angezeigt. Die Posts sind nicht auf Seiten aufgeteilt, sondern befinden sich in einer kontinuierlichen Liste. Die Liste der Posts ist für alle User*innen, die die Plattform zum gleichen Zeitpunkt besuchen identisch und nicht personalisiert.
+
+Im Laufe der Modellierung erhält die Plattform keine neue User*innen, es werden jedoch neue Posts erstellt und hinzugefügt.
+

@@ -1,0 +1,87 @@
+\documentclass[ a4paper,
+                oneside,
+                toc=bibliography,
+                toc=listof
+                ]{scrbook}
+
+\input{settings}
+
+
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{listings}
+\usepackage{tabularx}
+\usepackage{acronym}
+\usepackage{glossaries}
+\usepackage{listofsymbols}
+\usepackage{tabto}
+
+% Path to .bib file for BibLatex
+\addbibresource{bibliography.bib}
+% \addbibresource{someOtherBibFile}
+
+\author{Max Mustermann}
+\placeOfBirth{Stuttgart}
+\address{Seidenstraße 36, 70174 Stuttgart}
+\major{Mechatronics}
+\title{How to train a hamster}
+\titleTranslated{Wie man einen Hamster trainiert}
+\matrnr{1234567}
+\date{10 March 2020}
+\supervisor{My supervisor, M.Sc.}
+\professor{Prof. Dr.-Ing. Oliver Riedel}
+
+\begin{document} 
+    %\frontmatter
+    %\makeISWtitle
+
+	%\cleardoublepage
+	\setcounter{page}{1} % start at page (i) after title page
+    %\declarationOfOriginality
+
+    % Kurzfassung/Abstract
+    %\input{chapters/Abstract}
+    
+    %\cleardoublepage
+    %\tableofcontents
+       
+
+    \mainmatter
+    % ********************************************************************
+    % Write your own contents here:
+    % ********************************************************************
+    
+    
+    \input{chapters/Einleitung}
+    \input{chapters/RelatedWork}
+    \input{chapters/ModelParameter}
+    \input{chapters/Rating}
+    \input{chapters/Scoring}
+    \input{chapters/EvaluationFunktion}
+    \input{chapters/Implementierung}
+    \input{chapters/Ergebnisse}
+    \input{chapters/FutureWork}
+    
+    
+    
+    \chapter{Conclusions}
+
+    % ********************************************************************
+    % End of contents
+    % ********************************************************************
+    
+    \cleardoublepage
+    \printbibliography
+    
+    % \cleardoublepage
+    \input{chapters/Acronyms}
+    %\cleardoublepage
+    %\listoffigures
+    %\cleardoublepage
+    %\listoftables
+    
+    %% Appendix, if needed:
+    % \appendix
+    % \chapter{Example appendix chapter}
+
+\end{document}

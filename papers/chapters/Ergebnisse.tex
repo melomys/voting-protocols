@@ -1,0 +1,184 @@
+\chapter{Ergebnisse}
+
+In diesem Kapitel werden die Ergebnisse der agent*innenbasierten Modellierung vorgestellt.
+
+Mit Blick auf die aufgestellten Kriterien einer fairen Bewertungsmetrik wird in der Auswertung der Koeffizient $\rho$ in Formel \ref{eq:rho} verwendet, welcher die relevanten aggregierten Evaluationsparameter $T(nDCG)$, den Gini-Koeffizienten $T(G)$ und den Anteil der nicht betrachteten Posts $P_{v=0}$ vereint. $\rho$ wird für faire Bewertungsmetriken minimiert.
+
+\begin{equation}
+\rho =  1 - (\frac{nDCG}{2} - \frac{G}{4} - \frac{P_{v=0}}{4})
+\end{equation}
+
+Voerst werden Modellkonfigurationen unter den vier Fällen mit jeweils der Relevanzgravität $G_R = {0,2} $ und den User*innenmeinungsfunktionen Konsens $R_K$ und Dissens $R_D$ ausgwertet. In Abbildung \ref{fig:cases} links sind $T(G)$, $T(nDCG)$, und $P_{v = 0}$ von Modellen nach der Konfiguration 1 in die vier Fälle eingeteilt. Grau  hinterlegt sind sämtliche Modelle, farblich hervorgehoben die Mittelwerte der unterschiedlichen Modellkonfigurationen. Farblich unterschieden wird zwischen den Bewertungsmetriken. Aus der Korrelationsmatrix rechts in der Abbildung geht hervor, dass $\rho$ der Modelle für die Fälle mit $G_R = 2$ und der Fall $R = R_K$ und $G_R = 2$ stark durch den Spearman-Koeffizienten korreliert sind. 
+
+Im Folgenden werden nur noch die Fälle $R = R_K$ und $G_R = {0,2}$ betrachtet, die drei stark korrelierten Fällen müssen nicht einzeln untersucht werden.
+
+
+\begin{figure}[!h]
+	\label{fig:cases}	
+	\begin{subfigure}{0.5\textwidth}
+		\includegraphics[width=\textwidth]{"../plots/full_model_grouped_scatter.png"}
+	\end{subfigure}
+	\begin{subfigure}{0.5\textwidth}
+		\includegraphics[width=\textwidth]{"../plots/full_model_grouped_corr.png"}
+	\end{subfigure}
+	\caption{Fälle von Plattformen}
+\end{figure}
+
+
+%TODO update config
+
+\section{Größe des Bewertungsvektor}
+
+In Abbildung \ref{fig:bewertungvektor} ist die Modellsimulation mit Konfiguration 1 der Fälle $R = R_K$ und $G_R = {0,2}$ zu sehen . Farblich markiert ist die Größe des Bewertungsvektors. In 64.4\% der Konfigurationen wird mit $B_N = 2$ ein besseres $\rho$ erzielt.
+
+\begin{figure}[!h]
+	\label{fig:bewertungsvektor}	
+	\includegraphics[width=\textwidth]{"../plots/bewertungsvektor_all.png"}
+	\caption{Bewertungsvektor}
+\end{figure}
+
+\section{Initialscore}
+
+Abbildung \ref{fig:initscore} zeigt $\rho$ der Konfiguration 1 der beiden beiden Fälle. Auf der x-Achse sind die Bewertungsmetriken aufgetragen, farblich markiert ist der Initalwert. $s_0 = 0$ ist für alle Modellkonfigurationen die schlechteste Wahl.
+
+
+
+\begin{figure}[!h]
+	\label{fig:initscore}	
+	\includegraphics[width=\textwidth]{"../plots/init_score_boxplot.png"}
+	\caption{Initialscore}
+\end{figure}
+
+
+Nach Konfiguration 3 ist der Einfluss auf die Bewertungsmetriken des Initialscores dargestellt. In der Konfiguration des  verallgemeinerten Hacker News Metrik wird durch die Erhöhung von $s_0$ $T(G)$ verringert und $T(nDCG)$ erhöht. Für $s_0 > 70$ verringert sich $T(nDCG)$ signifikant. Bei der Aktivitätsmetrik führt eine Erhöhung von $s_0$ zum Abnahme von $P_{v=0}$, $T(nDCG)$ und $T(G)$. In der Viewmetrik wird zwischen $s_0 \in [10,30]$ $T(G)$ und $P_{v=0}$ reduziert, für $s_0 > 30$ wird hauptsächlich $T(nDCG)$ reduziert. Für die Reddit Hot Metrik ist $s_0 = \{0,30000\}$. Für $s_0$ erhalten neue Posts einen höheren Initialscore, als jemals von der Metrik zugewiesen wird. Der hohe Initialwert liefert bessere kleinere $T(G)$, $T(nDCG)$ und $P_{v=0}$. 
+
+Die Variierung des Initialscores wirkt sich auf unterschiedliche Art auf die unterschiedlichen Bewertungsmetriken aus.
+
+\begin{figure}[!htb]
+	\begin{subfigure}{0.5\textwidth}
+		\includegraphics[width=\textwidth]{"../plots/init_hn.png}%
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}{0.5\textwidth}
+		
+		
+		\includegraphics[width=\textwidth]{"../plots/init_akt.png"}%
+	\end{subfigure}
+	\begin{subfigure}{0.5\textwidth}
+		\includegraphics[width=\textwidth]{"../plots/init_view.png"}%
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}{0.5\textwidth}
+		\includegraphics[width=\textwidth]{"../plots/init_reddit.png"}%
+	\end{subfigure}
+	\caption{Initialscore in Bewertungsmetriken}
+	\label{fig:init_scoring_functions}
+\end{figure}
+
+
+
+\section{Bewertungstransformation}
+
+In Abbildung \ref{fig:trans} ist farblich die verwendete Bewertungstransformation gekennzeichnet. Ein Datenpunkt beschreibt den Mittelwert einer Modellkonfiguration. Es zeigt sich, dass $v_{diff}$ in den meisten Bewertungsmetrikfällen eine größere Varianz bezüglich $\rho$ als $v_{anteil}$ und $v_{wilson}$ Im Fall $R = R_K$ und $G_R = 0$ besitzt $v_{diff}$ jedoch einen geringeren Mittelwert. Im weiteren betrachteten Fall $R = R_K$ und $G_R = 0$ ist die Perfomance von $v_{anteil}$ und $v_{wilson}$ sehr ähnlich und meist besser als $v_{diff}$.  
+
+\begin{figure}[!h]
+	\label{fig:trans}	
+	\begin{subfigure}{0.5\textwidth}
+		\includegraphics[width=\textwidth]{"../plots/vote_eval_scatter.png"}
+	\end{subfigure}
+	\begin{subfigure}{0.5\textwidth}
+		\includegraphics[width=\textwidth]{"../plots/vote_eval_boxplot.png"}
+	\end{subfigure}
+	\caption{Bewertungstransformation}
+\end{figure}
+
+
+\section{Zufallsbewertung}
+
+
+Die Boxplots in Abbildung \ref{fig:zufall} zeigen, dass eine zufällige Abweichung bei allen Metriken außer der verallgemeinerten Hacker News im Fall $G_R = 0$ , zu einer signifikanten Verkleinerung von $P_{v=0}$ und $T(G)$ führt. Dabei führt die $\sigma$-Abweichung zu einer stärkeren Reduktion. Auch $T(nDCG)$ wird bei $G_R = 0$ verringert, wieder stärker durch die $\sigma$-Abweichung. Die Hacker News Metrik reagiert in diesem Fall gering auf die Zufallsabweichung. Im Fall von $G_R = 2$ wirkt sich die Zufallsabweichung nicht signifikant aus.
+
+\begin{figure}[!h]
+	\label{fig:zufall}	
+	\begin{subfigure}{0.5\textwidth}
+		\includegraphics[width=\textwidth]{"../plots/dev_pwnv.png"}
+	\end{subfigure}
+	\begin{subfigure}{0.5\textwidth}
+		\includegraphics[width=\textwidth]{"../plots/dev_gini.png"}
+	\end{subfigure}
+	\begin{subfigure}{0.5\textwidth}
+		\includegraphics[width=\textwidth]{"../plots/dev_ndcg.png"}
+	\end{subfigure}
+	\caption{Zufallsbewertung}
+\end{figure}
+
+\section{Bewertungsmetriken}
+
+
+\section{Iterationslänge}
+
+\section{User*innenparameter}
+
+\subsection{User*innenwahrscheinlichkeitsfunktionen}
+
+\subsection{User*innebewertungsfunktion}
+
+
+Dissensrating bringt erwartungsgemäß schlechtere Ergebnisse, 
+
+
+\section{Bewertungsmetriken}
+
+\subsection{Zufall}
+
+
+\section{Modellparameter}
+
+\subsection{Qualitätsraum}
+
+\subsection{Vorsortierung}
+
+Verlauf kein Scatteplot ist bestimmt interessanter
+
+\subsection{(Extreme User*innen)}
+
+gleiche wie vorsorierteung mit verlauf
+
+
+\subsection{Relevanzgravity}
+
+Hacker News Derivate schneiden besser mit höherer Relevanz gravität ab
+
+Nochmal mit höherer gravität versuchen 1.8 < 
+
+
+reddit auch für upvote model und hacker news auch für downvote models
+
+zufälligkeit
+
+
+Korrelation zwischen Ratingfunctions checken
+
+
+Reihenfolge :
+
+Initscore und gravität
+
+Wenn gravität und relevanz gravität korrelieren kann diese zukunftig immer entsprechend der relevanzgravität gesetzt werden.
+
+Modells mit init score testen
+vote evaluations funktionen
+
+Korrelation zwischen Ratingfunctions checken
+default models, welche 
+
+Steps
+Start users und Posts
+
+default models anlegen, welche den besten initscore vereinen und 
+
+
+
+Zwei Fälle relevance gravity = 0 und 2
+
+

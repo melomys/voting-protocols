@@ -1,0 +1,154 @@
+\chapter{Implementierung}
+
+%TODO Footnote Agents.jl und julia
+%TODO citing das agents.jl paper
+Die agentenbasierte Modell wurde mit dem Framework Agents.jl\footnote{\texttt{agent.jl}} für Julia\footnote{\texttt{julialang.org}}. Die verwendete Version von Agents.jl ist ein weitereintwickelter Fork der Verion 3.0.0.
+	
+Sämtliche Funktionalität ist in dem Paket \texttt{VotingProtocols}\footnote{\texttt{github adresse}} zusammengefasst.
+
+%TODO vielleicht noch etwas mehr schreiben
+\section{agentenbasierte Modellierung von Votingsystemen}
+
+Die User*innen werden als Agent*innen des Modells modelliert. Posts und die weiteren in Kapitel \ref{chapter:modell} beschriebenen Parameter werden als Parameter des Modells von Agents.jl gespeichert. 
+
+Das Modell wird für eine festgelegte Anzahl an Iterationen berechnet. Der Ablauf einer Simulation ist in Algorithmus \ref{alg:model} beschrieben. In jedem Iterationsschritt wird für alle User*innen die definierte Agent*innenschrittfunktion (Abschnitt \ref{agentstep}) ausgeführt. Diese legt das Bewertungsverhalten der User*innen fest. Nach der Berechnung der User*innenaktionen wird in jedem Iterationsschritt die Modellschrittfunktion(Abschnitt \ref{modelstep}) ausgeführt. In dieser Funktion wird die Bewertungsmetrik angewendet und die Posts entsprechend angeordnet.
+
+
+\begin{algorithm}
+	\label{alg:model}
+	\caption{Modellsimulation (vereinfacht)}
+	\begin{algorithmic}
+			\State Erstelle Modell aus Modellkonfiguration
+			\ForAll{Iterationen}
+				\ForAll{Agent*innen}
+					\State Agent*innenschrittfunktion für Agent*in
+				\EndFor
+				\State Modellschrittfunktion
+			\EndFor
+	\end{algorithmic}
+\end{algorithm}
+
+\subsection{Agent*innenschrittfunktion}
+\label{agentstep}
+
+Die Agent*innenschrittfunkion wird in Algorithmus \ref{alg:agentstep} beschrieben. 
+Für ein*e User*in $U$ wird zuerst berechnet ob sie in der aktuellen Iteration aktiv ist. Dies wird anhand der Aktivitätswahrscheinlichkeit von $a_U$ berechnet. Ist $U$ aktiv werden so viele Posts von $U$ auf der Platform betrachtet wie durch die Konzentration $c_U$ vorgegeben sind. Für jeden Post $P$ bildet sich $U$ mit der User*innenratingfunktion eine Meinung $r_{U,P} = R(P,U)$ und bewertet ihn möglicherweise.
+%TODO Das ist nicht besonders spezifisch aber die Ratingverteilung ist halt 1v 2v spezifisch..
+
+\begin{algorithm}
+	\label{alg:agentstep}
+	\caption{Agent*innenschritt}
+	\begin{algorithmic}
+		\If{User*in ist aktiv}
+		\ForAll{Posts in Konzentrationsspanne}
+		\State Betrachten und eventuell Bewerten des Posts
+		\EndFor
+		\EndIf
+	\end{algorithmic}
+\end{algorithm}
+
+\subsection{Modellschrittfunktion}
+\label{modelstep}
+
+Der Ablauf der Modellschrittfunktion ist in Algorithmus \ref{alg:modelstep} dargestellt.
+Für jeden Post $P$ wird mit der Bewertungsmetrik $S_{P,t} = S_t(P)$ berechnet. Anschließend werden neue Posts dem Modell hinzugefügt. Die Anzahl der neuen Posts ist durch den Modellparameter \texttt{new\_posts\_per\_step} definiert. Falls es erwünscht ist werden im nächsten Schritt die Postscores mit zufälligem Lärm verunreinigt. Nun können die Posts nach ihren Scores sortiert werden und die Modelliteration ist abgeschlossen.
+
+\begin{algorithm}
+	\label{alg:modelstep}
+	\caption{Modellschritt}
+	\begin{algorithmic}
+		\ForAll{Posts}
+			\State Postscore mit Bewertungsmetrik berechnen
+		\EndFor
+		\State Neue Posts hinzufügen
+		\If{Mit zufälliger Abweichung}
+			\ForAll{Posts}
+				\State Postscore mit zufälliger Abweichung verunreinigen
+			\EndFor
+		\EndIf
+		\State Posts nach Postscore sortieren
+	\end{algorithmic}
+\end{algorithm}
+
+%Julia ist eine High-Level Programmiersprache mit einer Ausführungsgeschwindigkeit, die an die statisch-typisierter Programmiersprachen wie C heranreicht.
+
+%Julia verfügt über weitreichende Bibliothek zur Datenanalyse und einen Read-Eval-Print-Loop zur direkten und interaktiven Entwicklung von Code.
+
+%\section{Agents.jl}
+
+%Für Julia exisiert die weitentwickelte Framework \texttt{Agents.jl} für agentenbasierte Modellierung.
+%Die Agenten in \texttt{Agents.jl} werden durch Julia Objekte beschrieben. Das Verhalten der Agenten wird über Schrittfunktion definiert. Wird das Modell ausgeführt wird für eine angegebene Menge an Iterationen für jeden Agenten die Schrittfunktion ausgeführt. Außerdem ist es möglich für eine Modellfunktion zu definieren, welche jeweils am Ende jeder Iteration ausgeführt wird. Es können beliebige Modellparameter definiert werden, welche sowohl in der Agenten- als auch in der Modellschrittfunktion gelesen und geändert werden können. Zur Datenkollektion werden Funktion übergeben, welche als einzigen Parameter das Modell erhalten. Nach jeder Iteration werden sämtliche Evaluationsfunktionen auf das Modell angewendet und die Ergebnisse in einem Feld gespeichert.
+
+%Die in dieser Arbeit verwendte Version von \texttt{Agents.jl} ist ein weiterentwickelter Fork der Version \texttt{3.0.0}. Es wurden kleine Änderungen an der Kollektion von Modellparametern vorgenommen.
+
+\section{Erstellung von Modellkonfigurationen}
+%TODO anpassen auf die aktuellen Namen
+
+Um unterschiedliche Modellkonfigurationen zu testen und zu vergleichen wurde ein Framework entwickelt, welches es ermöglicht modular Modellparameter zu Modellkonfigurationen zusammenzustellen. Parameter können mehrdeutig überschrieben werden, für jeden mehrdeutigen Parameter wird eine eigen Modellkonfiguration erstellt und simuliert. Die Modellkonfigurationen werden durch eine Liste aus Tupeln definiert. 
+
+Eine bespielhafte Konfiguration ist im Listing \ref{conf} in der Liste \texttt{model\_configs} zu sehen.
+
+\lstset{
+	emph={Dict,:,!, all\_models, user\_rating\_function, scoring\_function, gravity, model\_step, deviation\_function}
+	,emphstyle=\color{red}}
+\lstset{basicstyle=\ttfamily, numbers=left, numberstyle = \tiny, stepnumber = 2}
+
+\begin{figure}
+	\label{conf}
+	\caption{Beispiel Modellkonfigurationen}
+	\lstinputlisting{../scripts/experiments/example.jl}
+\end{figure}
+Der erste Eintrag der Tupels definiert die Grundkonfiguration. Im zweiten Eintrag können über ein Dictionary einzelne Modellparameter überschrieben werden. In Zeile 3 wird das \texttt{downvote\_model} ausgewählt. In den Zeilen 5 bis 7 werden einzelne Modellparameter überschrieben. Die Modellparameter werden als Symbole angesteuert. Der Modellparameter \texttt{deviation\_function} wird mehrdeutig überschrieben, indem er durch eine Liste angegeben wird. Das erste Tupel definiert somit zwei Modellkonfigurationen, welche sich nur in der \texttt{deviation\_function} unterscheiden. 
+
+Der erste Eintrag des zweiten Tupels in Zeile 13 ist eine Liste von Grundkonfigurationen. Für jede der angegebenen Grundkonfigurationen werden die im zweiten Eintrag des Tupels definierten Modellparameter überschrieben. Die in Zeile 15 bis 18 angegeben Modellparameter werden mehrdeutig überschrieben. \texttt{scoring\_function} wird doppelt definiert und \texttt{gravity} vierfach. Dadurch werden pro Grundkonfiguration $2 * 4 = 8$ Modellkonfigurationen erstellt. Da zwei Grundkonfigurationen angegeben sind werden durch das zweite Tupel insgesamt $2 * (2* 4) = 16$ Modellkonfigurationen festgelegt. 
+
+Das dritte Tupel besitzt als ersten Eintrag das Symbol \texttt{:all\_models}. Damit wird festgelegt, dass die im zweiten Eintrag des Tupels überschriebenen Modellparameter auf alle definierten Modellkonfigurationen angewendet werden.
+Somit erhalten alle bereits definierten Modellkonfigurationen den Parameter \texttt{user\_rating\_function} mit \texttt{user\_rating\_exp} zugewiesen.
+
+Insgesamt wurden durch \texttt{model\_configs} 18 Modellkonfigurationen festgelegt. Zwei im ersten Tupel und 16 im zweiten Tupel. Diese 18 Modelle können nun berechnet werden.
+
+
+\section{Auswertung der Modelle}
+
+Die Modelle werden durch die Angabe von Evaluationsmethoden aus Kapitel \ref{chap:evaluationsmethode} ausgewertet.
+
+Die Iterations- und Modellevaluationsfunktionen werden über zwei Arrays festgelegt. Die Evaluationsergebnisse werden analog in zwei Dataframes gespeichert und sind unter dem Namen der jeweiligen Evaluationsfunktion aufrufbar.
+
+Modellevaluationsmethoden haben Zugriff auf die berechnete DataFrame der Iterationsevaluationsmethoden.
+
+Beispielhafte Konfigurationen der beiden Listen sind in Listing \ref{lis:eval} zu sehen. 
+
+Die Iterationsevaluationsfunktionen \texttt{ndcg} und \texttt{gini} berechnen für jede Modelliteration den $nDCG$ bzw. Gini-Koeffizienten $G$ der Bewertungsmetrik. Durch das Macro \texttt{@gini\_top\_k(100)} wird eine Funktion \texttt{gini\_top\_100} erzeugt, welche den Gini-Koeffizienten für die 100 besten Posts berechnet.
+
+Die Funktion \texttt{posts\_with\_no\_views} berechnet $P_{v = 0}$ des Models. Das Macro \texttt{@area\_under} aggregiert die übergeben Iterationsevaluationparameter mit der Trapezregel. Die durch das Macro erzeugte Funktion besitzt den Namen \texttt{area\_under\_<param>} In diesem Beispiel wird so über alle Iterationsevaluationsparameter aggregiert. Mit \texttt{@model\_parameter} können Modellparameter ausgewertet werden. Die erzeugte Funktion erhält den Namen des übergebenen Modellparameters. Hier werden der Initalscore der Posts, die Bewertungsmetrik, die Relevanzgravität und die User*innenmeinungsfunktion ausgewertet.
+
+
+%TODO UMBENENNEN IN CODE: gini_top_k und model_parameter
+\begin{lstlisting}
+\label{lis:eval}
+iter_eval_functions = 
+[
+	ndcg,
+	gini,
+	@gini_top_k(100)
+]
+
+model_eval_functions = 
+[
+	posts_with_no_views,
+	@area_under(:ndcg),
+	@area_under(:gini),
+	@area_under(:gini_top_100),
+	@model_parameter(:init_score),
+	@model_parameter(:scoring_function),
+	@model_parameter(:relevance_gravity),
+	@model_parameter(:user_rating_function),
+]
+\end{lstlisting}
+
+%TODO R Footnote
+\paragraph{Export}
+Die Modellkonfigurationen und die Evaluationsfunktionen können der Funktion \texttt{export\_data} übergeben werden. Diese führt die Berechnung und Evaluation des Modells aus und exportiert die Daten in das \texttt{rds}-Format Datenformat von R\footnote{RFOTTNOT}. Die Datenanalyse kann so in R erfolgen.
+
+
+
