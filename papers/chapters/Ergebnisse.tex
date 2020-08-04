@@ -76,6 +76,15 @@ Die Variierung des Initialscores wirkt sich auf unterschiedliche Art auf die unt
 \end{figure}
 
 
+\section{Gravität}
+
+Der Einfluss der Gravität der drei Bewertungsmetriken mit Gravität wird nach Konfiguration 4 in Abbildung \ref{fig:grav} gezeigt. Die Aktivitätsmetrik besitzt bei $G_R = G=0$ den Wert $P_{v=0} = 0.84$. So wird bei der Akitvitätsmetrik das geringste $\rho$ mit $G=0$ erzielt. Für die View- und Hacker News Metrik steigt $\rho$ mit der Erhöhung von $G$ im Fall $G_R = 0$. Für den Fall $G_R = 2$ wird das kleinste $\rho$ mit $G = 0$ für die Bewertungsmetriken Aktivität und Verallgemeinertes Hacker News erzielt. Auf die Viewmetrik hat in diesem Fall die Variierung on $G$ keinen signifikanten Einfluss.
+
+\begin{figure}[!h]
+	\label{fig:grav}	
+	\includegraphics[width=\textwidth]{"../plots/gravity_box.png"}
+	\caption{Gravität}
+\end{figure}
 
 \section{Bewertungstransformation}
 
@@ -115,11 +124,37 @@ Die Boxplots in Abbildung \ref{fig:zufall} zeigen, dass eine zufällige Abweichu
 
 \section{Iterationslänge}
 
+Wird die Iterationslänge $M_N$ varriert hat dies Einfluss auf das Ergebnis. In Abbildung \ref{fig:steps} links oben sind die vier Bewertungsmetriken nach Konfiguration 4 nach $G_R = {1,2}$ dargestellt. Im Fall $G_R = 2$ zeigt sich, dass durch Erhöhung der Iterationsanzahl $T(nDCG)$ und $P_{v=0}$ verkleinert wird. Für den Fall $G_R = 0$ zeigen die drei weiteren Plots die Entwicklung der drei Evaluationsparameter mit steigender Iterationslänge. $T(nDCG)$ wird für die View- und Aktivitätsmetrik größer. Die Varianz von $T(nDCG)$ verringert sich für alle Metriken außer der Hacker News Metrik. $P_{v=0}$ steigt für die Viewmetrik mit steigendem $M_N$. Bei den drei restlichen Metriken wird $P_{v=0}$ und dessen Varianz verringert. Das Ansteigen der Iterationszahl hat nur geringen Einfluss auf $T(G)$, für die Hacker News Metrik wird $T(G)$ geringfügig größer. 
+
+
+
+
+\begin{figure}[!htb]
+	\begin{subfigure}{0.5\textwidth}
+		\includegraphics[width=\textwidth]{"../plots/steps_scatter.png}%
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}{0.5\textwidth}
+		
+		
+		\includegraphics[width=\textwidth]{"../plots/steps_ndcg.png"}%
+	\end{subfigure}
+	\begin{subfigure}{0.5\textwidth}
+		\includegraphics[width=\textwidth]{"../plots/steps_pwnv.png"}%
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}{0.5\textwidth}
+		\includegraphics[width=\textwidth]{"../plots/steps_gini.png"}%
+	\end{subfigure}
+	\caption{Unterschiedliche Iterationslängen}
+	\label{fig:steps}
+\end{figure}
+
+
+
 \section{User*innenparameter}
 
 \subsection{User*innenwahrscheinlichkeitsfunktionen}
-
-\subsection{User*innebewertungsfunktion}
 
 
 Dissensrating bringt erwartungsgemäß schlechtere Ergebnisse, 
@@ -127,56 +162,33 @@ Dissensrating bringt erwartungsgemäß schlechtere Ergebnisse,
 
 \section{Bewertungsmetriken}
 
-\subsection{Zufall}
-
 
 \section{Modellparameter}
 
 \subsection{Qualitätsraum}
 
+Der Einfluss der Größe des Qualitätsraum $Q_N$ wird in Abbildung \ref{fig:qual} untersucht. 
+Auf den Fall $G_R = 0$ hat die Größe nur geringfügig Einfluss, wie auch der Boxplot rechts bestätigt. Im Fall $G_R = 2$ erhöht sich mit $Q_N$ $T(nDCG)$. Auch die Varianz von $T(nDCG)$ verringert sich.a
+
+\begin{figure}[!h]
+	\label{fig:qual}	
+	\begin{subfigure}{0.5\textwidth}
+		\includegraphics[width=\textwidth]{"../plots/dim_scatter.png"}
+	\end{subfigure}
+	\begin{subfigure}{0.5\textwidth}
+		\includegraphics[width=\textwidth]{"../plots/dims_box.png"}
+	\end{subfigure}
+	\caption{Qualitätsdimensionen}
+\end{figure}
+
 \subsection{Vorsortierung}
 
 Verlauf kein Scatteplot ist bestimmt interessanter
 
-\subsection{(Extreme User*innen)}
+%\subsection{(Extreme User*innen)}
 
-gleiche wie vorsorierteung mit verlauf
-
-
-\subsection{Relevanzgravity}
-
-Hacker News Derivate schneiden besser mit höherer Relevanz gravität ab
-
-Nochmal mit höherer gravität versuchen 1.8 < 
+%gleiche wie vorsorierteung mit verlauf
 
 
-reddit auch für upvote model und hacker news auch für downvote models
-
-zufälligkeit
-
-
-Korrelation zwischen Ratingfunctions checken
-
-
-Reihenfolge :
-
-Initscore und gravität
-
-Wenn gravität und relevanz gravität korrelieren kann diese zukunftig immer entsprechend der relevanzgravität gesetzt werden.
-
-Modells mit init score testen
-vote evaluations funktionen
-
-Korrelation zwischen Ratingfunctions checken
-default models, welche 
-
-Steps
-Start users und Posts
-
-default models anlegen, welche den besten initscore vereinen und 
-
-
-
-Zwei Fälle relevance gravity = 0 und 2
 
 

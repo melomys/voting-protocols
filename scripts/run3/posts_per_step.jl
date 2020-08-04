@@ -7,7 +7,7 @@ model_init_params = [default_models...,
     (
         :all_models,
         Dict(
-            :posts_per_step => [0,5,10,50,100],
+            :new_posts_per_step => [0,5,10,50,100],
         ),
     ),
 ]
