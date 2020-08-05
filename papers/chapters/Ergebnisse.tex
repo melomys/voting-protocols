@@ -122,11 +122,11 @@ Die Boxplots in Abbildung \ref{fig:zufall} zeigen, dass eine zufällige Abweichu
 \end{figure}
 
 
-\section{Iterationslänge}
+\section{Modellparameter}
+
+\subsection{Iterationslänge}
 
 Wird die Iterationslänge $M_N$ varriert hat dies Einfluss auf das Ergebnis. In Abbildung \ref{fig:steps} links oben sind die vier Bewertungsmetriken nach Konfiguration 4 nach $G_R = {1,2}$ dargestellt. Im Fall $G_R = 2$ zeigt sich, dass durch Erhöhung der Iterationsanzahl $T(nDCG)$ und $P_{v=0}$ verkleinert wird. Für den Fall $G_R = 0$ zeigen die drei weiteren Plots die Entwicklung der drei Evaluationsparameter mit steigender Iterationslänge. $T(nDCG)$ wird für die View- und Aktivitätsmetrik größer. Die Varianz von $T(nDCG)$ verringert sich für alle Metriken außer der Hacker News Metrik. $P_{v=0}$ steigt für die Viewmetrik mit steigendem $M_N$. Bei den drei restlichen Metriken wird $P_{v=0}$ und dessen Varianz verringert. Das Ansteigen der Iterationszahl hat nur geringen Einfluss auf $T(G)$, für die Hacker News Metrik wird $T(G)$ geringfügig größer. 
-
-
 
 
 \begin{figure}[!htb]
@@ -150,21 +150,6 @@ Wird die Iterationslänge $M_N$ varriert hat dies Einfluss auf das Ergebnis. In 
 	\label{fig:steps}
 \end{figure}
 
-
-
-\section{User*innenparameter}
-
-\subsection{User*innenwahrscheinlichkeitsfunktionen}
-
-
-Dissensrating bringt erwartungsgemäß schlechtere Ergebnisse, 
-
-
-\section{Bewertungsmetriken}
-
-
-\section{Modellparameter}
-
 \subsection{Qualitätsraum}
 
 Der Einfluss der Größe des Qualitätsraum $Q_N$ wird in Abbildung \ref{fig:qual} untersucht. 
@@ -181,13 +166,59 @@ Auf den Fall $G_R = 0$ hat die Größe nur geringfügig Einfluss, wie auch der B
 	\caption{Qualitätsdimensionen}
 \end{figure}
 
-\subsection{Vorsortierung}
 
-Verlauf kein Scatteplot ist bestimmt interessanter
+\subsection{User*innen- und Postanzahl}
+
+In Abbildung \ref{fig:start_posts} ist der Einfluss der Anzahl der Startposts nach der \textit{speziellen Modellkonfiguration} dargestellt. Wird die Anzahl der Startposts erhöht, werden die Evaluationsparamater schlechter. Je mehr Posts von Anfang an existieren, desto kleiner ist der Teil den die User*innen schon zu Beginn erfassen können. Die Folge ist die markante Reduzierung von $T(G)$ und $T(nDCG)$. Die Ergebnisse mit unterschiedlicher Anzahl an Startposts sind stark miteinander korreliert. Die Bewertungsmetriken bleiben unabhängig von den Startposts vergleichbar, keine Bewertungsmetrik wird durch die bestimmte Wahl der Startposts bevorteiligt.
+
+Wird die Anzahl der neuen Posts pro Iteration oder die der User*innen variiert, sind die Ergebnisse der unterschiedlichen Anzahlen ebenfalls stark korreliert. Trotzdem ist davon auszugehen, dass mit einer hohen Wahl der Parameter die Realität besser modelliert wird.
+
+\begin{figure}[!h]
+	\label{fig:start_posts}	
+	\begin{subfigure}{0.5\textwidth}
+		\includegraphics[width=\textwidth]{"../plots/start_posts_scatter.png"}
+	\end{subfigure}
+	\begin{subfigure}{0.5\textwidth}
+		\includegraphics[width=\textwidth]{"../plots/start_posts_box.png"}
+	\end{subfigure}
+	\caption{Startposts}
+\end{figure}
+
+
+\subsection{Vorsortierung der Posts}
+
+%Verlauf kein Scatteplot ist bestimmt interessanter JA IST INTERESSANTER MUSSTE ABER ERSTMAL IMPLEMENTIEREN DU DULLI
 
 %\subsection{(Extreme User*innen)}
 
 %gleiche wie vorsorierteung mit verlauf
+
+
+\section{User*innenparameter}
+
+Nach der \textit{speziellen Modellkonfiguration} sind Simulationsergebnisse in Abbildung \ref{fig:user_params_a} dargestellt. Die Verteilungen der User*innenaktivität und der Bewertungszufriedenheit werden variiert. In Abbildung  \ref{fig:user_params_b} sind die Dichteverteilungen der vier verwendeten Verteilungen dargestellt. Wie an der Viewmetrik im Fall $G_R = 0$ zu sehen ist führt die Variierung der Verteilung der Bewertungsverteilung zur Verschiebung des Mittelwerts von $T(G)$, während die Variierung der Aktivitätsverteilung zur Verschiebung des Mittelwerts von $P_{v = 0}$ und $T(nDCG)$ führt. Für den Fall $G_R = 2$ hat die Variierung der Aktivitätsverteilung keinen signifikanten Einfluss. Die Simulationsergebnisse, welche durch die Verwendung unterschiedlicher Verteilungen enstanden sind stehen in starker Korrelation. Die Ergebnisse einzelner Modellkonfigurationen ist weitesgehend unabhängig von der Wahl der Verteilungen der Bewertungszufriedenheit und der Aktivität.
+
+\begin{figure}[!h]
+	\label{fig:user_params}	
+	\begin{subfigure}{0.5\textwidth}
+		\includegraphics[width=\textwidth]{"../plots/vote_prob_scatter.png"}
+		\caption{Variierung der Verteilung von Aktivität und Bewertungszufriedenheit}
+		\label{fig:user_params_a}
+	\end{subfigure}
+	\begin{subfigure}{0.5\textwidth}
+		\includegraphics[width=\textwidth]{"../plots/vote_prob_dists.png"}
+		\caption{Dichteverteilungen der verwendeten $\beta$-Verteilungen}
+		\label{fig:user_params_b}
+	\end{subfigure}
+	\caption{User*innenparameter}
+\end{figure}
+
+Für die Konzentrationsverteilung ergibt sich das gleiche Bild. Wird der Erwartungswert der Konzentrationsverteilung erhöht, so verringert sich $T(G)$. 
+
+Wird der Erwartungswert der poisson-verteilten Konzentration erhöht, so verringert sich $T(G)$ und $P_{v=0}$. Dies ist intuitiv, da User*innen mehr Posts betrachten und so auch diese sehen, welche von der Bewertungsmetrik schlechter bewertet wurden. Durch die Wahl der Konzentrationsverteilung wird ebenso wenig das Ergebnis einzelner Modellkonfigurationen beeinflusst.
+
+
+
 
 
 
