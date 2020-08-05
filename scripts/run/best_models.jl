@@ -12,7 +12,7 @@ model_init_params = [(
         :vote_evaluation => [vote_difference, wilson_score]
         :relevance_gravity => 0,
         :user_rating_function => user_rating_exp2,
-    ),(
+    )),(
     [downvote_model],
     Dict(
         :scoring_function => scoring_reddit_hot,
@@ -43,82 +43,7 @@ model_init_params = [(
         :user_rating_function => user_rating_exp2,
     )
     ),
-)]
-
-
-model_init_params = [
-    (
-        downvote_model,
-        Dict(
-            :scoring_function => scoring_hacker_news,
-            :init_score => 50,
-            :vote_evaluation => vote_difference,
-            :deviation_function => no_deviation,
-            :relevance_gravity => 0,
-            :user_rating_function => user_rating_exp2,
-        ),
-    ),
-    (
-        downvote_model,
-        Dict(
-            :scoring_function => scoring_hacker_news,
-            :init_score => 50,
-            :vote_evaluation => vote_difference,
-            :deviation_function => mean_deviation,
-            :relevance_gravity => 2,
-            :user_rating_function => user_rating_exp2,
-        ),
-    ),
-    (
-        downvote_model,
-        Dict(
-            :scoring_function => scoring_view,
-            :init_score => 20,
-            :vote_evaluation => vote_difference,
-            :deviation_function => mean_deviation,
-            :relevance_gravity => 0,
-            :user_rating_function => user_rating_exp2,
-        ),
-    ),
-    (
-        downvote_model,
-        Dict(
-            :scoring_function => scoring_view,
-            :init_score => 30,
-            :vote_evaluation => wilson_score,
-            :deviation_function => mean_deviation,
-            :relevance_gravity => 2,
-            :user_rating_function => user_rating_exp2,
-        ),
-    ),
-    (
-        downvote_model,
-        Dict(
-            :scoring_function => scoring_activation,
-            :init_score => 10,
-            :vote_evaluation => vote_difference,
-            :deviation_function => no_deviation,
-            :relevance_gravity => 0,
-            :user_rating_function => user_rating_exp2,
-        ),
-    ),
-    (
-        downvote_model,
-        Dict(
-            :scoring_function => scoring_activation,
-            :init_score => 30,
-            :vote_evaluation => vote_difference,
-            :deviation_function => mean_deviation,
-            :relevance_gravity => 2,
-            :user_rating_function => user_rating_exp2,
-        ),
-    ),
-    (:all_models,
-    Dict(
-
-    ))
 ]
-
 
 model_properties = [
     dcg,
