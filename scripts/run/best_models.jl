@@ -9,7 +9,7 @@ model_init_params = [(
         :init_score => [10, 20,30,40],
         :gravity => [0,0.5],
         :deviation_function => [no_deviation, mean_deviation],
-        :vote_evaluation => [vote_difference, wilson_score]
+        :vote_evaluation => [vote_difference, wilson_score],
         :relevance_gravity => 0,
         :user_rating_function => user_rating_exp2,
     )),(
@@ -22,17 +22,17 @@ model_init_params = [(
         :relevance_gravity => 0,
         :user_rating_function => user_rating_exp2,
     )
-    ),
+    ),(
     [downvote_model, standard_model],
     Dict(
         :scoring_function => [scoring_hacker_news, scoring_view, scoring_activation],
         :init_score => [10, 20,30,40],
         :gravity => [2],
         :deviation_function => [no_deviation, mean_deviation],
-        :vote_evaluation => [vote_difference, wilson_score]
+        :vote_evaluation => [vote_difference, wilson_score],
         :relevance_gravity => 2,
         :user_rating_function => user_rating_exp2,
-    ),(
+    )),(
     [downvote_model,standard_model],
     Dict(
         :scoring_function => scoring_reddit_hot,
