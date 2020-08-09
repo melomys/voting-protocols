@@ -1,0 +1,50 @@
+---
+title: "gravity"
+author: "Pupso"
+date: "8/3/2020"
+output: html_document
+---
+
+---
+title: "deviation"
+author: "Pupso"
+date: "7/31/2020"
+output: html_document
+---
+
+```{r}
+source("util.r")
+```
+
+```{r}
+df_gravity = combine_dfs("/home/ludwig/Bachelorarbeit/voting-protocols/data_cluster/data_gravity/data","model") %>% 
+  mutate(quality_dimensions = factor(quality_dimensions)) %>% 
+  filter(user_rating_function == "Konsens")
+
+
+```
+
+```{r}
+df_gravity %>% 
+  mutate(gravity = factor(gravity)) %>% 
+  ggplot_cus() + 
+  aes(x = area_under_gini, y = area_under_ndcg, posts_with_no_views, color = gravity) + 
+  geom_point(alpha = 0.3) + 
+  facet_grid(scoring_function~relevance_gravity)
+```
+
+
+```{r}
+df_gravity %>% 
+  mutate(gravity = factor(gravity)) %>% 
+  ggplot_cus() + 
+  aes(x = scoring_function, y = area_under_gini,fill = gravity) + 
+  geom_boxplot(alpha = 1) + 
+  facet_grid(~relevance_gravity)
+
+
+if(s)
+{
+ # ggsave("/home/ludwig/Bachelorarbeit/voting-protocols/plots/gravity_box.png", device = "png")
+}
+```

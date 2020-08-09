@@ -1,0 +1,423 @@
+---
+title: "specified_model"
+author: "Pupso"
+date: "7/30/2020"
+output: html_document
+---
+
+```{r}
+source("util.r")
+``` 
+
+```{r}
+df_specified_model = combine_dfs("/home/ludwig/Bachelorarbeit/voting-protocols/data_cluster/data_specified_model/data", "model_specified")
+```
+
+```{r}
+df_specified_model %>% 
+  mutate(relevance_gravity = factor(relevance_gravity)) %>% 
+  ggplot_cus() + 
+  aes(x = area_under_gini, y =ρ, fill = scoring_function) +
+  geom_boxplot(alpha = 0.4) +
+  facet_grid(relevance_gravity~user_rating_function)
+    
+
+```
+```{r}
+df_specified_model %>% 
+  ggplot_cus() + 
+  aes(x = area_under_gini, y = area_under_ndcg, size = ρ, color = init_score, shape = scoring_function) +
+  geom_boxplot(alpha = 0.5) + 
+  facet_grid(relevance_gravity~user_rating_function)
+
+```
+
+```{r}
+
+#HACKER NEWS
+df_specified_model %>% 
+    #filter(init_score > 70) %>%
+  mutate(init_score = factor(init_score)) %>% 
+  mutate(relevance_gravity = factor(relevance_gravity)) %>% 
+  filter(relevance_gravity == 0) %>% 
+  filter(scoring_function == "scoring_hacker_news") %>% 
+  #filter(deviation_function == "no_deviation") %>% 
+  filter(user_rating_function == "user_rating_dist2") %>% 
+ # filter(vote_evaluation == "vote_difference") %>% 
+
+  #filter(gravity == 0) %>% 
+  ggplot_cus() +
+  aes(x = area_under_gini, y = area_under_ndcg, color = init_score,size = ρ, shape= vote_evaluation, group= seed) + # , color = vote_count, shape = user_rating_function, fill = init_score) + 
+  scale_shape_manual(values=c(19,3,4))+
+  geom_point(alpha = 0.5) +
+  #geom_line(alpha = 0.4) +
+  facet_grid(gravity~deviation_function)
+
+  # HACKER NEWS:
+  # in user_rating_dist2 passiert nicht viel spannendes
+  # downvote_model bringt bessere ergebnisse
+  # bei g gilt weiterhin, dass die beiden gravitäten gleich sein sollten.
+  # bei g = 2 spiel votel_eval keine rolex, bei g = 0 vote_difference am besten, bei rating_exp2
+  # bei user_rating_dist2 bringt deviation einen signifikanten gini plus und hoher init score, wilson_score am besten, auch bei gravität 2 ist wilson am besten
+
+  #             : init, v_eval, model, deviation, gravity
+  # g = 0, exp2 : 70, diff, downvote, no, g = 0
+  # g = 2, exp2 : egal, egal, downvote, mean, g = 2
+  # g = 0, dist2: 30000, wilson/diff, downvote, mean, g = 0
+  # g = 2, dist2: 30000, wilson, downvote , mean, g = 2
+```
+
+
+```{r}
+#HACKER NEWS
+df_specified_model %>% 
+  mutate(relevance_gravity = factor(relevance_gravity)) %>% 
+  filter(scoring_function == "scoring_hacker_news") %>% 
+  ggplot() + 
+  aes(x = area_under_gini, y = area_under_ndcg, color = gravity, symbol = vote_evaluation) +
+  theme(text=element_text(family="Trebuchet MS")) +
+  geom_point(alpha = 0.4) +
+  facet_grid(relevance_gravity~user_rating_function)
+    
+
+```
+
+
+```{r}
+
+#HACKER NEWS
+df_specified_model %>% 
+    #filter(init_score > 70) %>%
+  mutate(init_score = factor(init_score)) %>% 
+  mutate(relevance_gravity = factor(relevance_gravity)) %>% 
+  filter(relevance_gravity == 0) %>% 
+  filter(scoring_function == "scoring_hacker_news") %>% 
+  filter(deviation_function == "mean_deviation") %>% 
+  filter(user_rating_function == "user_rating_dist2") %>% 
+  #filter(vote_evaluation == "vote_difference") %>% 
+
+  filter(gravity == 2) %>% 
+  ggplot() +
+  aes(fill = init_score, y = coeff, color = vote_evaluation)+ # , color = vote_count, shape = user_rating_function, fill = init_score) + 
+  theme(text=element_text(family="Trebuchet MS")) +
+  scale_shape_manual(values=c(19,3,4))+
+  geom_boxplot(alpha = 0.5) + 
+  #geom_line(alpha = 0.4) +
+  facet_grid(~gravity)
+```
+
+```{r}
+# VIEW
+df_specified_model %>% 
+  mutate(init_score = factor(init_score)) %>% 
+  mutate(relevance_gravity = factor(relevance_gravity)) %>% 
+  filter(relevance_gravity == 0) %>% 
+  filter(scoring_function == "scoring_view") %>% 
+  #filter(deviation_function == "no_deviation") %>% 
+  filter(user_rating_function == "user_rating_dist2") %>% 
+  #filter(vote_evaluation == "wilson_score") %>% 
+  #filter(init_score == 70) %>%
+  #filter(gravity == 2) %>% 
+  ggplot() +
+  aes(x = area_under_gini, y = area_under_ndcg, color = init_score,size = coeff, shape= vote_evaluation, group= seed) + # , color = vote_count, shape = user_rating_function, fill = init_score) + 
+  theme(text=element_text(family="Trebuchet MS")) +
+  scale_shape_manual(values=c(19,3,4))+
+  geom_point(alpha = 0.5) +
+  #geom_line(alpha = 0.4) +
+  #facet_wrap(gravity~deviation_function~relevance_gravity)# + 
+  facet_grid(deviation_function~gravity)
+
+  # VIEW:
+  # downvote ist besser
+  
+
+  #             : init, v_eval, model, deviation, gravity
+  # g = 0, exp2 : egal, diff, downvote, no, g = 0
+  # g = 2, exp2 : egal, egal, downvote, mean, g = 2
+  # g = 0, dist2: egal, egal, downvote, mean, g = 0
+  # g = 2, dist2: egal, egal, downvote , mean, g = 2
+```
+```{r}
+
+#VIEW
+df_specified_model %>% 
+    #filter(init_score > 70) %>%
+  mutate(init_score = factor(init_score)) %>% 
+  mutate(relevance_gravity = factor(relevance_gravity)) %>% 
+  filter(relevance_gravity == 0) %>% 
+  filter(scoring_function == "scoring_view") %>% 
+  filter(deviation_function == "mean_deviation") %>% 
+  filter(user_rating_function == "user_rating_exp2") %>% 
+  #filter(vote_evaluation == "vote_difference") %>% 
+
+  #filter(gravity == 2) %>% 
+  ggplot() +
+  aes(fill = init_score, y = coeff, color = vote_evaluation)+ # , color = vote_count, shape = user_rating_function, fill = init_score) + 
+  theme(text=element_text(family="Trebuchet MS")) +
+  scale_shape_manual(values=c(19,3,4))+
+  geom_boxplot(alpha = 0.5) + 
+  #geom_line(alpha = 0.4) +
+  facet_grid(~gravity)
+```
+```{r}
+# ACTIVATION
+df_specified_model %>% 
+  mutate(init_score = factor(init_score)) %>% 
+  mutate(relevance_gravity = factor(relevance_gravity)) %>% 
+  filter(relevance_gravity == 0) %>% 
+  filter(model_type == "downvote_model") %>% 
+  filter(scoring_function == "scoring_activation") %>% 
+  #filter(deviation_function == "no_deviation") %>% 
+  filter(user_rating_function == "user_rating_dist2") %>% 
+  #filter(vote_evaluation == "wilson_score") %>% 
+  #filter(init_score == 70) %>%
+  #filter(gravity == 2) %>% 
+  ggplot() +
+  aes(x = area_under_gini, y = area_under_ndcg, color = init_score,size = coeff, shape= vote_evaluation, group= seed) + # , color = vote_count, shape = user_rating_function, fill = init_score) + 
+  theme(text=element_text(family="Trebuchet MS")) +
+  scale_shape_manual(values=c(19,3,4))+
+  geom_point(alpha = 0.3) +
+  #geom_line(alpha = 0.4) +
+  facet_grid(gravity~deviation_function)
+
+  # ACTIVATION:
+  # downvote ist besser
+  
+
+  #             : init, v_eval, model, deviation, gravity
+  # g = 0, exp2 : egal, diff, downvote, no, g = 2
+  # g = 2, exp2 : egal, egal, downvote, mean, g = 2
+  # g = 0, dist2: egal, egal, downvote, mean, g = 2
+  # g = 2, dist2: eher 70, wilson/diff, downvote , mean, g = 2
+```
+```{r}
+
+#ACTIVATION
+df_specified_model %>% 
+    #filter(init_score > 70) %>%
+  mutate(init_score = factor(init_score)) %>% 
+  mutate(relevance_gravity = factor(relevance_gravity)) %>% 
+  filter(relevance_gravity == 0) %>% 
+  filter(scoring_function == "scoring_activation") %>% 
+  filter(deviation_function == "mean_deviation") %>% 
+  filter(user_rating_function == "user_rating_dist2") %>% 
+  #filter(vote_evaluation == "vote_difference") %>% 
+
+  filter(gravity == 2) %>% 
+  ggplot() +
+  aes(fill = init_score, y = coeff, color = vote_evaluation)+ # , color = vote_count, shape = user_rating_function, fill = init_score) + 
+  theme(text=element_text(family="Trebuchet MS")) +
+  scale_shape_manual(values=c(19,3,4))+
+  geom_boxplot(alpha = 0.5) + 
+  #geom_line(alpha = 0.4) +
+  facet_grid(~gravity)
+```
+
+```{r}
+# REDDIT
+df_specified_model %>% 
+  mutate(init_score = factor(init_score)) %>% 
+  mutate(relevance_gravity = factor(relevance_gravity)) %>% 
+  filter(relevance_gravity == 0) %>% 
+  #filter(model_type == "downvote_model") %>% 
+  filter(scoring_function == "scoring_reddit_hot") %>% 
+  #filter(deviation_function == "no_deviation") %>% 
+  filter(user_rating_function == "user_rating_dist2") %>% 
+  #filter(vote_evaluation == "wilson_score") %>% 
+  #filter(init_score == 0) %>%
+  #filter(gravity == 2) %>% 
+  ggplot() +
+  aes(x = area_under_gini, y = area_under_ndcg, color = init_score,size = coeff, shape= vote_evaluation, group= seed) + # , color = vote_count, shape = user_rating_function, fill = init_score) + 
+  theme(text=element_text(family="Trebuchet MS")) +
+  scale_shape_manual(values=c(19,3,4))+
+  geom_point(alpha = 0.3) +
+  #geom_line(alpha = 0.4) +
+  facet_wrap(~deviation_function)
+
+  # REDDIT:
+  # downvote ist besser
+  
+
+  #             : init, v_eval, model, deviation, gravity
+  # g = 0, exp2 : 0 besitzt große varianz, 300000 nicht dafür nicht so gut, vote_difference, downvote, no, egal
+  # g = 2, exp2 : 30000, egal, downvote, mean, egal
+  # g = 0, dist2: 30000, egal, downvote, mean, egal
+  # g = 2, dist2: 30000, egal, downvote, mean, egal
+```
+```{r}
+
+#REDDIT
+df_specified_model %>% 
+    #filter(init_score > 70) %>%
+  mutate(init_score = factor(init_score)) %>% 
+  mutate(relevance_gravity = factor(relevance_gravity)) %>% 
+  filter(relevance_gravity == 0) %>% 
+  filter(scoring_function == "scoring_reddit_hot") %>% 
+  filter(deviation_function == "mean_deviation") %>% 
+  filter(user_rating_function == "user_rating_dist2") %>% 
+  #filter(vote_evaluation == "vote_difference") %>% 
+
+  #filter(gravity == 2) %>% 
+  ggplot() +
+  aes(fill = init_score, y = coeff, color = vote_evaluation)+ # , color = vote_count, shape = user_rating_function, fill = init_score) + 
+  theme(text=element_text(family="Trebuchet MS")) +
+  scale_shape_manual(values=c(19,3,4))+
+  geom_boxplot(alpha = 0.5) + 
+  #geom_line(alpha = 0.4) +
+  facet_grid(~gravity)
+```
+
+```{r}
+df_full_model %>% 
+  mutate(init_score = factor(init_score)) %>% 
+  mutate(relevance_gravity = factor(relevance_gravity)) %>% 
+  filter(relevance_gravity == 0) %>% 
+  
+  #filter(scoring_function == "scoring_hacker_news") %>% 
+  #filter(deviation_function == "no_deviation") %>% 
+  #filter(gravity == "0") %>% 
+  ggplot() +
+  aes(x = coeff, y = area_under_ndcg, color = scoring_function,) + 
+  theme(text=element_text(family="Trebuchet MS")) +
+  geom_point(alpha = 0.3) +
+  #geom_line(alpha = 0.4) +
+  facet_wrap(~relevance_gravity)
+
+  # bei g > 0 verringert deviation den gini koeffizienten
+```
+```{r}
+df_specified_model %>% 
+  mutate(init_score = factor(init_score)) %>% 
+  mutate(relevance_gravity = factor(relevance_gravity)) %>% 
+  #filter(relevance_gravity == 0) %>% 
+  filter(model_type == "downvote_model") %>% 
+  #filter(scoring_function == "scoring_hacker_news") %>% 
+  #filter(deviation_function == "no_deviation") %>% 
+  #filter(gravity == "0") %>% 
+  ggplot() +
+  aes(x = coeff, y = area_under_ndcg, color = scoring_function, shape = user_rating_function) + 
+  theme(text=element_text(family="Trebuchet MS")) +
+  geom_point(alpha = 0.3) +
+  #geom_line(alpha = 0.4) +
+  facet_grid(relevance_gravity~deviation_function)
+
+  # bei g > 0 verringert deviation den gini koeffizienten
+```
+
+```{r}
+#relevance gravity = 1.8
+df_init %>% 
+  mutate(init_score = factor(init_score)) %>% 
+  filter(gravity == 0) %>%
+  filter(relevance_gravity == 0) %>% 
+  filter(scoring_function == "scoring_hacker_news") %>% 
+ filter(deviation_function == "no_deviation") %>% 
+  ggplot() +
+  aes(x = area_under_gini, y = area_under_ndcg, color = init_score,group= seed) +  
+  theme(text=element_text(family="Trebuchet MS")) +
+  geom_point(alpha = 0.4)
+  #geom_line(alpha = 0.4) +
+  #facet_grid(relevance_gravity~gravity)
+
+  #HACKER NEWS
+  # bei gravity != 0 bei init_score >= 10 hat init_score keinen einfluss mehr
+  # bei gravity != 0 ist deviation besser bezogen auf gini, etwas schlechter im ndcg
+
+  ggsave(filename = "/home/ludwig/Desktop/hn.png", device = "png",plot = last_plot())
+```
+```{r}
+df_init %>% 
+ # filter(steps <= 100) %>% 
+  mutate(steps = factor(steps)) %>% 
+  filter(relevance_gravity == 0) %>% 
+  #filter(scoring_function == "scoring_hacker_news") %>% 
+  ggplot() +
+  aes(fill = deviation_function,y =  area_under_gini) + 
+  theme(text=element_text(family="Trebuchet MS")) +
+  theme(axis.text.x=element_blank(),axis.ticks.x=element_blank(),) +
+  geom_boxplot() + 
+  facet_wrap(~gravity)
+  #facet_wrap(~steps,ncol = nrow(unique(tmp_df[,"steps"])))
+
+  # gini verringert sich steigender gravity und deviation function
+
+```
+
+```{r}
+df_init %>% 
+ # filter(steps <= 100) %>% 
+  mutate(steps = factor(steps)) %>% 
+  filter(relevance_gravity == 2) %>% 
+  #filter(gravity == 2) %>% 
+  #filter(user_rating_function == "user_rating_dist2") %>% 
+  ggplot() +
+  aes(fill = scoring_function,y =  area_under_ndcg) + 
+  theme(text=element_text(family="Trebuchet MS")) +
+  theme(axis.text.x=element_blank(),axis.ticks.x=element_blank(),) +
+  geom_boxplot() + 
+  facet_grid(gravity~init_score)
+  #facet_wrap(~steps,ncol = nrow(unique(tmp_df[,"steps"])))
+
+```
+```{r}
+df_score %>% 
+ # filter(steps <= 100) %>% 
+  mutate(steps = factor(steps)) %>% 
+  filter(relevance_gravity == 0) %>% 
+  filter(deviation_function == "mean_deviation") %>% 
+  ggplot() +
+  aes(fill = scoring_function,y = posts_with_no_views) + 
+  theme(text=element_text(family="Trebuchet MS")) +
+  theme(axis.text.x=element_blank(),axis.ticks.x=element_blank(),) +
+  geom_boxplot() + 
+  facet_wrap(~init_score)
+  #facet_wrap(~steps,ncol = nrow(unique(tmp_df[,"steps"])))
+
+```
+
+
+```{r}
+df_score %>% 
+ # filter(steps <= 100) %>% 
+  mutate(steps = factor(steps)) %>% 
+  filter(relevance_gravity == 0) %>% 
+  filter(scoring_function == "scoring_hacker_news") %>% 
+  #filter(init_score == 30) %>% 
+  #filter(deviation_function == "no_deviation") %>% 
+  ggplot() +
+  aes(shape = deviation_function ,x=area_under_gini,y =  area_under_ndcg, color = user_rating_function,group = seed) + 
+  theme(text=element_text(family="Trebuchet MS")) +
+  #theme(axis.text.x=element_blank(),axis.ticks.x=element_blank(),) +
+  geom_point(alpha = 0.5) + 
+  facet_wrap(~init_score)
+  #facet_wrap(~steps,ncol = nrow(unique(tmp_df[,"steps"])))
+
+```
+```{r}
+df_score %>% 
+ # filter(steps <= 100) %>% 
+  mutate(steps = factor(steps)) %>% 
+  
+  filter(relevance_gravity == 0) %>% 
+  filter(deviation_function == "no_deviation") %>% 
+  ggplot() +
+  aes(color = vote_evaluation,x=area_under_gini,y =  area_under_ndcg, shape = user_rating_function) + 
+  theme(text=element_text(family="Trebuchet MS")) +
+  #theme(axis.text.x=element_blank(),axis.ticks.x=element_blank(),) +
+  geom_point(alpha = 0.5) + 
+  #facet_wrap(~steps,ncol = nrow(unique(tmp_df[,"steps"])))
+
+```
+
+```{r}
+corrable = df_full_model %>% 
+  filter(scoring_function == "scoring_view")
+  #filter(user_rating_function == "user_rating_exp2") %>% 
+  #filter(deviation_function == "no_deviation")
+
+corrable = corrable[, purrr::map_lgl(corrable, is.numeric)] 
+  
+corrable = corrable[,c("area_under_gini", "area_under_ndcg","posts_with_no_views", "init_score", "relevance_gravity")]
+
+ggcorrplot(cor(corrable), ggtheme = theme(text=element_text(family="Trebuchet MS"))) 
+```

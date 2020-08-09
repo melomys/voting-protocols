@@ -2,7 +2,7 @@
 \label{chapter:bewertungsfunktionen}
 
 
-Für eine User*in $U$ die einen Post $P$ betrachtet ist die Meinungsfunktion $R(P,U): \R^{N_Q} \rightarrow \R$, welche die beiden $N_Q$-dimensionalen Vektoren der Postqualität und Qualitätsperzeption auf den skalaren Meinungswert $m_{P,U} = R(P, U)$ reduziert. Dieser drückt aus wie gut die User*in den betrachteten Post empfindet. Dabei soll gelten:
+Für eine User*in $U$ die einen Post $P$ betrachtet ist die Meinungsfunktion $R(P,U): \R^{N_Q} \rightarrow \R$, welche die beiden $N_Q$-dimensionalen Vektoren der Postqualität und Qualitätsperzeption auf den skalaren Meinungswert $m_{P,U} = R(P,U)$ reduziert. Dieser drückt aus wie gut die User*in den betrachteten Post empfindet. Dabei soll gelten:
 
 \begin{enumerate}
 	\item $m_{P,U} \in [0,1]$
@@ -12,7 +12,7 @@ Für eine User*in $U$ die einen Post $P$ betrachtet ist die Meinungsfunktion $R(
 
 \section{Transformation der Qualitätsparameter}
 
-Um die Intervallgrenzen der genannten Kriterien zu beachten wird eine Transormation der Qualitätsparameter vollzogen, welche diese auf das Intervall $[0,1]$ begrenzen. Die Transformation wird durch die logistische Funktion $l$ in Formel \ref{sigmoid} vollzogen:
+Um die Intervallgrenzen der genannten Kriterien zu erfüllen wird eine Transformation der Qualitätsparameter vollzogen, welche diese auf das Intervall $[0,1]$ begrenzen. Die Transformation wird durch die logistische Funktion $l$ in Formel \ref{sigmoid} vollzogen:
 
 
 
@@ -21,41 +21,48 @@ Um die Intervallgrenzen der genannten Kriterien zu beachten wird eine Transormat
 l(x) = \frac{1}{1 + e^{-\frac{1}{2}x}}
 \end{equation}
 
-%TODO grafik der logistischen funktion
+%TODO grafik der logistischen funktion, NEE EHER NICHT
 
-Somit ergeben sich die transformierten Qualitäts- bwz Qualitätsperzeptionsvektoren der Post und User*innen durch die komponentenweise Anwendung von $s$ auf $q_P$ und $q_U$
+Somit ergeben sich die transformierten Qualitäts- bwz Qualitätsperzeptionsvektoren der Post und User*innen durch die komponentenweise Anwendung von $l$ auf $q_P$ und $q_U$
 
 \begin{align}
 \tilde{q}_P = l(q_P) \\
 \tilde{q}_U = l(q_U) 
 \end{align}
 
-\section{Approxamtion des User*innenratings}
+\section{Approxamtion der User*innenmeinungfunktion}
 
+
+Die reale User*innenbewertungsfunktion ist hoch komplex und kann nur sehr vereinfacht modelliert werden.
 Im folgenden werden zwei Ansätze eingeführt um die User*innenmeinungsfunktion $R(P,U)$ zu approximieren.
  
-\subsection{Konsensrating}
+\subsection{Meinung im Konsens}
 
-Im Konsensrating wird davon ausgegangen, dass User*innen "gute" Posts eher als diese erkennen. Alle User*innen sind sich über die besonders guten und schlechten Posts einig und erkennen diese richtig. Bei durchschnittlichen Posts kann es auch zu Meinungsverschiedenheiten kommen, je nach der Qualitätsperzeption der User*innen.
+In der Konsensbewertung wird davon ausgegangen, dass alle User*innen "gute" Posts mit hohen Qualitätsmerkmalwerten eher als gut empfinden und Posts mit niedrigen Qualitätsmerkmalwerten eher als schlecht empfunden werden.
 
-Das Konsensrating ist eher auf einen Q\&A Platform oder einem Techforum wie Hacker News denkbar. Konstruktive Beiträge sind eher von destruktiven zu unterscheiden. User*innen die besonders gut in einem Thema sind haben an Beiträge zu diesem Thema möglicherweise höhere Ansprüche.
+Die Konsensbewertung ist auf technischen und wissenschaftlichen Plattformen, zum Beispiel Hacker News, denkbar. Konstruktive Beiträge sind eher von destruktiven zu unterscheiden. Trotzdem können User*innen unterschiedlich viel Wissen in einzelnen Fachgebieten und dadurch einen höheren Anspruch an Posts in diesem Bereich haben.  
 
-In Formel \ref{konsensexp2} ist ein Ratingfunktion, welche die genannten Punkte ausdrückt:
+In Formel \ref{konsensexp2} wird die Konsensbewertung ausgedrückt: 
 
+%TODO Für Q_N einsetzen
 \begin{equation}
 \label{konsensexp2}
 R_K(P,U) = \frac{1}{N}\sum_{i = 1}^{N}\tilde{q}_{P,i}^{\tilde{q}_{U,i}}
 \end{equation}
 
+Der transformierte Qualitätsvektor $\tilde{q}_P$ des Posts wird komponentenweise mit der transformierten Qualitätsperzeption der User*in $\tilde{q}_U$ exponiert und aufsummiert. Die Summe wird durch die Anzahl der Qualitätsmerkmale $Q_N$ geteilt.
 
 
-\subsection{Dissensrating}
+\subsection{Meinung im Dissens}
 
 User*innen empfinden Posts als "gut", die nah an ihrer eigenen Qualitätsperzeption liegen. Dadurch sind sich User*innen bei vielen Posts uneinig.
 
-Das Dissensrating ist eher auf einer Diskussionsplattformen denkbar. Dort können die Meinungen auseinander gehen. User*innen haben nicht unbedingt das Interesse die Position der Gegenüber einzunehmen. 
 
-Eine Funktion die die genannten Kriterien erfüllt verwendet die euklidische Distanz, es ergibt sich in Formel \ref{dissens}:
+Die Dissensbewertung ist auf einer Diskussionsplattform denkbar. Dort können die Meinungen über Beiträge stark auseinander. User*innen wollen Beiträge, welche ihre eigene Meinung wiedergeben für andere User*innen sichtbar machen.
+
+
+
+In Formel \ref{dissens} wird die Dissensbewertung mithilfe der euklidischen Distanz beschrieben. Es wird die euklidische Distanz aus $\tilde{q}_P$ und $\tilde{q}_U$ gebildet und durch $\sqrt{N_Q}$ geteilt. Dieser Term wird von $1$ abgezogen. Eine User*in für $\tilde{q}_P = \tilde{q}_U$ einen Post maximal gut.
 
 
 %TODO Dissensrating validieren
@@ -63,6 +70,19 @@ Eine Funktion die die genannten Kriterien erfüllt verwendet die euklidische Dis
 \label{dissens}
 R_D(P,U) = 1 - \frac{||(\tilde{q}_P - \tilde{q}_U)||_2}{\sqrt{N_Q}}
 \end{equation}
+
+In Abbildung \ref{fig:vergleichmeinung} werden anhand von jeweils zwei Beispielposts ,$P1$,$P2$, und User*innen, $U1$,$U2$,die beiden Meinungsfunktionen mit zwei Qualitätsmerkmalen $x$ und $y$ verglichen. Die Posts werden nach Farbe unterschieden, während die User*innen nach dem Symbol unterschieden. In der linken Abbildung sind die User*innen nach ihren transformierten Qualitätsmerkmalen dargstellt. Rechts ist der Meinungswert aus den beiden Meinungsfunktionen dargestellt. Herrscht Dissens sind sich beide User*innen uneinig welchen Post sie besser finden. Im Konsens sind sich die User*innen einig, dass $P2$ besser ist. Trotzdem empfindet $U2$ den Post $P1$ deutlich schlechter als $U1$.
+
+\begin{figure}
+	\begin{subfigure}{0.6\textwidth}
+		\includegraphics[width=\textwidth]{"../plots/meinung1.png"}
+	\end{subfigure}
+	\begin{subfigure}{0.4\textwidth}
+		\includegraphics[width=\textwidth]{"../plots/meinung2.png"}
+	\end{subfigure}
+	\label{fig:vergleichmeinung}
+	\caption{Vergleich der beiden Meinungsfunktionen Konsens und Dissens}
+\end{figure}
 
 
 

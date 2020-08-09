@@ -1,0 +1,94 @@
+---
+title: "pre_sort"
+author: "Pupso"
+date: "7/27/2020"
+output: html_document
+---
+
+```{r}
+source("util.r")
+```
+
+```{r}
+df_pre = combine_dfs("/home/ludwig/Bachelorarbeit/voting-protocols/data_cluster/data_not_users","pre_sort") %>% 
+  mutate(sorted = factor(sorted))
+```
+
+
+
+```{r}
+df_pre %>% 
+  mutate(init_score = factor(init_score)) %>% 
+  ggplot() +
+  aes(x = area_under_gini, y = area_under_ndcg, color = sorted,size=posts_with_no_views, shape=scoring_function, group= seed) + # , color = vote_count, shape = user_rating_function, fill = init_score) + 
+  theme(text=element_text(family="Trebuchet MS")) +
+  geom_point(alpha = 0.4) + 
+  #geom_line(alpha = 0.4) +
+  facet_grid(relevance_gravity~user_rating_function)
+```
+```{r}
+df_pre %>% 
+ # filter(steps <= 100) %>% 
+  mutate(steps = factor(steps)) %>% 
+  filter(user_rating_function == "user_rating_exp2") %>% 
+  ggplot() +
+  aes(fill = scoring_function,y =  coeff) + 
+  theme(text=element_text(family="Trebuchet MS")) +
+  theme(axis.text.x=element_blank(),axis.ticks.x=element_blank(),) +
+  geom_boxplot() + 
+  facet_wrap(~sorted)
+  #facet_wrap(~steps,ncol = nrow(unique(tmp_df[,"steps"])))
+
+```
+
+```{r}
+df_pre %>% 
+ # filter(steps <= 100) %>% 
+  mutate(steps = factor(steps)) %>% 
+  ggplot() +
+  aes(fill = scoring_function,y =  area_under_curve) + 
+  theme(text=element_text(family="Trebuchet MS")) +
+  theme(axis.text.x=element_blank(),axis.ticks.x=element_blank(),) +
+  geom_boxplot() + 
+  facet_wrap(~init_score)
+  #facet_wrap(~steps,ncol = nrow(unique(tmp_df[,"steps"])))
+
+```
+
+```{r}
+df_pre %>% 
+ # filter(steps <= 100) %>% 
+  mutate(steps = factor(steps)) %>% 
+  ggplot() +
+  aes(fill = scoring_function,y =  area_under_spearman) + 
+  theme(text=element_text(family="Trebuchet MS")) +
+  theme(axis.text.x=element_blank(),axis.ticks.x=element_blank(),) +
+  geom_boxplot() + 
+  facet_wrap(~init_score)
+  #facet_wrap(~steps,ncol = nrow(unique(tmp_df[,"steps"])))
+
+```
+
+
+```{r}
+df %>% 
+ # filter(steps <= 100) %>% 
+  mutate(steps = factor(steps)) %>% 
+  ggplot() +
+  aes(color = scoring_function,x=area_under_gini,y =  area_under_curve, shape = user_rating_function) + 
+  theme(text=element_text(family="Trebuchet MS")) +
+  #theme(axis.text.x=element_blank(),axis.ticks.x=element_blank(),) +
+  geom_point(alpha = 0.5) + 
+  facet_wrap(~init_score)
+  #facet_wrap(~steps,ncol = nrow(unique(tmp_df[,"steps"])))
+
+```
+
+
+```{r}
+df_pre %>% 
+  filter(user_rating_function == "Konsens") %>% 
+  ggplot_cus() +
+  aes(y = gini_all,x = ) + 
+  geom_line()
+```

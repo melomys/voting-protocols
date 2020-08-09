@@ -1,0 +1,136 @@
+---
+title: "user_propability"
+author: "Pupso"
+date: "7/27/2020"
+output: html_document
+---
+
+```{r}
+source("util.r")
+```
+
+```{r}
+df_userprob = combine_dfs("/home/ludwig/Bachelorarbeit/voting-protocols/data_cluster/data_not_users/","activity_voting") %>% 
+  filter(user_rating_function == "Konsens")
+
+  df_userprob$voting_probability_distribution = revalue(x = df_userprob$voting_probability_distribution, c("Distributions.Beta{Float64}(α=2.5, β=5.0)" = "Beta(2.5,5)", "Distributions.Beta{Float64}(α=1.0, β=5.0)" = "Beta(1,5)", "Distributions.Beta{Float64}(α=1.0, β=10.0)" = "Beta(1,10)","Distributions.Beta{Float64}(α=2.5, β=10.0)" = "Beta(2.5,10)"))
+  
+  df_userprob$activity_distribution = revalue(x = df_userprob$activity_distribution,c("Distributions.Beta{Float64}(α=2.5, β=5.0)" = "Beta(2.5,5)", "Distributions.Beta{Float64}(α=1.0, β=5.0)" = "Beta(1,5)", "Distributions.Beta{Float64}(α=1.0, β=10.0)" = "Beta(1,10)","Distributions.Beta{Float64}(α=2.5, β=10.0)" = "Beta(2.5,10)"))
+
+```
+
+
+```{r}
+df_userprob %>% 
+  mutate(init_score = factor(init_score)) %>% 
+  ggplot() +
+  aes(x = area_under_gini, y = area_under_ndcg, color = activity_distribution,size= posts_with_no_views,group= seed) + # , color = vote_count, shape = user_rating_function, fill = init_score) + 
+  theme(text=element_text(family="Trebuchet MS")) +
+  geom_point(alpha = 0.4) + 
+  #geom_line(alpha = 0.4) +
+  facet_grid(scoring_function~relevance_gravity)
+```
+```{r}
+df_userprob %>% 
+  filter(user_rating_function == "Konsens") %>% 
+  filter(relevance_gravity == 0) %>% 
+  ggplot() +
+  theme(text=element_text(family="Trebuchet MS")) +
+  aes(y = area_under_ndcg, fill = scoring_function) +
+  geom_boxplot() + 
+  facet_wrap(~activity_distribution, ncol = nrow(unique(df_userprob[,"activity_distribution"])))
+```
+
+```{r}
+
+df_userprob %>% 
+  filter(user_rating_function == "Konsens") %>% 
+  mutate(init_score = factor(init_score)) %>% 
+  #filter(voting_probability_distribution != "Beta(1,5)") %>% 
+  ggplot_cus() +
+  aes(x = area_under_gini, y = area_under_ndcg, color = voting_probability_distribution,size= posts_with_no_views,shape = activity_distribution,  group= seed) + # , color = vote_count, shape = user_rating_function, fill = init_score) + 
+  geom_point(alpha = 0.6) + 
+  #geom_line(alpha = 0.7) +
+  facet_grid(relevance_gravity~scoring_function)
+
+
+if(s)
+{
+  ggsave("/home/ludwig/Bachelorarbeit/voting-protocols/plots/vote_prob_scatter.png", device= "png")
+}
+
+```
+```{r}
+c = corr_matrix(df_userprob, "voting_probability_distribution")
+ggcorrplot(cor(c, method = "spearman"), ggtheme = )
+```
+
+```{r}
+df_userprob %>% 
+  #filter(user_rating_function == "user_rating_exp2") %>% 
+  filter(relevance_gravity == 0) %>% 
+  ggplot() +
+  theme(text=element_text(family="Trebuchet MS")) +
+  aes(y = area_under_ndcg, fill = scoring_function) +
+  geom_boxplot() + 
+  facet_wrap(~voting_probability_distribution, ncol = nrow(unique(df_userprob[,"voting_probability_distribution"])))
+```
+
+
+```{r}
+df_userprob %>% 
+  filter(user_rating_function == "user_rating_exp2") %>% 
+  filter(relevance_gravity == 0) %>% 
+  ggplot() + 
+  aes(x = area_under_gini, y = area_under_ndcg, size= posts_with_no_views, color = scoring_function) + 
+  theme(text=element_text(family="Trebuchet MS")) +
+  geom_point(alpha = 0.4) +
+  facet_grid(voting_probability_distribution~activity_distribution)
+
+df_userprob %>% 
+  mutate(init_score = factor(init_score)) %>% 
+  filter(activity_distribution == "Distributions.Beta{Float64}(α=2.5, β=5.0)") %>% 
+  ggplot() +
+  aes(x = area_under_gini, y = area_under_ndcg, color = activity_distribution, shape= user_rating_function, group= seed) + # , color = vote_count, shape = user_rating_function, fill = init_score) + 
+  theme(text=element_text(family="Trebuchet MS")) +
+  geom_point(alpha = 0.3) + 
+  #geom_line(alpha = 0.4) +
+  facet_wrap(~scoring_function)
+```
+
+```{r}
+#BETA
+
+x_qbeta <- seq(0, 1, by = 0.005)  
+y_qbeta1 <- dbeta(x_qbeta,shape1 = 1, shape2 = 5) 
+y_qbeta2 <- dbeta(x_qbeta,shape1 = 2.5, shape2 = 5) 
+y_qbeta3 <- dbeta(x_qbeta,shape1 = 1, shape2 = 10) 
+y_qbeta4 <- dbeta(x_qbeta,shape1 = 2.5, shape2 = 10) 
+
+
+tib_beta = tibble(x1 = x_qbeta,y1 = y_qbeta3, y2 = y_qbeta1, y3 = y_qbeta4, y4 = y_qbeta2)
+
+
+
+tib_beta = melt(tib_beta, id = "x1")
+
+tib_beta$variable = revalue(x = tib_beta$variable, c("y2" = "Beta(1,5)", "y4" = "Beta(2.5,5)", "y1" = "Beta(1,10)", "y3" = "Beta(2.5,10)"))
+tib_beta %>% 
+  #filter(variable != "Beta(1,5)") %>% 
+  ggplot_cus() + 
+  aes(x = x1,color = variable, y = value ) +
+  labs(color = "Verteilung der Bewertungszufriedenheit") + 
+  geom_line(alpha = 1)
+
+
+if(s)
+{
+  ggsave("/home/ludwig/Bachelorarbeit/voting-protocols/plots/vote_prob_dists.png", device= "png")
+}
+
+  
+
+```
+    geom_line(aes(y = y1), color = "var0") + 
+geom_line(aes(y = y1), color = "var0") + 
+

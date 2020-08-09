@@ -1,0 +1,135 @@
+---
+title: "deviation"
+author: "Pupso"
+date: "7/31/2020"
+output: html_document
+---
+
+```{r}
+source("util.r")
+```
+
+```{r}
+df_deviation = combine_dfs("/home/ludwig/Bachelorarbeit/voting-protocols/data_cluster/data_dev_votes_per_step/","deviation") %>% 
+  mutate(quality_dimensions = factor(quality_dimensions)) %>% 
+  filter(user_rating_function == "Konsens")
+
+
+grouped_deviation = df_deviation %>% 
+  mutate(scoring_function = factor(scoring_function)) %>%
+  #group_by(scoring_function, init_score, deviation_function, vote_evaluation, gravity)
+  group_by(scoring_function, init_score, deviation_function, vote_evaluation,gravity, relevance_gravity, user_rating_function, model_type) %>% 
+  dplyr::summarise(area_under_gini = mean(area_under_gini), area_under_ndcg = mean(area_under_ndcg), posts_with_no_views = mean(posts_with_no_views),ρ = mean(ρ), n = n()) 
+```
+```{r}
+
+df_deviation %>% 
+  filter(user_rating_function == "Konsens") %>% 
+  #filter(deviation_function == "σ") %>% 
+  ggplot_cus() + 
+  aes(x = area_under_gini, y = area_under_ndcg, size = posts_with_no_views, color = deviation_function) + 
+  geom_point(alpha = 0.1) + 
+  facet_wrap(~relevance_gravity) 
+
+```
+
+```{r}
+df_deviation %>% 
+  mutate(init_score = factor(init_score)) %>% 
+  filter(user_rating_function == "Konsens") %>% 
+ # filter(deviation_function == "σ") %>% 
+  ggplot() +
+  aes(x = area_under_gini, y = area_under_ndcg, color = deviation_function,size= posts_with_no_views) + # , color = vote_count, shape = user_rating_function, fill = init_score) + 
+  theme(text=element_text(family="Trebuchet MS")) +
+  #geom_point(alpha =0.3, data = df_deviation, color = "grey70") + 
+  geom_point(alpha = 0.5) + 
+  #geom_line(alpha = 0.4) +
+  facet_grid(scoring_function~relevance_gravity)
+```
+```{r}
+df_deviation %>% 
+ # filter(steps <= 100) %>% 
+  filter(user_rating_function == "Konsens") %>% 
+  #filter(relevance_gravity == 0) %>% 
+  #mutate(steps = factor(steps)) %>% 
+  ggplot_cus() +
+  aes(x = deviation_function,fill = scoring_function,y = area_under_gini) + 
+  #theme(legend.position = "left") + 
+ # theme(axis.text.x=element_blank(),axis.ticks.x=element_blank(),) +
+  geom_boxplot() + 
+  #facet_wrap(~quality_dimensions, ncol = nrow(unique(df_dims[,"quality_dimensions"])))
+  facet_grid(~relevance_gravity)
+
+if(s)
+{
+  ggsave("/home/ludwig/Bachelorarbeit/voting-protocols/plots/dev_gini.png")
+}
+
+```
+```{r}
+df_deviation %>% 
+ # filter(steps <= 100) %>% 
+  filter(user_rating_function == "Konsens") %>% 
+  #filter(relevance_gravity == 0) %>% 
+  #mutate(steps = factor(steps)) %>% 
+  ggplot_cus() +
+  aes(x = deviation_function,fill = scoring_function,y = posts_with_no_views  ) +
+  theme(legend.position =  "none") + 
+  geom_boxplot() + 
+  #facet_wrap(~quality_dimensions, ncol = nrow(unique(df_dims[,"quality_dimensions"])))
+  facet_grid(~relevance_gravity)
+if(s)
+{
+  ggsave("/home/ludwig/Bachelorarbeit/voting-protocols/plots/dev_pwnv.png")
+}
+
+
+```
+```{r}
+df_deviation %>% 
+ # filter(steps <= 100) %>% 
+  filter(user_rating_function == "Konsens") %>% 
+  #filter(relevance_gravity == 0) %>% 
+  #mutate(steps = factor(steps)) %>% 
+  ggplot_cus() +
+  aes(x = deviation_function,fill = scoring_function,y = area_under_ndcg ) + 
+  theme(legend.position = "none") + 
+  geom_boxplot() +
+  #facet_wrap(~quality_dimensions, ncol = nrow(unique(df_dims[,"quality_dimensions"])))
+  facet_grid(~relevance_gravity)
+
+if(s)
+{
+  ggsave("/home/ludwig/Bachelorarbeit/voting-protocols/plots/dev_ndcg.png")
+}
+
+
+```
+```{r}
+df_deviation %>% 
+ # filter(steps <= 100) %>% 
+  mutate(quality_dimensions = factor(quality_dimensions)) %>% 
+  mutate(steps = factor(steps)) %>% 
+  ggplot() +
+  aes(fill = scoring_function,y =  area_under_curve) + 
+  theme(text=element_text(family="Trebuchet MS")) +
+  theme(axis.text.x=element_blank(),axis.ticks.x=element_blank(),) +
+  geom_boxplot() + 
+  facet_wrap(~quality_dimensions)
+  #facet_wrap(~steps,ncol = nrow(unique(tmp_df[,"steps"])))
+
+```
+
+
+```{r}
+df_dims %>% 
+ # filter(steps <= 100) %>% 
+  mutate(steps = factor(steps)) %>% 
+  ggplot() +
+  aes(color = scoring_function,x=area_under_gini,y =  area_under_ndcg, group = seed, shape = user_rating_function) + 
+  theme(text=element_text(family="Trebuchet MS")) +
+  #theme(axis.text.x=element_blank(),axis.ticks.x=element_blank(),) +
+  geom_point(alpha = 0.5) + 
+  #geom_line(alpha = 0.3) +
+  facet_wrap(~quality_dimensions)
+  #facet_wrap(~steps,ncol = nrow(unique(tmp_df[,"steps"])))

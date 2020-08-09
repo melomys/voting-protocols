@@ -1,0 +1,91 @@
+---
+title: "concentration"
+author: "Pupso"
+date: "7/27/2020"
+output: html_document
+---
+
+
+```{r}
+source("util.r")
+```
+
+```{r}
+df_conc = combine_dfs("/home/ludwig/Bachelorarbeit/voting-protocols/data_cluster/data_conc_posts_per_step//data","concentration") %>% 
+  filter(user_rating_function == "Konsens")
+```
+
+
+
+```{r}
+df_conc %>% 
+  mutate(init_score = factor(init_score)) %>% 
+  ggplot() +
+  aes(x = area_under_gini, y = area_under_ndcg, color = concentration_distribution, shape= user_rating_function, group= seed, size = posts_with_no_views) + # , color = vote_count, shape = user_rating_function, fill = init_score) + 
+  theme(text=element_text(family="Trebuchet MS")) +
+  geom_point(alpha = 0.4) + 
+  geom_line(alpha = 0.4) +
+  facet_grid(scoring_function~relevance_gravity)
+```
+```{r}
+
+corr = corr_matrix(df_conc, "concentration_distribution")
+ggcorrplot(corr)
+```
+
+```{r}
+df_conc %>% 
+ # filter(steps <= 100) %>% 
+  mutate(steps = factor(steps)) %>% 
+  ggplot() +
+  aes(fill = scoring_function,y =  area_under_gini) + 
+  theme(text=element_text(family="Trebuchet MS")) +
+  theme(axis.text.x=element_blank(),axis.ticks.x=element_blank(),) +
+  geom_boxplot() + 
+  facet_wrap(~concentration_distribution,ncol = nrow(unique(df_conc[,"concentration_distribution"])))
+
+```
+
+```{r}
+df_conc %>% 
+ # filter(steps <= 100) %>% 
+  mutate(steps = factor(steps)) %>% 
+  ggplot() +
+  aes(fill = scoring_function,y =  area_under_curve) + 
+  theme(text=element_text(family="Trebuchet MS")) +
+  theme(axis.text.x=element_blank(),axis.ticks.x=element_blank(),) +
+  geom_boxplot() + 
+  facet_wrap(~concentration_distribution,ncol = nrow(unique(df_conc[,"concentration_distribution"])))
+
+
+```
+
+```{r}
+df_conc %>% 
+ # filter(steps <= 100) %>% 
+  mutate(steps = factor(steps)) %>% 
+  ggplot() +
+  aes(fill = scoring_function,y =  area_under_spearman) + 
+  theme(text=element_text(family="Trebuchet MS")) +
+  theme(axis.text.x=element_blank(),axis.ticks.x=element_blank(),) +
+  geom_boxplot() + 
+  facet_wrap(~concentration_distribution,ncol = nrow(unique(df_conc[,"concentration_distribution"])))
+
+
+```
+
+
+```{r}
+df_conc %>% 
+ # filter(steps <= 100) %>% 
+  mutate(steps = factor(steps)) %>% 
+  ggplot() +
+  aes(color = scoring_function,x=area_under_gini,group = seed,y =  area_under_curve, shape = user_rating_function) + 
+  theme(text=element_text(family="Trebuchet MS")) +
+  #theme(axis.text.x=element_blank(),axis.ticks.x=element_blank(),) +
+  geom_point(alpha = 0.5) + 
+  geom_line(alpha = 0.3) + 
+  facet_wrap(~concentration_distribution,ncol = nrow(unique(df_conc[,"concentration_distribution"])))
+
+
+```

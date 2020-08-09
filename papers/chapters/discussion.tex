@@ -1,0 +1,29 @@
+\chapter{Diskussion der Ergebnisse}
+
+Alle getesten Bewertungsmetriken erzeugen in der gleichen Umwelt unterschiedliche Ergebnisse. Die Wahl der Bewertungsmetrik hat Einfluss auf die Fairness der Sortierung der Posts.
+
+
+
+Die in [Luu] vorgeschlagene zufällige Abweichung führt in dieser Simulation zur Verbessung von Metriken auf News- und Diskussionsplattform. Der aggregierte Gini-Koeffizient $T(G)$ kann signifikant reduziert werden, während der aggregierte nDCG $T(nDCG)$ stabil bleibt.
+
+In [Wilson Score Paper] wird der Wilson-Score vorgeschlagen um Up- und Downvotes eines Posts zu evaluieren, die Bewertung des Posts zu transformieren. In der Simulation zeigt sich, dass der Wilson Score nicht in allen Fällen der Differenz auf Up- und Downvotes überlegen. Auf einer Plattform auf der Konsens herrscht und die Posts nicht an Relevanz verlieren, wie in einer technischen Q\&A Plattform ist die Differenz-Bewewertungstransformation überlegen.
+
+Bewertungsmetriken liefern bessere Ergebnisse,wenn Posts mit einem Initialscore $s_0 > 0$ ausgestattet werden. Die Wahl des besten Initialscores ist von der Bewertungsmetrik abhängig. Für die Reddit Hot Metrik konnte der optimale Initialscore nicht ermittelt werden, es ist jedoch zu vermuten das dieser, wie bei den drei weiteren Metriken, weder kleiner noch größer als die Scores sämtlicher Posts der Bewertungsmetrik zu wählen ist.
+
+In dieser Arbeit wurde der sehr große Featureraum nicht vollständig exploriert. Einzelne Metrikparameter wie die Gravität werden nur unter bestimmten Modellkonfigurationen simuliert und verglichen. Es ist möglich, dass Kombinationen von Metrikparametern sehr gute Ergebnisse liefern, zu diesen aber keine Simulation ausgeführt wurde und sie nicht entdeckt wurden. 
+
+
+%So ist zum Beispiel auch der $\rho$-Koeffizient der Aktivitätsmetrik bei Variierung der Gravität großen Sprüngen ausgesetzt. Es ist nicht letztendlich zu sagen, welcher Gravitätswert zur besten Performance führt. 
+
+
+
+\paragraph{Einfluss der Modell- und User*innenparameter}
+
+Die Vergleichbarkeit der Ergebnisse ist nicht unmittelbar abhängig von der Wahl der artifiziell erzeugten User*innenparameter. Zwar können die Ergebnisse zum Beispiel durch die Wahl der Konzentrationsverteilung bezüglich des aggregierten Gini-Koeffizienten verschoben werden, jedoch erfahren sämtliche Modellkonfigurationen diese Verschiebung, sodass keine einzelnen Modellkonfigurationen durch die bestimmte Wahl der User*innenparameter bevorteiligt wird.
+
+
+Die Erhöhung der Iterationsanzahl führt erwartungsgemäß zu einer Verringerung der Varianz der betrachteten Ergebnisparameter. Im Fall von $G_R = 0$ reagieren nicht alle Bewertungsmetriken gleich auf die Veränderung der Iterationsanzahl. Dies führt zu einer Verzerrung der Simulationsergebnisse nach Iterationslänge.
+
+Wird die Anzahl der Posts und User*innen varriert, hat dies keinen gravierenden Einfluss auf die Vergeleichbarkeit der Ergebnisse. Wie zu Erwarten steigt mit zunehmender Postanzahl der Gini-Koeffizient und die Anzahl der Posts ohne Betrachtungen
+
+Auf einer reellen Social Media Plattform sind die User*innen Postzahlen um ein vielfaches größer als die in der Simulation verwendeten. Es ist davon auszugehen, dass sich die beschriebenen Effekte mit weiter ansteigender User*innen und Postanzahl verstärkt werden. 

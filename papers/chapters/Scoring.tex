@@ -1,10 +1,11 @@
 \chapter{Bewertungsmetriken}
 \label{chapter:bewertungsmetriken}
 
+Anhand von Bewertungsmetriken sollen Posts nach ihrer Relevanz sortiert werden. Ein Post $P$ erhält durch eine Bewertungsmetrik den Score $s_P = B(P)$ zugewiesen. Mit diesem zugewiesenen Score werden die Posts sortiert und auf der Plattform zur Verfügung gestellt.
 
-Mit Bewertungsmetriken sollen Posts anhand ihrer Relevanz sortiert werden. Ein Post $P$ erhält durch eine Bewertungsmetrik den Score $s_P = B(P)$ zugewiesen. Die Posts werden anhand des zugewiesenen Scores sortiert und auf der Plattform zur Verfügung gestellt.
 
- Die wahre Relevanz $R_P$ steht in der Berechnung der Bewertungsmetrik nicht zur Verfügung, daher müssen die "sichtbaren" Parameter von $P$ verwendet werden um die Relevanz anzunähern.
+Die nicht beobachtbaren Qualitätsparameter stehen in der Berechnung der Bewertungsmetrik nicht zur Verfügung, diese kann nur die beobachtbaren Parameter verwenden:
+%Die wahre Relevanz $R_P$ steht in der Berechnung der Bewertungsmetrik nicht zur Verfügung, daher müssen die "sichtbaren" Parameter von $P$ verwendet werden um die Relevanz anzunähern.
 
 \begin{itemize}
 	\item $a_P$, Veröffentlichungzeitpunkt
@@ -24,7 +25,6 @@ Eine ideale Bewertungsmetrik ist fair, die folgenden Punkte sind erfüllt:
 \label{voteevaluation}
 
 Die Bewertungsvektoren liegen im $N_B$-dimensionalen Raum vor. Innerhalb von Bewertungsmetriken werden die $N_B$ dimensionalen Bewertungsvektoren von Posts auf einen Skalar transformiert. Dies geschieht mit einer Bewertungstransformationsfunktion $v: \mathbb{R}^{n} \rightarrow \mathbb{R}$.
-
 
 Für den zweidimensionalen Fall mit Up- und Downvotes ($u_P$,$d_P$) werden im folgenden einige Bewertungstransformationen vorgestellt.
 
@@ -64,20 +64,20 @@ Mit der Gesamtzahl der Bewertungen eines Posts $n_P = u_P + d_P$, dem Punktschä
 
 Bewertungsmetriken berechnen den Score $S_{P,t}$ für einen Post unter Betrachtung der Postparameter eines Postes $P$ zum Modellschritt $t$.
 	
-\subsection{Hacker News Ranking}
+\subsection{Hacker News}
 \label{seqHackerNews}
 
 %TODO nochmal über die Notation S_{P,t} klar werden, vielleicht auch S_t(P) ??
-Hacker News verwendet eine Metrik, in der die Upvotes $u_{P}$ eines Postes ins Verhältnis zum Alter $a_{P}$ in Stunden zum Zeitpunkt $t$ setzt. Somit besitzt der Bewertungsraum die Dimension $1$. Das Alter wird mit der Gravitätskonstanste $G = 1.8$ potenziert. Die Bewertungstransformation lautet $v(b_P) = u_P - 1$ so ergibt sich die Hacker News Bewertungsmetrik in Formel \ref{HackerNews}:
+Hacker News verwendet eine Metrik, in der die Upvotes $u_{P}$ eines Postes ins Verhältnis zum Alter $a_{P}$ in Stunden zum Zeitpunkt $t$ setzt. Das Alter wird mit der Gravitätskonstanste $G = 1.8$ potenziert. Die Bewertungstransformation lautet $v(b_P) = u_P - 1$ so ergibt sich die Hacker News Bewertungsmetrik in Formel \ref{HackerNews}:
  
 \begin{equation}
 \label{HackerNews}
 S_{P,t} = \frac{u_{P,t} - 1}{(a_{P,t} + 2)^{G}}
 \end{equation}
 
-\section{Verallgemeinertes Hacker News Ranking}
+\section{Verallgemeinertes Hacker News}
 \label{seqvHackerNews}
-Das verallgemeinerte Hacker News Ranking verwendet eine beliebige Bewertungstransforamiton $v$ und lässt sich somit auch auf höhere Bewertungsräume anwenden:
+Das verallgemeinerte Hacker News Ranking verwendet eine beliebige Bewertungstransformation $v$ und lässt sich somit auch auf höhere Bewertungsräume anwenden:
 
 \begin{equation}
 \label{vHackerNews}
@@ -85,9 +85,7 @@ S_{P,t} = \frac{v(b_{P,t})}{(a_{P,t} + 2)^{G}}
 \end{equation}
 
 
-\section{Reddit Hot Ranking}
-
-% TODO Karma wird nicht einberechnet
+\section{Reddit Hot}
 
 Im Reddit Hot Ranking fließt die evaluierte Voteanzahl $d_P$ eines Postes logarithmisch, und der Zeitpunkt der Veröffentlichung $r_P$ einfach ein. 
 
@@ -98,7 +96,7 @@ Um den Veröffentlichungszeitpunkt $e_P$ zu messen, wird die Differenz in Sekund
 e_{P} = r_{P} - E  
 \end{equation}
 
-Die Default Bewertungstransformation des Reddit Hot Ranking ist die Differenz aus Up- und Downvotes:
+Die Bewertungstransformation des Reddit Hot Ranking ist die Differenz aus Up- und Downvotes:
 
 \begin{equation}
 \label{RedditHotD}

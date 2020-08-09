@@ -1,0 +1,135 @@
+---
+title: "scoring_functions"
+author: "Pupso"
+date: "7/26/2020"
+output: html_document
+---
+ 
+
+
+```{r}
+source("util.r")
+``` 
+
+```{r}
+df_score = combine_dfs("/home/ludwig/Bachelorarbeit/voting-protocols/cluster_data/","scoring_function")
+```
+
+```{r}
+df_score %>% 
+  mutate(init_score = factor(init_score)) %>% 
+  filter(relevance_gravity == 0) %>% 
+  filter(deviation_function == "no_deviation") %>% 
+  ggplot() +
+  aes(x = area_under_gini, y = area_under_ndcg, color = init_score, shape= user_rating_function, group= seed) + # , color = vote_count, shape = user_rating_function, fill = init_score) + 
+  theme(text=element_text(family="Trebuchet MS")) +
+  geom_point(alpha = 1) + 
+  #geom_line(alpha = 0.4) +
+  facet_wrap(~scoring_function)
+```
+```{r}
+#relevance gravity = 1.8
+df_score %>% 
+  mutate(init_score = factor(init_score)) %>% 
+  filter(relevance_gravity == 1.8) %>% 
+ # filter(deviation_function == "mean_deviation") %>% 
+  ggplot() +
+  aes(x = area_under_gini, y = area_under_ndcg, color = init_score, shape= user_rating_function, group= seed) + # , color = vote_count, shape = user_rating_function, fill = init_score) + 
+  theme(text=element_text(family="Trebuchet MS")) +
+  geom_point(alpha = 0.4) + 
+  #geom_line(alpha = 0.4) +
+  facet_wrap(~scoring_function)
+```
+```{r}
+df_score %>% 
+ # filter(steps <= 100) %>% 
+  mutate(steps = factor(steps)) %>% 
+  filter(relevance_gravity == 0) %>% 
+  ggplot() +
+  aes(fill = scoring_function,y =  area_under_gini, color = deviation_function) + 
+  theme(text=element_text(family="Trebuchet MS")) +
+  theme(axis.text.x=element_blank(),axis.ticks.x=element_blank(),) +
+  geom_boxplot() + 
+  facet_wrap(~init_score)
+  #facet_wrap(~steps,ncol = nrow(unique(tmp_df[,"steps"])))
+
+```
+
+```{r}
+df_score %>% 
+ # filter(steps <= 100) %>% 
+  mutate(steps = factor(steps)) %>% 
+  filter(relevance_gravity == 1.8) %>% 
+  filter(user_rating_function == "user_rating_dist2") %>% 
+  ggplot() +
+  aes(fill = scoring_function,y =  area_under_ndcg) + 
+  theme(text=element_text(family="Trebuchet MS")) +
+  theme(axis.text.x=element_blank(),axis.ticks.x=element_blank(),) +
+  geom_boxplot() + 
+  facet_wrap(~init_score)
+  #facet_wrap(~steps,ncol = nrow(unique(tmp_df[,"steps"])))
+
+```
+```{r}
+df_score %>% 
+ # filter(steps <= 100) %>% 
+  mutate(steps = factor(steps)) %>% 
+  filter(relevance_gravity == 0) %>% 
+  filter(deviation_function == "mean_deviation") %>% 
+  ggplot() +
+  aes(fill = scoring_function,y = posts_with_no_views) + 
+  theme(text=element_text(family="Trebuchet MS")) +
+  theme(axis.text.x=element_blank(),axis.ticks.x=element_blank(),) +
+  geom_boxplot() + 
+  facet_wrap(~init_score)
+  #facet_wrap(~steps,ncol = nrow(unique(tmp_df[,"steps"])))
+
+```
+
+
+```{r}
+df_score %>% 
+ # filter(steps <= 100) %>% 
+  mutate(steps = factor(steps)) %>% 
+  filter(relevance_gravity == 0) %>% 
+  filter(scoring_function == "scoring_hacker_news") %>% 
+  #filter(init_score == 30) %>% 
+  #filter(deviation_function == "no_deviation") %>% 
+  ggplot() +
+  aes(shape = deviation_function ,x=area_under_gini,y =  area_under_ndcg, color = user_rating_function,group = seed) + 
+  theme(text=element_text(family="Trebuchet MS")) +
+  #theme(axis.text.x=element_blank(),axis.ticks.x=element_blank(),) +
+  geom_point(alpha = 0.5) + 
+  facet_wrap(~init_score)
+  #facet_wrap(~steps,ncol = nrow(unique(tmp_df[,"steps"])))
+
+```
+```{r}
+df_score %>% 
+ # filter(steps <= 100) %>% 
+  mutate(steps = factor(steps)) %>% 
+  
+  filter(relevance_gravity == 0) %>% 
+  filter(deviation_function == "no_deviation") %>% 
+  ggplot() +
+  aes(color = scoring_function,x=area_under_gini,y =  area_under_ndcg, shape = user_rating_function) + 
+  theme(text=element_text(family="Trebuchet MS")) +
+  #theme(axis.text.x=element_blank(),axis.ticks.x=element_blank(),) +
+  geom_point(alpha = 0.5) + 
+  #facet_wrap(~steps,ncol = nrow(unique(tmp_df[,"steps"])))
+
+```
+
+```{r}
+corrable = df_score %>% 
+  #filter(scoring_function == "scoring_hacker_news") %>% 
+  filter(user_rating_function == "user_rating_exp2") %>% 
+  filter(deviation_function == "no_deviation")
+
+corrable = corrable[ , purrr::map_lgl(corrable, is.numeric)] 
+  
+corrable = corrable[,c("area_under_gini","area_under_gini_top_10", "area_under_gini_top_50", "area_under_gini_top_100", "area_under_ndcg","posts_with_no_views", "init_score", "relevance_gravity")]
+
+ggcorrplot(cor(corrable), ggtheme = theme(text=element_text(family="Trebuchet MS"))) 
+```
+

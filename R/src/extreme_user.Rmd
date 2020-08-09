@@ -1,0 +1,94 @@
+---
+title: "extreme_user"
+author: "Pupso"
+date: "7/27/2020"
+output: html_document
+---
+
+```{r}
+source("util.r")
+```
+
+```{r}
+df_euser = combine_dfs("/home/ludwig/Bachelorarbeit/voting-protocols/data_cluster/data","extreme")
+```
+```{r}
+df_temp = df_euser %>% 
+  #mutate(user = str_replace(user, "Tuple", "ae")) %>% 
+  mutate(user = str_remove_all(user, "Tuple{Float64*Function}")) %>% 
+  #mutate(user = str_replace_all(user, "VotingProtocols.var\"add_extreme_user!#2\"{Int64}", "extremeness:")) %>% 
+  mutate(hash = sha1(user))
+df_temp[,c("user", "hash")]
+```
+
+```{r}
+df_euser %>% 
+  mutate(init_score = factor(init_score)) %>% 
+  mutate(user = factor(sha1(user))) %>% 
+  ggplot() +
+  aes(x = area_under_gini, y = area_under_ndcg, color = user,size= posts_with_no_views, shape=scoring_function, group= seed) + # , color = vote_count, shape = user_rating_function, fill = init_score) + 
+  theme(text=element_text(family="Trebuchet MS")) +
+  geom_point(alpha = 0.4) + 
+  #geom_line(alpha = 0.4) +
+  facet_grid(relevance_gravity~user_rating_function)
+
+```
+```{r}
+df_euser %>% 
+  mutate(quality_dimensions = factor(quality_dimensions)) %>% 
+ # filter(steps <= 100) %>% 
+  mutate(steps = factor(steps)) %>% 
+  ggplot() +
+  aes(fill = scoring_function,y =  area_under_gini) + 
+  theme(text=element_text(family="Trebuchet MS")) +
+  theme(axis.text.x=element_blank(),axis.ticks.x=element_blank(),) +
+  geom_boxplot() + 
+  facet_wrap(~quality_dimensions)
+  #facet_wrap(~steps,ncol = nrow(unique(tmp_df[,"steps"])))
+
+```
+
+```{r}
+df_euser %>% 
+ # filter(steps <= 100) %>% 
+  mutate(quality_dimensions = factor(quality_dimensions)) %>% 
+  mutate(steps = factor(steps)) %>% 
+  ggplot() +
+  aes(fill = scoring_function,y =  area_under_curve) + 
+  theme(text=element_text(family="Trebuchet MS")) +
+  theme(axis.text.x=element_blank(),axis.ticks.x=element_blank(),) +
+  geom_boxplot() + 
+  facet_wrap(~quality_dimensions)
+  #facet_wrap(~steps,ncol = nrow(unique(tmp_df[,"steps"])))
+
+```
+
+```{r}
+df_euser %>% 
+ # filter(steps <= 100) %>% 
+  mutate(steps = factor(steps)) %>% 
+  ggplot() +
+  aes(fill = scoring_function,y =  area_under_spearman) + 
+  theme(text=element_text(family="Trebuchet MS")) +
+  theme(axis.text.x=element_blank(),axis.ticks.x=element_blank(),) +
+  geom_boxplot() + 
+  facet_wrap(~init_score)
+  #facet_wrap(~steps,ncol = nrow(unique(tmp_df[,"steps"])))
+
+```
+
+
+```{r}
+df_euser %>% 
+ # filter(steps <= 100) %>% 
+  mutate(steps = factor(steps)) %>% 
+  ggplot() +
+  aes(color = scoring_function,x=area_under_gini,y =  area_under_curve, group = seed, shape = user_rating_function) + 
+  theme(text=element_text(family="Trebuchet MS")) +
+  #theme(axis.text.x=element_blank(),axis.ticks.x=element_blank(),) +
+  geom_point(alpha = 0.5) + 
+  geom_line(alpha = 0.3) +
+  facet_wrap(~quality_dimensions)
+  #facet_wrap(~steps,ncol = nrow(unique(tmp_df[,"steps"])))
+
+```

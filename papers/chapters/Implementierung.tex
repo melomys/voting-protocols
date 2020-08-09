@@ -11,7 +11,7 @@ Sämtliche Funktionalität ist in dem Paket \texttt{VotingProtocols}\footnote{\t
 
 Die User*innen werden als Agent*innen des Modells modelliert. Posts und die weiteren in Kapitel \ref{chapter:modell} beschriebenen Parameter werden als Parameter des Modells von Agents.jl gespeichert. 
 
-Das Modell wird für eine festgelegte Anzahl an Iterationen berechnet. Der Ablauf einer Simulation ist in Algorithmus \ref{alg:model} beschrieben. In jedem Iterationsschritt wird für alle User*innen die definierte Agent*innenschrittfunktion (Abschnitt \ref{agentstep}) ausgeführt. Diese legt das Bewertungsverhalten der User*innen fest. Nach der Berechnung der User*innenaktionen wird in jedem Iterationsschritt die Modellschrittfunktion(Abschnitt \ref{modelstep}) ausgeführt. In dieser Funktion wird die Bewertungsmetrik angewendet und die Posts entsprechend angeordnet.
+Das Modell wird für eine festgelegte Anzahl an Iterationen berechnet. Der Ablauf einer Simulation ist in Algorithmus \ref{alg:model} beschrieben. Das Modell wird mit $N_U$ User*innen und $N_{P_{start}}$ Posts und sämtlichen weiteren Modellparametern initialisiert. In jedem Iterationsschritt wird für alle User*innen die definierte Agent*innenschrittfunktion (Abschnitt \ref{agentstep}) ausgeführt. Diese legt das Bewertungsverhalten der User*innen fest. Nach der Berechnung der User*innenaktionen wird in jedem Iterationsschritt die Modellschrittfunktion(Abschnitt \ref{modelstep}) ausgeführt. In dieser Funktion wird die Bewertungsmetrik angewendet und die Posts entsprechend angeordnet.
 
 
 \begin{algorithm}
@@ -32,8 +32,7 @@ Das Modell wird für eine festgelegte Anzahl an Iterationen berechnet. Der Ablau
 \label{agentstep}
 
 Die Agent*innenschrittfunkion wird in Algorithmus \ref{alg:agentstep} beschrieben. 
-Für ein*e User*in $U$ wird zuerst berechnet ob sie in der aktuellen Iteration aktiv ist. Dies wird anhand der Aktivitätswahrscheinlichkeit von $a_U$ berechnet. Ist $U$ aktiv werden so viele Posts von $U$ auf der Platform betrachtet wie durch die Konzentration $c_U$ vorgegeben sind. Für jeden Post $P$ bildet sich $U$ mit der User*innenratingfunktion eine Meinung $r_{U,P} = R(P,U)$ und bewertet ihn möglicherweise.
-%TODO Das ist nicht besonders spezifisch aber die Ratingverteilung ist halt 1v 2v spezifisch..
+Für ein*e User*in $U$ wird zuerst berechnet ob sie in der aktuellen Iteration aktiv ist. Dies wird anhand der Aktivitätswahrscheinlichkeit von $a_U$ berechnet. Ist $U$ aktiv werden so viele Posts von $U$ auf der Plattform betrachtet wie durch die Konzentration $c_U$ vorgegeben sind. Für jeden Post $P$ bildet sich $U$ mit der User*innenmeinungsfunktion der Meinungswert $m_{P,U}$ und bewertet ihn möglicherweise.
 
 \begin{algorithm}
 	\label{alg:agentstep}
@@ -51,7 +50,7 @@ Für ein*e User*in $U$ wird zuerst berechnet ob sie in der aktuellen Iteration a
 \label{modelstep}
 
 Der Ablauf der Modellschrittfunktion ist in Algorithmus \ref{alg:modelstep} dargestellt.
-Für jeden Post $P$ wird mit der Bewertungsmetrik $S_{P,t} = S_t(P)$ berechnet. Anschließend werden neue Posts dem Modell hinzugefügt. Die Anzahl der neuen Posts ist durch den Modellparameter \texttt{new\_posts\_per\_step} definiert. Falls es erwünscht ist werden im nächsten Schritt die Postscores mit zufälligem Lärm verunreinigt. Nun können die Posts nach ihren Scores sortiert werden und die Modelliteration ist abgeschlossen.
+Für jeden Post $P$ wird mit der Bewertungsmetrik $S_{P,t} = S_t(P)$ berechnet. Anschließend werden $N_{P_iter}$ neue Posts dem Modell hinzugefügt. definiert. Falls es erwünscht ist werden im nächsten Schritt die Postscores mit zufälligem Lärm verunreinigt. Nun können die Posts nach ihren Scores sortiert werden und die Modelliteration ist abgeschlossen.
 
 \begin{algorithm}
 	\label{alg:modelstep}
@@ -98,6 +97,8 @@ Eine bespielhafte Konfiguration ist im Listing \ref{conf} in der Liste \texttt{m
 	\caption{Beispiel Modellkonfigurationen}
 	\lstinputlisting{../scripts/experiments/example.jl}
 \end{figure}
+
+%TODO Da nochmal rüberschreiben
 Der erste Eintrag der Tupels definiert die Grundkonfiguration. Im zweiten Eintrag können über ein Dictionary einzelne Modellparameter überschrieben werden. In Zeile 3 wird das \texttt{downvote\_model} ausgewählt. In den Zeilen 5 bis 7 werden einzelne Modellparameter überschrieben. Die Modellparameter werden als Symbole angesteuert. Der Modellparameter \texttt{deviation\_function} wird mehrdeutig überschrieben, indem er durch eine Liste angegeben wird. Das erste Tupel definiert somit zwei Modellkonfigurationen, welche sich nur in der \texttt{deviation\_function} unterscheiden. 
 
 Der erste Eintrag des zweiten Tupels in Zeile 13 ist eine Liste von Grundkonfigurationen. Für jede der angegebenen Grundkonfigurationen werden die im zweiten Eintrag des Tupels definierten Modellparameter überschrieben. Die in Zeile 15 bis 18 angegeben Modellparameter werden mehrdeutig überschrieben. \texttt{scoring\_function} wird doppelt definiert und \texttt{gravity} vierfach. Dadurch werden pro Grundkonfiguration $2 * 4 = 8$ Modellkonfigurationen erstellt. Da zwei Grundkonfigurationen angegeben sind werden durch das zweite Tupel insgesamt $2 * (2* 4) = 16$ Modellkonfigurationen festgelegt. 

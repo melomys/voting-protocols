@@ -1,14 +1,16 @@
 \chapter{Verwandte Arbeiten}
 
-Soziale Medien erfreuen sich immer größer User*innenzahlen, die Anzahl der Nutzung steigt und damit auch die Anzahl der geposteten Beiträge. Die Beiträge müssen, durch Bewertungsmetriken vorsortiert, den User*innen angezeigt werden um eine Grundqualität der Seiten zu wahren. Ausgewählte Arbeiten, die sich mit der Fairness von Bewertungsmetriken beschäftigen werden vorgestellt. Agentenbasierte Modellierung findet viel in der Modellierung von Meinungsdynamiken Anwendung. Interessante Arbeiten aus diesem Bereich werden ebenfalls vorgestellt.
+%Soziale Medien erfreuen sich immer größer User*innenzahlen, die Anzahl der Nutzung steigt und damit auch die Anzahl der geposteten Beiträge. Die Beiträge müssen, durch Bewertungsmetriken vorsortiert, den User*innen angezeigt werden um eine Grundqualität der Seiten zu wahren. Ausgewählte Arbeiten, die sich mit der Fairness von Bewertungsmetriken beschäftigen werden vorgestellt. Agentenbasierte Modellierung findet viel in der Modellierung von Meinungsdynamiken Anwendung. Interessante Arbeiten aus diesem Bereich werden ebenfalls vorgestellt.
 
+In dieser Arbeit wird ein agent*innenbasiertes Modell eines sozialen Mediums erstellt. Dafür ist es interessant die bisherigen verwandten Anwendungen von agent*innenbasierte Modellierung zu überblicken. Es zeigt sich, dass diese Art der Modellierung viel Anwendung in der Simulation von Meinungsbildungsprozessen und Meinungsdynamiken verwendet wird.
 
+Viele Arbeiten beschäftigen sich mit der Fairness von Rankings in sozialen Medien. Einige Erkenntnisse und Ideen dieser Arbeiten können zur Untersuchung der Bewertungsmetriken in dieser Arbeit verwendet werden und werden in diesem Kapitel vorgestellt.
 
-\section{Meinungsdynamiken}
+\section{agent*innenbasierte Modellierung von Meinungsdynamiken}
 
-Um Meingungsdynamiken und Meinungsbildungsprozesse zu modellieren werden häufig agentenbasierte Modelle verwendet. Dabei werden Agent*innen als meinungshabende Individuen modelliert, welche andere Agent*innen in ihrer Meinung beinflussen und von anderen selbst beeinflusst werden. [Agent-Based Models for Opinion Formation: A Bibliographic Survey] ist eine Bibliographische Übersicht, welche die wichtigsten Charakteristiken solcher Modelle herausarbeitet.
+Um Meingungsdynamiken und Meinungsbildungsprozesse zu modellieren werden häufig agent*innenbasierte Modelle verwendet. Dabei werden Agent*innen als meinungshabende Individuen modelliert, welche andere Agent*innen in ihrer Meinung beinflussen und von anderen selbst beeinflusst werden. [Agent-Based Models for Opinion Formation: A Bibliographic Survey] ist eine bibliographische Übersicht, welche die wichtigsten Charakteristiken solcher Modelle herausarbeitet.
 
-Die Autor*innen von [Mixing beliefs among interacting agents] untersuchen das Verhalten von Individuen, welche eine Meinung aus einem kontinuierlichem Raum besitzen. Es wird ein Modell vorgestellt um Meinungsbildung zu simulieren.
+%Die Autor*innen von [Mixing beliefs among interacting agents] untersuchen das Verhalten von Individuen, welche eine Meinung aus einem kontinuierlichem Raum besitzen. Es wird ein Modell vorgestellt um Meinungsbildung zu simulieren.
 
 Für eine Gruppe aus Individuen, welche alle eine eigene subjektive Meinung besitzen wird von [Reaching A consensus] ein Modell vorgeschlagen, welches die unterschiedlichen Meinungen zu einem Konsens zusammenführen kann.
 
@@ -33,17 +35,17 @@ Einige Arbeiten beschäftigen sich mit Fairness zwischen \textit{beschützten} G
 
 In [Fairness and Transparency in Ranking (nicht in Scopus)] stellen die Autor*innen fest, dass Fairness zwischen Gruppen hergestellt ist, wenn der Quotient aus Sichtbarkeit und Relevanz von Elementen der beiden Gruppen gleich ist.
 
-[Fairness of Exposure in Rankings] und [Measuring Fairness in Ranked Output] betrachten Fairness in Rankings unter Einbeziehung von \textit{beschützten} und \textit{nicht beschützten} Objekten. Es werden Messfunktionen eingeführt für Fairness eingeführt um die Benachteiligung von \textit{beschützten} Objekten systematisch auszuwerten.
+[Fairness of Exposure in Rankings] und [Measuring Fairness in Ranked Output] betrachten Fairness in Rankings unter Einbeziehung von \textit{beschützten} und \textit{nicht beschützten} Objekten. Es werden Messfunktionen für Fairness eingeführt um die Benachteiligung von \textit{beschützten} Objekten systematisch auszuwerten.
 
 Ein Algorithmus, welcher aus einer Menge von \textit{beschützten} und \textit{nicht beschützten} Objekten die relevantesten $k$ Objekte sucht wird in [FA*IR: A Fair Top-k Ranking Algorithm vorgestellt] Für diese $k$ Objekte sind nicht \textit{beschützten} Objekte nicht benachteiligt.
 
-Gruppenbezogene Fairness wird in [Equity of Attention: Amortizing Individual Fairness in Rankings] nur als Spezialfall von individueller Fairness betrachtet. Es wird der \textit{Discounted Cumulative Gain}-Koeffizient (DCG) zur Messung der Fairness der Rankings verwendet. Die Autor*innen stellen fest, dass sich der DCG mit einer einzelnen Bewertungsmetrik nicht optimieren lässt. Sie stellen ein Optimierungsproblem auf, welche durch die Anordnung von unterschiedlichen Bewertungsmetriken Fairness \textit{amorisiert}.
+Gruppenbezogene Fairness wird in [Equity of Attention: Amortizing Individual Fairness in Rankings] nur als Spezialfall von individueller Fairness betrachtet. Es wird der \textit{Discounted Cumulative Gain}-Koeffizient (DCG) zur Messung der Fairness der Rankings verwendet. Die Autor*innen stellen fest, dass sich der DCG mit einer einzelnen Bewertungsmetrik nicht optimieren lässt. Sie stellen ein Optimierungsproblem auf, welche durch die Anordnung von unterschiedlichen Bewertungsmetriken Fairness \textit{amortisiert}.
 %TODO das ist ganz schönes waschlappen gesabbel
 
 
 \subsection{Individuelle Fairness in sozialen Medien}
 
-In \cite{Salganik2006854} und [Measuring and Optimizing Cultural Markets] wird ein Experiment durchgeführt in dem Testpersonen unbekannte Lieder bewerten. Die Testpersonen werden in zwei Gruppen aufgeteilt. Eine \textit{unabhängige} Gruppe und eine unter \textit{sozialem Einfluss}. die \textit{unabhängige} Gruppe erhält keine weiteren Informationen, alle User kriegen eine zufällige Liste der Lieder angezeigt und können diese downloaden. Die Gruppe unter \textit{sozialem Einfluss} wird zusätzlich in acht Welten unterteilt, jeder User kriegt eine Liste mit Liedern nach der Downloadzahl sortiert angezeigt. Die Downloadzahlen werden angezeigt. Die Autoren zeigen, dass unter sozialem Einfluss Ungleichheit und Unvorhersehbarkeit der Popularität von Objekten besteht.
+In \cite{Salganik2006854} und [Measuring and Optimizing Cultural Markets] wird ein Experiment durchgeführt in dem Testpersonen unbekannte Lieder bewerten. Die Testpersonen werden in zwei Gruppen aufgeteilt. Eine \textit{unabhängige} Gruppe und eine unter \textit{sozialem Einfluss}. die \textit{unabhängige} Gruppe erhält keine weiteren Informationen, alle User*innen kriegen eine zufällige Liste der Lieder angezeigt und können diese downloaden. Die Gruppe unter \textit{sozialem Einfluss} wird zusätzlich in acht Welten unterteilt, jeder User kriegt eine Liste mit Liedern nach der Downloadzahl sortiert angezeigt. Die Downloadzahlen werden angezeigt. Die Autoren zeigen, dass unter sozialem Einfluss Ungleichheit und Unvorhersehbarkeit der Popularität von Objekten besteht.
 
 In [Leveraging Position Bias to Improve Peer Recommendation] wurde ein Experiment durchgeführt, bei dem Proband*innen Posts anderen Proband*innen empfehlen können, welche schließlich nach 5 unterschiedlichen Bewertungsmetriken gerankt werden: 
 \begin{enumerate}
@@ -54,11 +56,7 @@ In [Leveraging Position Bias to Improve Peer Recommendation] wurde ein Experimen
 	\item Fixierung invertiert: in umgekehrter fixierter Reihenfolge
 \end{enumerate}
 
-Die Bewertungsmetriken werden mit dem \textit{Gini}-Koeffizienten ausgewertet. Dabei schneidet die Zufallsmetrik, gefolgt von der Aktivitätsmetrik am besten ab, die fixierten Metriken am schlechtesten
-%Die Bewertungsmetriken werden mit dem \textit{Gini}-Koeffizienten ausgewertet. die Ergebnisse sind in \ref{leveraging} zu sehen:
-
-%TODO Grafik
-%----
+Die Bewertungsmetriken werden mit dem \textit{Gini}-Koeffizienten ausgewertet. Dabei schneidet die Zufallsmetrik, gefolgt von der Aktivitätsmetrik am besten, die fixierten Metriken am schlechtesten ab.
 
 
 In [How Not To Sort by Average Rating] wird der \textit{Wilson}-Score zur Auswertung von Up- und Downvotes vorgeschlagen. Es wird gezeigt, weshalb andere Methoden schlechter geeignet sind. Der \textit{Wilson}-Score findet im Reddit-"Best"-Kommentarranking Anwendung.
@@ -69,21 +67,20 @@ Die Autor*innen stellen in [Social dynamics of Digg] und [Using an model of soci
 
 [Stoddard] untersucht die Korrelation zwischen Qualität von Posts und die Anzahl und Art der Bewertungen auf Hacker News und Reddit. Die Qualität eines Posts wird als die Bewertung beschrieben, welche ein Post unter absolut fairen Bedingungen erhalten würde. Sie entwickeln eine Methode um die Qualität von Posts auf den Platformen abzuschätzen.
 
-In [Description and Prediction of Slashdot Actitvity] wird versucht die Aktitvität (Kommentierung) die ein Post auf der Platform \textit{Slashdot} erzeugt auf Grundlage der erzeugten Aktivität in den ersten Minuten/Stunden nach Veröffentlichung des Posts. 
+In [Description and Prediction of Slashdot Actitvity] wird versucht die Aktitvität die ein Post auf der Platform \textit{Slashdot} ingesamt erzeugt auf Grundlage der erzeugten Aktivität in den ersten Minuten/Stunden nach Veröffentlichung des Posts. 
 
 Muchnik findet in \cite{Muchnik2013647} heraus, dass sozialer Einfluss Bewertungsdynamiken verzerrt und zur Bildung von Bewertungsblasen führen kann.
 Negativer sozialer Einfluss kann durch die Gruppenintelligenz wieder ausgeglichen werden.
 
 In [How Public Opinion Forms] wird gezeigt, dass die Popularität von Beiträgen Einfluss auf das Bewertungsverhalten hat. So sammeln populäre, gute bewertete Beiträge, zunehmend auch schlechte Bewertungen.
 
-In [Towards Quality Discourse in Online News Comments]  werden Kommentarsystem von Nachrichtenagenturen unteruscht und die Wirkung von Beiträgen mit niedriger Qualität auf Nutzer*innen und Journalist*innen. Es wird gezeigt, wie die individuelle Lesemotivation Einfluss auf die Qualitätswahrnehmung hat.
-Um die Qualität zu verbessern werden unter anderem Moderations- und Markierungsmethoden vorgeschlagen.
+In [Towards Quality Discourse in Online News Comments]  werden Kommentarsystem von Nachrichtenagenturen untersucht und die Wirkung von Beiträgen mit niedriger Qualität auf Nutzer*innen und Journalist*innen. Es wird gezeigt, wie die individuelle Lesemotivation Einfluss auf die Qualitätswahrnehmung hat. Um die Qualität zu verbessern werden unter anderem Moderations- und Markierungsmethoden vorgeschlagen.
 
-Luu schlägt in [Randomize HN] vor etwas Random Noise in das Ranking von Hacker News einzufügen, um die scharfe Aufmerksamkeitskante zwischen Posts die auf der Startseite landen und diesen, die auf den  auszuglätten.
+Luu schlägt in [Randomize HN] vor etwas Random Noise in das Ranking von Hacker News einzufügen, um die scharfe Aufmerksamkeitskante zwischen Posts die auf der Startseite landen und denen auf  den hinteren Seiten auszuglätten.
 
-Die Autoren von [Ranking with Fairness Constraints] argumentieren, dass viele Bewertungsmetriken die Diverität verringern und Stereotypen reproduzieren, die Bewertungsmetriken jedoch nicht darauf geprüft werden. Es wird ein Algorithmus vorgeschlagen, welcher ein Optimierung zur Bestimmung eines Objektrankings unter bestimmten Fairnessbedingungen vornimmt.
+Die Autoren von [Ranking with Fairness Constraints] argumentieren, dass viele Bewertungsmetriken die Diversität verringern und Stereotypen reproduzieren, die Bewertungsmetriken jedoch nicht darauf geprüft werden. Es wird ein Algorithmus vorgeschlagen, welcher ein Optimierung zur Bestimmung eines Objektrankings unter bestimmten Fairnessbedingungen vornimmt.
 
-Diese Arbeit greift Ideen und Kritik zu bestehenden Bewertungsmetriken und deren Evaluation auf. Es wird ein Framework entwickelt, durch welches Bewertungsmetriken durch ein agentenbasiertes Modell simuliert und verglichen werden können. 
+%Diese Arbeit greift Ideen und Kritik zu bestehenden Bewertungsmetriken und deren Evaluation auf. Es wird ein Framework entwickelt, durch welches Bewertungsmetriken durch ein agentenbasiertes Modell simuliert und verglichen werden können. 
 
 
 %Eine Methode um Beiträge in Q\&A Foren nach Qualität zu klassifizieren wird in [Understanding and Classifiying the Quality of Technical Forum Questions] vorgeschlagen. Die Methode verwendet \textit{Decision Trees}. Sie wird an einem Datensatz von Stack Overflow validiert.

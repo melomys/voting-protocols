@@ -1,34 +1,46 @@
 \chapter{Einleitung}
 
+\section{Motivation}
 
-\section{Bewertungsdynamiken}
-Durch immer weiter fortschreitende Ausbreitung des Internets, wächst die Anzahl der User*innen von sozialen Medien und anderen Onlineplattformen, damit einhergehend die Anzahl der veröffentlichten Beiträge. Es werden so viele Beiträge veröffentlicht, dass es nicht möglich ist allen User*innen alle Beiträge anzuzeigen. Es werden bewertungsmetrische Algorithmen eingeführt, welche Beiträge bewerten und anschließend filtern und vorsortieren. Im Idealfall werden durch die angewendeten Algorithmen schlechte Beiträge, weil sie z.B. diskriminierend, langweilig oder irrelevant sind, aussortiert und nur wenigen User*innen angezeigt, jedoch gut und relevante Beiträge vielen User*innen sichtbar gemacht werden. 
+In den letzten Jahrzehnten sind soziale Medien zu einem wichtigen Teil in der Kommunikation herangewachsen. Im Gegensatz zu konventionellen Medien können Nutzer*innen von sozialen Medien selbst Inhalte veröffentlichen. Dies führt zu einer Menge an Information, die kein Mensch überblicken oder verstehen kann. Es werden Algorithmen verwendet, welche die Beiträge filtern und den Nutzer*innen diese anzeigen, welche sie wahrscheinlich interessant finden. 
 
-Onlineplattformen verwenden unterschiedliche Votingsysteme mit welchen User*innen Beiträge bewerten können und anhand derer Bewertungsmetriken Beiträge sortieren. Hacker News\footnote{\texttt{news.ycombinator.com}} erlaubt User*innen Posts nur positiv, mit Upvotes, zu bewerten. Auf Reddit\footnote{\texttt{reddit.com}} ist es ebenfalls möglich Posts mit Downvotes runterzuwerten. Onlineshops wie TheCubicle\footnote{\texttt{thecubicle.com}} verwenden ein 1 bis 5 Sterne System um Artikel zu bewerten. 
+Viele soziale Medien und Onlineplattformen verwenden \textit{Votingsysteme} um Nutzer*innen die Möglichkeit zu geben iher Meinung über den Beitrag zu äußern. Hacker News\footnote{\texttt{https://news.ycombinator.com}} erlaubt User*innen Posts nur positiv, mit Upvotes, zu bewerten. Auf Reddit\footnote{\texttt{htttps://www.reddit.com}} ist es ebenfalls möglich Posts mit Downvotes runterzuwerten. Onlineshops wie TheCubicle\footnote{\texttt{https://www.thecubicle.com}} verwenden ein 1 bis 5 Sterne System um Artikel zu bewerten.
 
-Wie in [Page quality: In search of an unbiased web ranking] für Websuchalgorithmen beschrieben unterliegen viele Bewertungsmetriken dem \textit{rich-get-richer}-Effekt, welcher dem Idealfall entgegen wirkt. Der \textit{rich-get-richer}-Effekt führt dazu, dass Beiträge welche viel Aufmerksamkeit und dadurch viel Aktivität in Form von Kommentaren oder Bewertungen erhalten werden weiteren User*innen angezeigt. Beiträge hingegen mit wenig Aufmerksamkeit erhalten auch zukünftig wenig Aktitvität, weil sie von wenigen User*innen wahrgenommen werden. Wie in [Description and Prediction of Slashdot Activity] gezeigt wird ist es entscheidend wie viel Aktivität ein Beitrag in einer kurzen Zeitspanne erzeugen kann. Ist es viel Aktivität wird der Beitrag insgesamt viel Aufmerksamkeit erhalten, ist es jedoch wenig Aktivität wird der Beitrag auch insgesamt wenig Aufmerksamkeit erfahren.
+Es können Empfehlungssysteme verwendet werden, welche Nutzer*innen die Beiträge personalisiert anzeigen, welche bereits andere Nutzer*innen mit ähnlichen Interessen als gut bewertet haben. Während User*innen aus ihrer Perspektive interessante Posts erhalten hat diese Methode einige negative Effekte. Die Anwendung führt zur Bildung von Filterblasen. User*innen interagieren nur noch mit Beiträgen, welche sie positiv wahrnehmen. Nutzer*innen welche sich zum Beispiel in der Filterblase eines politischen Extrems befinden erhalten so keine kritischen Beiträge mehr zu ihrer eigenen Meinung wodurch sich diese verstärkt. 
+
+Beiträge welche bereits viel Aufmerksamkeit erhalten haben, werden weiteren Nutzer*innen angezeigt und erhalten dadurch weitere Aufmerksamkeit und Interaktion. Beiträge hingegen, welche wenig Aufmerksamkeit erhalten, werden durch das Empfehlungssystem nicht weiter als interessant erachtet. Diese Effekt wird \textit{Matthäus-Effekt} bezeichnet.
+
+Filterblasen können vermieden werden, wenn allen Nutzer*innen die gleichen Beiträge angezeigt werden. Die Beiträge müssen trotzdem anhand des Interesses für Nutzer*innen gefiltert und sortiert werden. Dazu werden \textit{Bewertungsmetriken} verwendet, welche die Posts anhand ihrer Interaktion, zum Beispiel unter Einbeziehung ihrer Upvotes und des Veröffentlichungszeitpunkt bewerten und anordnen.
+
+Auch Bewertungsmetriken sind Matthäus-Effekten ausgesetzt. Im Gegensatz zu Empfehlungssystemen basieren diese meist nicht auf Methoden des maschinellen Lernens, sondern auf einfachen Algorithmen welche leicht austauschbar sind. 
+
+Es ist wünschenswert eine Bewertungsmetrik zu finden, welche die Matthäus-Effekte minimiert. Aufgrund ihrer einfachen Struktur können sie leicht simuliert und verglichen werden.
+
+Es ist nicht ausgeschlossen, dass die Art des Votingssystems Einfluss auf die Matthäus-Effekte hat. Das Votingsystem sollte auf der Suche nach einer optimalen Bewertungsmetrik mit einbezogen werden.
+
+In dieser Arbeit wird ein agent*innen basiertes Modell von Votingsystemen in sozialen Medien entworfen um unterschiedliche Bewertungsmetriken zur vergleichen.
+
+%Wie in [Description and Prediction of Slashdot Activity] gezeigt wird ist es entscheidend wie viel Aktivität ein Beitrag in einer kurzen Zeitspanne erzeugen kann. Ist es viel Aktivität wird der Beitrag insgesamt viel Aufmerksamkeit erhalten, ist es jedoch wenig Aktivität wird der Beitrag auch insgesamt wenig Aufmerksamkeit erfahren.
 
 % TODO Grafik nach Slashdot Activtiy ranking nachempfinden
-
-Es ist wünschenswert eine Bewertungsmetrik zu finden, welche \textit{rich-get-richer}-Effekte minimiert und qualitativ hochwertige Beiträge sichtbarer macht als qualitativ minderwertige Beiträge.
-
-Es ist nicht ausgeschlossen, dass die Qualität einer Bewertungsmetrik vom gewählten Votingsystem abhängig ist, daher soll bei der Suche nach einer optimalen Bewertungsmetrik das Votingsystem einbezogen werden.
-
-In dieser Arbeit wird ein agentenbasiertes Modell entwickelt um unterschiedliche Bewertungsmetriken auf der Grundlage unterschiedlicher Votingsysteme zu vergleichen.
-
 
 
 %Keine Möglichkeit ein Experiment durchzuführen wie in dieser Arbeit von Salganik oder Lerman
 
-\section{agentenbasierte Modellierung}
+\section{Agent*innenbasierte Modellierung}
 
-In der agentenbasierten Modellierung werden die Aktionen und Interaktionen vieler Entitäten, den Agenten, simuliert. Die Agenten erhalten Verhaltensregeln, durch ihre Aktivtät kann ein komplexes System beschrieben werden. Die Auswirkungen auf das System können betrachtet werden.
+In der agent*innenbasierten Modellierung werden die Aktionen und Interaktionen einzelner Entitäten, den Agent*innen, simuliert. Auch die Umwelt in der die Agent*innen interagieren wird modelliert. Mit Agent*innen können unterschiedliche Dinge modelliert werden. So sind Agent*innen nicht auf die Modellierung von Menschen beschränkt. Durch Agent*innen können in einer Simulation eines Vogelschwarms die Vögel modelliert werden. Für die Modellierung eines Waldbrandes würden die Agent*innen Bäume repräsentieren. Einzelne Agent*innen können sich dabei in ihren Eigenschaften sehr unterschiedlich sein. Werden Menschen durch die Agent*innen modelliert können diese können zum Beispiel extrovertiert oder introvertiert sein, eigennützig oder im Sinn der Gruppe handeln.
 
-Wie [Agents.jl] beschreibt können viele komplexe Systeme nicht vollständig durch herkömmliche mathematische Methoden beschrieben werden. Komplexe Systeme hängen von dem Verhalten der Elemente, der Agenten, des Systems ab. Kleine Änderungen am Verhalten der Agenten können große Veränderungen des Gesamtsystems hervorrufen. Durch agentenbasierte Modellierung können nicht lineare Modelle beschrieben.
+Agent*innenbasierte Modelle sind weder absolut realistisch noch vollständig. Durch sie wird eine vereinfachte Realität modelliert. Die Agent*innen können zwar beliebig komplex parametrisiert werden. Dennoch werden meist sehr einfache Verhaltensregeln der Agent*innen definiert, denn durch die Interaktion entstehen bereits hier komplexe Systeme, welche die Realität scheinbar ausreichend approximieren.
 
-Agenten können in einem Raum angeordnet werden, sodass sie mit ihren Nachbarn interagieren, wie im Modell von [Shelling], oder als Netzwerk indem jeder Agent mit jedem Agenten interagieren kann. Möglich ist auch, dass die Agenten nicht untereinander, nur mit dem System, interagieren.
+Kleine Veränderungen am Verhalten der Agent*innen können bereits große Veränderungen des Simulationsergebnisses hervorrufen.In der Simulation treffen die Agent*innen individuell unterschiedliche Entscheidungen, welche durch die Verhaltensregeln vorgegeben sind und durch die Wahrnehmung der Agent*innen der Umwelt beeinflusst wird.
 
-Die Popularität steigt stetig, agentenbasierte Modelle sind beliebt um unter anderem biologische, ökonomische und soziale Systeme zu modellieren.
+Die Agent*innen können in einem Netzwerk angeordnet sein, sodass sie sich gegenseitig in ihrem Verhalten beeinflussen, sie können jedoch auch nur mit dem System interagieren.
+%Wie [Agents.jl] beschreibt können viele komplexe Systeme nicht vollständig durch herkömmliche mathematische Methoden beschrieben werden. Komplexe Systeme hängen von dem Verhalten der Elemente, der Agenten, des Systems ab. Kleine Änderungen am Verhalten der Agenten können große Veränderungen des Gesamtsystems hervorrufen. Durch agentenbasierte Modellierung können nicht lineare Modelle beschrieben.
+
+%Agenten können in einem Raum angeordnet werden, sodass sie mit ihren Nachbarn interagieren, wie im Modell von [Shelling], oder als Netzwerk indem jeder Agent mit jedem Agenten interagieren kann. Möglich ist auch, dass die Agenten nicht untereinander, nur mit dem System, interagieren.
+
+Die Popularität steigt stetig, agent*innenbasierte Modelle sind beliebt um unter anderem biologische, ökonomische und soziale Systeme, wie soziale Medien zu modellieren. Auch in dieser Arbeit wird die agent*inenbasierten Modellierung zur Simulation einer Social Media Plattform verwendet.
 
 \section{Die modellierte Kommunikationsplattform}
 

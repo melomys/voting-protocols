@@ -1,0 +1,95 @@
+---
+title: "dimensions.r"
+author: "Pupso"
+date: "7/26/2020"
+output: html_document
+---
+
+```{r}
+source("util.r")
+```
+
+```{r}
+df_dims = combine_dfs("/home/ludwig/Bachelorarbeit/voting-protocols/data_cluster/data_not_users/","dimensions") %>% 
+  mutate(quality_dimensions = factor(quality_dimensions))
+```
+
+
+```{r}
+df_dims %>% 
+  mutate(init_score = factor(init_score)) %>% 
+  filter(user_rating_function == "Konsens") %>% 
+  ggplot() +
+  aes(x = area_under_gini, y = area_under_ndcg, color = quality_dimensions,size= posts_with_no_views,group= seed) + # , color = vote_count, shape = user_rating_function, fill = init_score) + 
+  theme(text=element_text(family="Trebuchet MS")) +
+  geom_point(alpha = 0.6) + 
+  #geom_line(alpha = 0.4) +
+  facet_wrap(~relevance_gravity)
+
+
+if(s)
+{
+  ggsave("/home/ludwig/Bachelorarbeit/voting-protocols/plots/dim_scatter.png", device = "png")
+}
+```
+```{r}
+df_dims %>% 
+  filter(user_rating_function == "Konsens") %>% 
+  filter(relevance_gravity == 0) %>% 
+  ggplot_cus() + 
+  aes(x = quality_dimensions, fill = scoring_function, y = ρ) + 
+  geom_boxplot()
+
+if(s)
+{
+  ggsave("/home/ludwig/Bachelorarbeit/voting-protocols/plots/dims_box.png", device = "png")
+}
+ 
+```
+
+```{r}
+df_dims %>% 
+ # filter(steps <= 100) %>% 
+  filter(user_rating_function == "Konsens") %>% 
+  filter(relevance_gravity == 0) %>% 
+  mutate(steps = factor(steps)) %>% 
+  ggplot() +
+  aes(fill = scoring_function,y =  ρ) + 
+  theme(text=element_text(family="Trebuchet MS")) +
+  theme(axis.text.x=element_blank(),axis.ticks.x=element_blank(),) +
+  geom_boxplot() + 
+  facet_wrap(~quality_dimensions, ncol = nrow(unique(df_dims[,"quality_dimensions"])))
+  #facet_wrap(~steps,ncol = nrow(unique(tmp_df[,"steps"])))
+
+```
+
+```{r}
+df_dims %>% 
+ # filter(steps <= 100) %>% 
+  mutate(quality_dimensions = factor(quality_dimensions)) %>% 
+  mutate(steps = factor(steps)) %>% 
+  ggplot() +
+  aes(fill = scoring_function,y =  area_under_curve) + 
+  theme(text=element_text(family="Trebuchet MS")) +
+  theme(axis.text.x=element_blank(),axis.ticks.x=element_blank(),) +
+  geom_boxplot() + 
+  facet_wrap(~quality_dimensions)
+  #facet_wrap(~steps,ncol = nrow(unique(tmp_df[,"steps"])))
+
+```
+
+
+```{r}
+df_dims %>% 
+ # filter(steps <= 100) %>% 
+  mutate(steps = factor(steps)) %>% 
+  ggplot() +
+  aes(color = scoring_function,x=area_under_gini,y =  area_under_ndcg, group = seed, shape = user_rating_function) + 
+  theme(text=element_text(family="Trebuchet MS")) +
+  #theme(axis.text.x=element_blank(),axis.ticks.x=element_blank(),) +
+  geom_point(alpha = 0.5) + 
+  #geom_line(alpha = 0.3) +
+  facet_wrap(~quality_dimensions)
+  #facet_wrap(~steps,ncol = nrow(unique(tmp_df[,"steps"])))
+
+```

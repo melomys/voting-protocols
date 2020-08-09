@@ -1,0 +1,140 @@
+---
+title: "start_posts"
+author: "Pupso"
+date: "7/27/2020"
+output: html_document
+---
+
+```{r}
+source("util.r")
+```
+
+
+```{r}
+df_start_posts = combine_dfs("/home/ludwig/Bachelorarbeit/voting-protocols/data_cluster/data_extreme_and_more","start_post")
+```
+
+
+
+```{r}
+df_start_posts %>% 
+  mutate(init_score = factor(init_score)) %>% 
+  filter(user_rating_function == "Konsens") %>% 
+  mutate(start_posts = factor(start_posts)) %>% 
+  ggplot_cus() +
+  aes(x = area_under_gini, y = area_under_ndcg, color = start_posts, group= seed, size = posts_with_no_views) + # , color = vote_count, shape = user_rating_function, fill = init_score) + 
+  theme(legend.position = "left") + 
+  geom_point(alpha = 0.6) +
+  #geom_line(alpha = 0.1) +
+  facet_grid(relevance_gravity~scoring_function)
+
+if(s)
+{
+  #ggsave("/home/ludwig/Bachelorarbeit/voting-protocols/plots/start_posts_scatter.png", device = "png")
+}
+```
+```{r}
+df_start_posts %>% 
+  mutate(init_score = factor(init_score)) %>% 
+  filter(user_rating_function == "Konsens") %>% 
+  mutate(start_posts = factor(start_posts)) %>% 
+  ggplot_cus() +
+  aes(x = start_posts, y = ρ,fill = scoring_function) + # , color = vote_count, shape = user_rating_function, fill = init_score) + 
+  geom_boxplot() +
+  #geom_line(alpha = 0.1) +
+  facet_wrap(~relevance_gravity)
+if(s)
+{
+  ggsave("/home/ludwig/Bachelorarbeit/voting-protocols/plots/start_posts_box.png", device = "png")
+}
+```
+
+```{r}
+cm = corr_matrix(df_start_posts, "start_posts")
+cor(cm, method = "spearman")
+```
+
+
+```{r}
+df_start_posts %>% 
+ # filter(steps <= 100) %>% 
+  mutate(start_posts = factor(start_posts)) %>% 
+  mutate(steps = factor(steps)) %>% 
+  filter(user_rating_function == "Konsens") %>% 
+  filter(relevance_gravity == 0) %>% 
+  ggplot_cus() +
+  aes(x = start_posts, fill =scoring_function, y = ρ) + 
+  theme(text=element_text(family="Trebuchet MS")) +
+  geom_boxplot()
+ # facet_wrap(~start_posts)
+  #facet_wrap(~steps,ncol = nrow(unique(tmp_df[,"steps"])))
+
+```
+```{r}
+to_spear = df_start_posts %>% 
+  filter(user_rating_function == "Konsens") %>% 
+  filter(relevance_gravity == 0)
+  #filter(scoring_function == "Veralg. Hacker News")
+
+spear_50 = df_start_posts %>% 
+  filter(start_posts == 50)
+
+spear_100 = df_start_posts %>% 
+  filter(start_posts == 100)
+
+spear_300 = df_start_posts %>% 
+  filter(start_posts == 300)
+
+spear_500 = df_start_posts %>% 
+  filter(start_posts == 500)
+
+
+spear_tib = tibble(s50 = spear_50$ρ, s100 = spear_100$ρ, s300 = spear_300$ρ, s500 = spear_500$ρ)
+
+
+ggcorrplot(cor(spear_tib, method = "spearman"),ggtheme = theme(text=element_text(family="Trebuchet MS")), lab = FALSE, colors = c("#6D9EC1", "white", "#E46726"), legend.title = "Spearman von ρ")
+
+```
+
+
+```{r}
+df %>% 
+ # filter(steps <= 100) %>% 
+  mutate(steps = factor(steps)) %>% 
+  ggplot() +
+  aes(fill = scoring_function,y =  area_under_curve) + 
+  theme(text=element_text(family="Trebuchet MS")) +
+  theme(axis.text.x=element_blank(),axis.ticks.x=element_blank(),) +
+  geom_boxplot() + 
+  facet_wrap(~init_score)
+  #facet_wrap(~steps,ncol = nrow(unique(tmp_df[,"steps"])))
+```
+
+```{r}
+df %>% 
+ # filter(steps <= 100) %>% 
+  mutate(steps = factor(steps)) %>% 
+  ggplot() +
+  aes(fill = scoring_function,y =  area_under_spearman) + 
+  theme(text=element_text(family="Trebuchet MS")) +
+  theme(axis.text.x=element_blank(),axis.ticks.x=element_blank(),) +
+  geom_boxplot() + 
+  facet_wrap(~init_score)
+  #facet_wrap(~steps,ncol = nrow(unique(tmp_df[,"steps"])))
+
+```
+
+
+```{r}
+df %>% 
+ # filter(steps <= 100) %>% 
+  mutate(steps = factor(steps)) %>% 
+  ggplot() +
+  aes(color = scoring_function,x=area_under_gini,y =  area_under_curve, shape = user_rating_function) + 
+  theme(text=element_text(family="Trebuchet MS")) +
+  #theme(axis.text.x=element_blank(),axis.ticks.x=element_blank(),) +
+  geom_point(alpha = 0.5) + 
+  facet_wrap(~init_score)
+  #facet_wrap(~steps,ncol = nrow(unique(tmp_df[,"steps"])))
+
+```
