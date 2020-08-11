@@ -36,6 +36,7 @@ default_evaluation_functions = [
     @model_property_function(:model_id),
     @model_property_function(:model_type),
     @model_property_function(:quality_dimensions),
+    @model_property_function(:quality_distribution),
     @model_property_function(:scoring_function),
     @model_property_function(:seed),
     @model_property_function(:sorted),
