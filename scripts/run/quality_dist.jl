@@ -14,7 +14,7 @@ model_init_params = [default_models...,
     (
         :all_models,
         Dict(
-            :quality_distributions => [d1,d2,d3,d4],
+            :quality_distribution => [d1,d2,d3,d4],
         ),
     ),
 ]
