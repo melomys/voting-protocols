@@ -25,7 +25,7 @@ grouped_full_model %>%
   labs(x = "T(G)", y = "T(nDCG)", size = expression(P["v=0"])) +
   scale_x_continuous(breaks =c(0.3,0.5,0.7)) + 
   geom_point(data = df_full_model, alpha = 0.1, color = "grey70")+
-  #geom_point(aes(size = 1.5*ρ), color = "grey20") + 
+  #geom_point(aes(size = 1.5*rho), color = "grey20") + 
   geom_point(alpha = 0.5) +
   #geom_smooth(method = "lm") + 
   facet_grid(relevance_gravity~user_rating_function)
@@ -55,9 +55,9 @@ df_kons_0 = df_full_model %>%
   filter(relevance_gravity == "Q&A")
 
 
-corr_full_model = tibble(Konsens_QandA = df_kons_0$ρ, Konsens_News = df_kons_2$ρ, Dissens_QandA = df_diss_0$ρ, Dissens_News = df_diss_2$ρ)
+corr_full_model = tibble(Konsens_QandA = df_kons_0$rho, Konsens_News = df_kons_2$rho, Dissens_QandA = df_diss_0$rho, Dissens_News = df_diss_2$rho)
 
-ggcorrplot(cor(corr_full_model, method = "spearman"), ggtheme = theme(text=element_text(family="Trebuchet MS")), lab = FALSE, colors = c("#6D9EC1", "white", "#E46726"), legend.title = "Spearman\nvon ρ") 
+ggcorrplot(cor(corr_full_model, method = "spearman"), ggtheme = theme(text=element_text(family="Trebuchet MS")), lab = FALSE, colors = c("#6D9EC1", "white", "#E46726"), legend.title = "Spearman\nvon rho") 
 
 
 if(s)
@@ -88,7 +88,7 @@ grouped_full_model %>%
   geom_curve(data=ann_line, aes(xend=xend, yend=yend, x=x, y=y),
     linejoin = "round", curvature = .45, arrow = arrow(length = unit(2, "mm"))
   ) +
-  geom_text(data=ann_text, aes(x=x, y=y), hjust = "left",label = "Texteinet") + 
+  geom_text(data=ann_text, aes(x=x, y=y), hjust = "left",label = "Text") + 
   facet_wrap(~relevance_gravity)
 if(s)
 {
@@ -100,7 +100,7 @@ ggsave("/home/ludwig/Bachelorarbeit/voting-protocols/plots/bewertungsvektor_all.
 df_full_model %>% 
   filter(user_rating_function == "Konsens") %>% 
   ggplot_cus() + 
-  aes(fill = scoring_function, x = init_score, y = ρ) +
+  aes(fill = scoring_function, x = init_score, y = rho) +
   labs(x = "Initialscore", fill = "Bewertungsmetrik") + 
   #scale_x_discrete(labels = c("Aktitvität", "Reddit Hot", "Veralg. HN", "View")) + 
   geom_boxplot() + 
@@ -336,7 +336,7 @@ grouped_full_model %>%
   #filter(relevance_gravity == 2) %>% 
   filter(init_score != 0) %>% 
   ggplot_cus() + 
-  aes(y = ρ, fill = vote_evaluation,x = scoring_function)  + 
+  aes(y = rho, fill = vote_evaluation,x = scoring_function)  + 
   scale_x_discrete(labels = c("Aktivität", "RH", "VHN", "View")) + 
   theme(legend.position = "right") +
   labs(x = "Bewertungstransformation", fill = "Bewertungsmetrik") + 
@@ -417,9 +417,9 @@ df_deviation %>%
   #filter(relevance_gravity == 0) %>% 
   #mutate(steps = factor(steps)) %>% 
   ggplot_cus() +
-  aes(x = deviation_function,fill = scoring_function,y = ρ ) + 
+  aes(x = deviation_function,fill = scoring_function,y = rho ) + 
   theme(legend.position = "none") + 
-  labs(x = "Zufallsabweichung", y = "ρ") + 
+  labs(x = "Zufallsabweichung", y = "rho") + 
   geom_boxplot() +
   #facet_wrap(~quality_dimensions, ncol = nrow(unique(df_dims[,"quality_dimensions"])))
   facet_grid(~relevance_gravity)
@@ -463,7 +463,7 @@ step500 = df_steps %>%
   filter(steps == 500)
 
 
-cor(step100$ρ, step500$ρ, method = "spearman")
+cor(step100$rho, step500$rho, method = "spearman")
 ```
 
 ```{r}
@@ -535,7 +535,7 @@ c = cor(cm, method = "spearman")
 df_gravity %>% 
   #mutate(gravity = factor(gravity)) %>% 
   ggplot_cus() + 
-  aes(fill = scoring_function, y = ρ,x= gravity) + 
+  aes(fill = scoring_function, y = rho,x= gravity) + 
   labs(fill = "Bewertungsmetrik", x = "Gravität") + 
   geom_boxplot(alpha = 1) + 
   facet_grid(~relevance_gravity)
@@ -572,7 +572,7 @@ df_dims %>%
   filter(relevance_gravity == "Q&A") %>% 
   ggplot_cus() + 
   theme(legend.position = "right") + 
-  aes(x = quality_dimensions, fill = scoring_function, y = ρ) + 
+  aes(x = quality_dimensions, fill = scoring_function, y = rho) + 
   labs(x = expression(N[Q]), fill= "Bewertungsmetrik") + 
   geom_boxplot() + 
   facet_wrap(~relevance_gravity)
@@ -670,7 +670,7 @@ df_start_posts %>%
   filter(user_rating_function == "Konsens") %>% 
   mutate(start_posts = factor(start_posts)) %>% 
   ggplot_cus() +
-  aes(x = start_posts, y = ρ,fill = scoring_function) + # , color = vote_count, shape = user_rating_function, fill = init_score) + 
+  aes(x = start_posts, y = rho,fill = scoring_function) + # , color = vote_count, shape = user_rating_function, fill = init_score) + 
   labs(x = "Anzahl Startposts", fill = "Bewertungsmetrik") + 
   geom_boxplot() +
   #geom_line(alpha = 0.1) +

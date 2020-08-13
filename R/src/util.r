@@ -46,7 +46,7 @@ import_df = function(str)
   df$relevance_gravity = revalue(x = df$relevance_gravity, c("0" = "Q&A", "2" = "News"), warn_missing = FALSE)
   df %>% 
    # filter(user_rating_function == "Konsens") %>% 
-    mutate(ρ = 0.5 -(area_under_ndcg/2 - area_under_gini/4 - posts_with_no_views/4)) %>% 
+    mutate(rho = 0.5 -(area_under_ndcg/2 - area_under_gini/4 - posts_with_no_views/4)) %>% 
     mutate(seed = factor(seed)) %>% 
     mutate(model_id = factor(model_id)) %>% 
     mutate(init_score = factor(init_score)) %>% 
@@ -88,10 +88,10 @@ corr_matrix = function(df, feature)
   {
     tmp_df = df %>% 
       filter(!!sym(feature) == name)
-   gaga = add_column(gaga, !!sym(toString(name)) := tmp_df[,"ρ"])
+   gaga = add_column(gaga, !!sym(toString(name)) := tmp_df[,"rho"])
   }
   gaga
   #cor(gaga, method= "spearman")
-  #spear_tib = tibble(s50 = spear_50$ρ, s100 = spear_100$ρ, s300 = spear_300$ρ, s500 = spear_500$ρ)
+  #spear_tib = tibble(s50 = spear_50$rho, s100 = spear_100$rho, s300 = spear_300$rho, s500 = spear_500$rho)
   
 }
