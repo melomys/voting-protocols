@@ -11,7 +11,7 @@ source("util.r")
 
 ```{r}
 df_userprob = combine_dfs("/home/ludwig/Bachelorarbeit/voting-protocols/data_cluster/data_not_users/","activity_voting") %>% 
-  filter(user_rating_function == "Konsens")
+  filter(user_opinion_function == "Konsens")
 
   df_userprob$voting_probability_distribution = revalue(x = df_userprob$voting_probability_distribution, c("Distributions.Beta{Float64}(α=2.5, β=5.0)" = "Beta(2.5,5)", "Distributions.Beta{Float64}(α=1.0, β=5.0)" = "Beta(1,5)", "Distributions.Beta{Float64}(α=1.0, β=10.0)" = "Beta(1,10)","Distributions.Beta{Float64}(α=2.5, β=10.0)" = "Beta(2.5,10)"))
   
@@ -24,7 +24,7 @@ df_userprob = combine_dfs("/home/ludwig/Bachelorarbeit/voting-protocols/data_clu
 df_userprob %>% 
   mutate(init_score = factor(init_score)) %>% 
   ggplot() +
-  aes(x = area_under_gini, y = area_under_ndcg, color = activity_distribution,size= posts_with_no_views,group= seed) + # , color = vote_count, shape = user_rating_function, fill = init_score) + 
+  aes(x = area_under_gini, y = area_under_ndcg, color = activity_distribution,size= posts_with_no_views,group= seed) + # , color = vote_count, shape = user_opinion_function, fill = init_score) + 
   theme(text=element_text(family="Trebuchet MS")) +
   geom_point(alpha = 0.4) + 
   #geom_line(alpha = 0.4) +
@@ -32,7 +32,7 @@ df_userprob %>%
 ```
 ```{r}
 df_userprob %>% 
-  filter(user_rating_function == "Konsens") %>% 
+  filter(user_opinion_function == "Konsens") %>% 
   filter(relevance_gravity == 0) %>% 
   ggplot() +
   theme(text=element_text(family="Trebuchet MS")) +
@@ -44,11 +44,11 @@ df_userprob %>%
 ```{r}
 
 df_userprob %>% 
-  filter(user_rating_function == "Konsens") %>% 
+  filter(user_opinion_function == "Konsens") %>% 
   mutate(init_score = factor(init_score)) %>% 
   #filter(voting_probability_distribution != "Beta(1,5)") %>% 
   ggplot_cus() +
-  aes(x = area_under_gini, y = area_under_ndcg, color = voting_probability_distribution,size= posts_with_no_views,shape = activity_distribution,  group= seed) + # , color = vote_count, shape = user_rating_function, fill = init_score) + 
+  aes(x = area_under_gini, y = area_under_ndcg, color = voting_probability_distribution,size= posts_with_no_views,shape = activity_distribution,  group= seed) + # , color = vote_count, shape = user_opinion_function, fill = init_score) + 
   geom_point(alpha = 0.6) + 
   #geom_line(alpha = 0.7) +
   facet_grid(relevance_gravity~scoring_function)
@@ -67,7 +67,7 @@ ggcorrplot(cor(c, method = "spearman"), ggtheme = )
 
 ```{r}
 df_userprob %>% 
-  #filter(user_rating_function == "user_rating_exp2") %>% 
+  #filter(user_opinion_function == "user_rating_exp2") %>% 
   filter(relevance_gravity == 0) %>% 
   ggplot() +
   theme(text=element_text(family="Trebuchet MS")) +
@@ -79,7 +79,7 @@ df_userprob %>%
 
 ```{r}
 df_userprob %>% 
-  filter(user_rating_function == "user_rating_exp2") %>% 
+  filter(user_opinion_function == "user_rating_exp2") %>% 
   filter(relevance_gravity == 0) %>% 
   ggplot() + 
   aes(x = area_under_gini, y = area_under_ndcg, size= posts_with_no_views, color = scoring_function) + 
@@ -91,7 +91,7 @@ df_userprob %>%
   mutate(init_score = factor(init_score)) %>% 
   filter(activity_distribution == "Distributions.Beta{Float64}(α=2.5, β=5.0)") %>% 
   ggplot() +
-  aes(x = area_under_gini, y = area_under_ndcg, color = activity_distribution, shape= user_rating_function, group= seed) + # , color = vote_count, shape = user_rating_function, fill = init_score) + 
+  aes(x = area_under_gini, y = area_under_ndcg, color = activity_distribution, shape= user_opinion_function, group= seed) + # , color = vote_count, shape = user_opinion_function, fill = init_score) + 
   theme(text=element_text(family="Trebuchet MS")) +
   geom_point(alpha = 0.3) + 
   #geom_line(alpha = 0.4) +

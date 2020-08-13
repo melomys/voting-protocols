@@ -18,7 +18,7 @@ df_steps = combine_dfs("/home/ludwig/Bachelorarbeit/voting-protocols/data_cluste
 ```{r}
   df_steps %>% 
   mutate(steps = factor(steps)) %>% 
-  filter(user_rating_function == "Konsens") %>% 
+  filter(user_opinion_function == "Konsens") %>% 
   ggplot_cus() + 
   aes(x = area_under_gini, y = area_under_ndcg, color = steps) + 
   geom_point() + 
@@ -28,11 +28,11 @@ df_steps = combine_dfs("/home/ludwig/Bachelorarbeit/voting-protocols/data_cluste
 ```{r}
 df_steps %>% 
   mutate(init_score = factor(init_score)) %>% 
-  filter(user_rating_function == "Konsens") %>% 
+  filter(user_opinion_function == "Konsens") %>% 
   filter(relevance_gravity == 0) %>% 
   mutate(steps = factor(steps)) %>% 
   ggplot() +
-  aes(x = area_under_gini, y = area_under_ndcg, color = steps, shape= user_rating_function, group= seed) + # , color = vote_count, shape = user_rating_function, fill = init_score) + 
+  aes(x = area_under_gini, y = area_under_ndcg, color = steps, shape= user_opinion_function, group= seed) + # , color = vote_count, shape = user_opinion_function, fill = init_score) + 
   theme(text=element_text(family="Trebuchet MS")) +
   geom_point(alpha = 0.4) + 
   #geom_line(alpha = 0.4) +
@@ -40,7 +40,7 @@ df_steps %>%
 ```
 ```{r}
 df_steps %>% 
-  filter(user_rating_function == "Konsens") %>% 
+  filter(user_opinion_function == "Konsens") %>% 
   mutate(steps = factor(steps)) %>% 
   ggplot_cus() + 
   theme(legend.position = "left") + 
@@ -57,7 +57,7 @@ if(s)
 ```{r}
 df_steps %>% 
   mutate(steps = factor(steps)) %>% 
-  filter(user_rating_function == "Konsens") %>% 
+  filter(user_opinion_function == "Konsens") %>% 
   filter(relevance_gravity == 0) %>% 
   ggplot_cus() +
   aes(fill = scoring_function,y =  area_under_gini, x = steps) + 
@@ -74,7 +74,7 @@ if(s)
 ```{r}
 df_steps %>% 
  # filter(steps <= 100) %>% 
-  filter(user_rating_function == "Konsens") %>% 
+  filter(user_opinion_function == "Konsens") %>% 
   filter(relevance_gravity == 0) %>% 
   mutate(quality_dimensions = factor(quality_dimensions)) %>% 
   mutate(steps = factor(steps)) %>% 
@@ -94,7 +94,7 @@ if(s)
 ```{r}
 df_steps %>% 
  # filter(steps <= 100) %>% 
-  filter(user_rating_function == "Konsens") %>% 
+  filter(user_opinion_function == "Konsens") %>% 
   filter(relevance_gravity == 0) %>% 
   mutate(quality_dimensions = factor(quality_dimensions)) %>% 
   mutate(steps = factor(steps)) %>% 
@@ -116,7 +116,7 @@ if(s)
 ```{r}
 df_steps %>% 
  # filter(steps <= 100) %>% 
-  filter(user_rating_function == "Konsens") %>% 
+  filter(user_opinion_function == "Konsens") %>% 
   filter(relevance_gravity == 0) %>% 
   mutate(quality_dimensions = factor(quality_dimensions)) %>% 
   mutate(steps = factor(steps)) %>% 
@@ -132,7 +132,7 @@ df_steps %>%
 ```
 ```{r}
 to_spear = df_steps %>% 
-  filter(user_rating_function == "Konsens") %>% 
+  filter(user_opinion_function == "Konsens") %>% 
   filter(relevance_gravity == 0)
   #filter(scoring_function == "Veralg. Hacker News")
 
@@ -165,7 +165,7 @@ df_steps %>%
  # filter(steps <= 100) %>% 
   mutate(steps = factor(steps)) %>% 
   ggplot() +
-  aes(color = scoring_function,x=area_under_gini,y =  area_under_ndcg, group = seed, shape = user_rating_function) + 
+  aes(color = scoring_function,x=area_under_gini,y =  area_under_ndcg, group = seed, shape = user_opinion_function) + 
   theme(text=element_text(family="Trebuchet MS")) +
   #theme(axis.text.x=element_blank(),axis.ticks.x=element_blank(),) +
   geom_point(alpha = 0.5) + 
