@@ -21,33 +21,30 @@ Um die Intervallgrenzen der genannten Kriterien zu erfüllen wird eine Transform
 l(x) = \frac{1}{1 + e^{-\frac{1}{2}x}}
 \end{equation}
 
-%TODO grafik der logistischen funktion, NEE EHER NICHT
-
-Somit ergeben sich die transformierten Qualitäts- bwz Qualitätsperzeptionsvektoren der Post und User*innen durch die komponentenweise Anwendung von $l$ auf $q_P$ und $q_U$
+Somit ergeben sich die transformierten Qualitäts- bzw. Qualitätsperzeptionsvektoren der Posts und User*innen durch die komponentenweise Anwendung von $l$ auf $q_P$ und $q_U$
 
 \begin{align}
 \tilde{q}_P = l(q_P) \\
 \tilde{q}_U = l(q_U) 
 \end{align}
 
-\section{Approxamtion der User*innenmeinungfunktion}
+\section{Approximation der User*innenmeinungsfunktion}
 
 
-Die reale User*innenbewertungsfunktion ist hoch komplex und kann nur sehr vereinfacht modelliert werden.
+Die reale User*innenmeinungsfunktion ist hoch komplex und kann nur sehr vereinfacht modelliert werden.
 Im folgenden werden zwei Ansätze eingeführt um die User*innenmeinungsfunktion $R(P,U)$ zu approximieren.
  
 \subsection{Meinung im Konsens}
 
-In der Konsensbewertung wird davon ausgegangen, dass alle User*innen "gute" Posts mit hohen Qualitätsmerkmalwerten eher als gut empfinden und Posts mit niedrigen Qualitätsmerkmalwerten eher als schlecht empfunden werden.
+Im Konsens wird davon ausgegangen, dass alle User*innen "gute" Posts mit hohen Qualitätsmerkmalwerten eher als gut empfinden und Posts mit niedrigen Qualitätsmerkmalwerten eher als schlecht empfunden werden.
 
-Die Konsensbewertung ist auf technischen und wissenschaftlichen Plattformen, zum Beispiel Hacker News, denkbar. Konstruktive Beiträge sind eher von destruktiven zu unterscheiden. Trotzdem können User*innen unterschiedlich viel Wissen in einzelnen Fachgebieten und dadurch einen höheren Anspruch an Posts in diesem Bereich haben.  
+Der Konsens ist auf technischen und wissenschaftlichen Plattformen, zum Beispiel Hacker News, denkbar. Konstruktive Beiträge sind eher von destruktiven zu unterscheiden. Trotzdem können User*innen unterschiedlich viel Wissen in einzelnen Fachgebieten und dadurch einen höheren Anspruch an Posts in diesem Bereich haben.  
 
-In Formel \ref{konsensexp2} wird die Konsensbewertung ausgedrückt: 
+In Formel \ref{konsensexp2} wird der Konsens ausgedrückt: 
 
-%TODO Für Q_N einsetzen
 \begin{equation}
 \label{konsensexp2}
-R_K(P,U) = \frac{1}{N}\sum_{i = 1}^{N}\tilde{q}_{P,i}^{\tilde{q}_{U,i}}
+R_K(P,U) = \frac{1}{Q_N}\sum_{i = 1}^{Q_N}\tilde{q}_{P}^{\tilde{q}_{U}}
 \end{equation}
 
 Der transformierte Qualitätsvektor $\tilde{q}_P$ des Posts wird komponentenweise mit der transformierten Qualitätsperzeption der User*in $\tilde{q}_U$ exponiert und aufsummiert. Die Summe wird durch die Anzahl der Qualitätsmerkmale $Q_N$ geteilt.
@@ -57,31 +54,28 @@ Der transformierte Qualitätsvektor $\tilde{q}_P$ des Posts wird komponentenweis
 
 User*innen empfinden Posts als "gut", die nah an ihrer eigenen Qualitätsperzeption liegen. Dadurch sind sich User*innen bei vielen Posts uneinig.
 
+Im Dissens ist auf einer Diskussionsplattform denkbar. Dort können die Meinungen über Beiträge stark auseinander. User*innen wollen Beiträge, welche ihre eigene Meinung wiedergeben für andere User*innen sichtbar machen.
 
-Die Dissensbewertung ist auf einer Diskussionsplattform denkbar. Dort können die Meinungen über Beiträge stark auseinander. User*innen wollen Beiträge, welche ihre eigene Meinung wiedergeben für andere User*innen sichtbar machen.
-
-
-
-In Formel \ref{dissens} wird die Dissensbewertung mithilfe der euklidischen Distanz beschrieben. Es wird die euklidische Distanz aus $\tilde{q}_P$ und $\tilde{q}_U$ gebildet und durch $\sqrt{N_Q}$ geteilt. Dieser Term wird von $1$ abgezogen. Eine User*in für $\tilde{q}_P = \tilde{q}_U$ einen Post maximal gut.
+In Formel \ref{dissens} wird der Dissens mithilfe der euklidischen Distanz beschrieben. Es wird die euklidische Distanz aus $\tilde{q}_P$ und $\tilde{q}_U$ gebildet und durch $\sqrt{Q_N}$ geteilt. Dieser Term wird von $1$ abgezogen. Eine User*in findet für $\tilde{q}_P = \tilde{q}_U$ einen Post maximal gut.
 
 
-%TODO Dissensrating validieren
 \begin{equation}
 \label{dissens}
-R_D(P,U) = 1 - \frac{||(\tilde{q}_P - \tilde{q}_U)||_2}{\sqrt{N_Q}}
+R_D(P,U) = 1 - \frac{||(\tilde{q}_P - \tilde{q}_U)||_2}{\sqrt{Q_N}}
 \end{equation}
 
-In Abbildung \ref{fig:vergleichmeinung} werden anhand von jeweils zwei Beispielposts ,$P1$,$P2$, und User*innen, $U1$,$U2$,die beiden Meinungsfunktionen mit zwei Qualitätsmerkmalen $x$ und $y$ verglichen. Die Posts werden nach Farbe unterschieden, während die User*innen nach dem Symbol unterschieden. In der linken Abbildung sind die User*innen nach ihren transformierten Qualitätsmerkmalen dargstellt. Rechts ist der Meinungswert aus den beiden Meinungsfunktionen dargestellt. Herrscht Dissens sind sich beide User*innen uneinig welchen Post sie besser finden. Im Konsens sind sich die User*innen einig, dass $P2$ besser ist. Trotzdem empfindet $U2$ den Post $P1$ deutlich schlechter als $U1$.
+\cleardoublepage
+In Abbildung \ref{fig:vergleichmeinung} werden anhand von jeweils zwei Beispielposts, $P1$ und $P2$, und -user*innen, $U1$ und $U2$, die beiden Meinungsfunktionen mit zwei Qualitätsmerkmalen $x$ und $y$ verglichen. Die Posts werden nach Farbe unterschieden, während die User*innen nach dem Symbol unterschieden werden. In der linken Abbildung sind die User*innen nach ihren transformierten Qualitätsmerkmalen dargestellt. Rechts ist der Meinungswert aus den beiden Meinungsfunktionen dargestellt. Herrscht Dissens sind sich beide User*innen uneinig welchen Post sie besser finden. Im Konsens sind sich die User*innen einig, dass $P2$ besser ist. Trotzdem empfindet $U2$ den Post $P1$ deutlich schlechter als $U1$.
 
-\begin{figure}
+\begin{figure}[!h]
 	\begin{subfigure}{0.6\textwidth}
 		\includegraphics[width=\textwidth]{"../plots/meinung1.png"}
 	\end{subfigure}
 	\begin{subfigure}{0.4\textwidth}
 		\includegraphics[width=\textwidth]{"../plots/meinung2.png"}
 	\end{subfigure}
-	\label{fig:vergleichmeinung}
 	\caption{Vergleich der beiden Meinungsfunktionen Konsens und Dissens}
+	\label{fig:vergleichmeinung}
 \end{figure}
 
 

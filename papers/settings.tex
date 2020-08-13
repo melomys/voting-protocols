@@ -1,6 +1,6 @@
 
 % set the language here. Last language is the main language. Use `ngerman` (= new german) for German texts.
-\usepackage[ngerman, english]{babel}
+\usepackage[ngerman]{babel}
 % \usepackage[english,ngerman]{babel} % If your text mainly is in German.
 
 
@@ -17,7 +17,6 @@
 \usepackage{booktabs}
 
 % consistent acronym definitions and usage. You may want to use the glossaries package instead, which is more powerful, but more complex to handle.
-\usepackage[printonlyused, smaller]{acronym}
 
 % for multiple plots in one figue, e.g. Fig 1.a and Fig 1.b
 % https://en.wikibooks.org/wiki/LaTeX/Floats,_Figures_and_Captions#Subfloats
@@ -61,6 +60,9 @@
 \definecolor{UStuttDarkOrange}{RGB}{228,175,52}
 \definecolor{UStuttLightOrange}{RGB}{236,218,145}
 
+\definecolor{JuliaBlue}{RGB}{83,124,178}
+\definecolor{JuliaBeige}{RGB}{216,166,49}
+
 
 % for code listings, you can e.g. use the "listings" package (http://texdoc.net/texmf-dist/doc/latex/listings/listings.pdf):
 \usepackage{listings} 
@@ -92,11 +94,10 @@
     type=bachelor, % bachelor, study, bachelorproject
 ]{iswthesis}
 
-\usepackage{biblatex}
+%\usepackage[style=alphabetic]{biblatex}
 % hyperref provides hyperlinks within the document, but also auto-naming.
 % E.g. when referencing, instead of typing "Figure~\ref{fig:XY}" try "\autoref{fig:XY}".
-% You may want to use `clevceref` instead of using \autoref in the hyperref package, which has slightly more possibilities.
-\PassOptionsToPackage{pdfpagelabels}{hyperref}
+% You may want to use `clevceref` instead of using \autoref in the hyperref package, which has slightly more possibilities.\PassOptionsToPackage{pdfpagelabels}{hyperref}
 \usepackage{hyperref}  % backref linktocpage pagebackref
 \pdfcompresslevel=9
 \pdfadjustspacing=1

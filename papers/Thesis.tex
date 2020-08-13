@@ -1,60 +1,77 @@
 \documentclass[ a4paper,
                 oneside,
                 toc=bibliography,
-                toc=listof
+               	parskip=half,
+                toc=listof,
                 ]{scrbook}
 
+\usepackage[style=alphabetic]{biblatex}
 \input{settings}
 
-
+\usepackage[utf8]{inputenc}
 \usepackage{algorithm}
 \usepackage{algpseudocode}
 \usepackage{listings}
 \usepackage{tabularx}
-\usepackage{acronym}
+\usepackage[smaller]{acronym}
 \usepackage{glossaries}
 \usepackage{listofsymbols}
 \usepackage{tabto}
-
+\usepackage{geometry}
+\usepackage{setspace}
+\usepackage{caption}
+\usepackage{fancyhdr}
+%\usepackage{scrpage2}
+\usepackage[style=alphabetic]{biblatex}
 % Path to .bib file for BibLatex
 \addbibresource{bibliography.bib}
+\bibliography{bibliography} 
+
 % \addbibresource{someOtherBibFile}
 
-\author{Max Mustermann}
-\placeOfBirth{Stuttgart}
-\address{Seidenstraße 36, 70174 Stuttgart}
-\major{Mechatronics}
-\title{How to train a hamster}
-\titleTranslated{Wie man einen Hamster trainiert}
-\matrnr{1234567}
-\date{10 March 2020}
-\supervisor{My supervisor, M.Sc.}
-\professor{Prof. Dr.-Ing. Oliver Riedel}
+\newgeometry{vmargin={20mm}, hmargin={29mm,25mm}, footskip={10mm}} 
+
+\author{Felix Matuschka}
+
+\title{Vergleich unterschiedlicher Bewertungsmetriken in sozialen Medien}
+\subtitle{Eine agent*innenbasierte Modellierung von Votingsystemen in der Onlinekommunikation}
+\date{\today}
+\supervisor{Prof. Dr. Alexander Voß}
+\professor{Dr. André Calero-Valdez}
 
 \begin{document} 
     %\frontmatter
-    %\makeISWtitle
-
+    \makeISWtitle
+	\pagenumbering{gobble}
 	%\cleardoublepage
-	\setcounter{page}{1} % start at page (i) after title page
-    %\declarationOfOriginality
+    \declarationOfOriginality
 
     % Kurzfassung/Abstract
     %\input{chapters/Abstract}
     
-    %\cleardoublepage
-    %\tableofcontents
-       
-	\input{chapters/Zusammenfassung}
+    \cleardoublepage
+    \renewcommand{\contentsname}{Inhaltsverzeichnis}
+    \tableofcontents
+    \cleardoublepage
+    
+    \onehalfspacing 
+    \vspace*{\fill}
+    	\input{chapters/Zusammenfassung}
+    \vspace*{\fill}
+
+	\frontmatter
 	
+	\pagenumbering{roman}
+	\input{chapters/Acronyms}
 	
 	
     \mainmatter
+    \setcounter{page}{2} % start at page (i) after title page
     % ********************************************************************
     % Write your own contents here:
     % ********************************************************************
     
-    
+ 
     \input{chapters/Einleitung}
     \input{chapters/RelatedWork}
     \input{chapters/ModelParameter}
@@ -72,17 +89,18 @@
     % ********************************************************************
     
     \cleardoublepage
-    \printbibliography
-    
+
+%   	\printbibliography[title=Literatur]
+ 	\printbibliography[title=Literatur]  
     % \cleardoublepage
-    \input{chapters/Acronyms}
+
     %\cleardoublepage
     %\listoffigures
     %\cleardoublepage
     %\listoftables
     
     %% Appendix, if needed:
-    % \appendix
-    % \chapter{Example appendix chapter}
+     \appendix
+	\input{chapters/Anhang}
 
 \end{document}

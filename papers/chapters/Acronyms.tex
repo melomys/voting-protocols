@@ -1,32 +1,66 @@
 \cleardoublepage
+\addcontentsline{toc}{chapter}{Formelzeichen}
+% Formula symbols
 
 \chapter*{Formelzeichen}
 
-
-\begin{table}[!htbp]
-	\begin{tabularx}{\textwidth}{lcX}
-		$M$ & \hspace{6em} & Modell \\
-		$P$ & \hspace{6em} & Post \\
-		$U$ & \hspace{6em} & User*in \\
-	\end{tabularx}
-\end{table}
-
-\chapter*{Abkürzungsverzeichnis} % Abkürzungsverzeichnis
-\addcontentsline{toc}{chapter}{Abkürzungsverzeichnis}
-
-\begin{acronym}[SPS] % longest acronym in [...] for spacing
-    % \acro{short}{long}
-    % \acroextra{...} wird nur im Abkürzungsverzeichnis ausgegeben.
-    \acro{ISW}{Institut für Steuerungstechnik der Werkzeugmaschinen und Fertigungseinrichtungen \acroextra{der Universität Stuttgart}}
-    \acro{SPS}{Speicherprogrammierbare Steuerung}
-    % acrodefplural, wenn eine Pluralform benötigt wird (Standard: angehängtes "s" aus dem Englischen)
-    % \acrodefplural{acroKey}[plural short]{plural long}
-    \acrodefplural{SPS}[SPS]{Speicherprogrammierbare Steuerungen}
-    \acro{NDA}{Non-Disclosure Agreement}
-    \acro{P}[$P$]{Post}
-    \acro{U}{User*in}
-    \acro{M}[$M$]{Model}
-
-
+\markboth{Formelzeichen}{}
+\subsubsection*{Modellparamter}
+\begin{acronym}[LONGEST]
+\acro{Mn}[\ensuremath{M_N}]{Iterationslänge}
+\acro{Im}[\ensuremath{i_M}]{Iterationsschritt}
+\acro{P}[\ensuremath{P}]{Post}
+\acro{U}[\ensuremath{U}]{User*in}
+\acro{R}[\ensuremath{R}]{User*innenmeinungsfunktion}
+\acro{W}[\ensuremath{W}]{User*innenmeinungsverteilung}
+\acro{V}[\ensuremath{V}]{Bewertungsraum eines Votingsystems}
+\acro{RG}[\ensuremath{R_\gamma}]{Gravität der Relevanz}
+\acro{Un}[\ensuremath{U_N}]{Anzahl der User*innen}
+\acro{Q}[\ensuremath{Q}]{Qualitätsverteilung}
+\acro{Pnstart}[\ensuremath{{P_{start}}}]{Startpost}
+\acro{Pniter}[\ensuremath{{P_{iter}}}]{neuer Post in Iteration}
 \end{acronym}
 
+\subsubsection*{Postparameter}
+\begin{acronym}[LONGEST]
+\acro{qP}[\ensuremath{q_P}]{Qualiät}
+\acro{rP}[\ensuremath{r_P}]{Relevanz}
+\acro{tP}[\ensuremath{t_P}]{Veröffentlichungszeitpunkt}
+\acro{bP}[\ensuremath{b_P}]{Bewertungsvektor}
+\acro{vP}[\ensuremath{v_P}]{Anzahl der Betrachtungen}
+\acro{sP}[\ensuremath{s_P}]{Score}
+\acro{uP}[\ensuremath{{n_\uparrow}_P}]{Anzahl der Upvotes}
+\acro{dP}[\ensuremath{{n_\downarrow}_P}]{Anzahl der Downvotes}
+\end{acronym}
+
+\subsubsection*{User*innenparameter}
+\begin{acronym}[LONGEST]
+	\acro{qU}[\ensuremath{q_U}]{Qualitätsperzeption}
+	\acro{kU}[\ensuremath{k_U}]{Konzentration}
+	\acro{zU}[\ensuremath{z_U}]{Bewertungszufriedenheit}
+	\acro{aU}[\ensuremath{a_U}]{Aktivität}
+	\acro{m}[\ensuremath{m_{P,U}}]{Meinungswert bezüglich des Posts $P$}
+\end{acronym}
+
+
+\subsubsection*{Parameter der Bewertungsmetriken}
+\begin{acronym}[LONGEST]
+\acro{B}[\ensuremath{B}]{Bewertungsmetrik}
+\acro{alpha}[\ensuremath{\tau}]{Transformation des Bewertungsvektors}
+\acro{G}[\ensuremath{\gamma}]{Gravität}
+\acro{s0}[\ensuremath{\iota_0}]{Initialscore von Posts}
+\end{acronym}
+
+\subsubsection*{Evaluationsfunktionen}
+\begin{acronym}[LONGEST]
+	\acro{G}[\ensuremath{G}]{Gini-Koeffzient}
+	\acro{DCG}[\ensuremath{DCG}]{Discounted Cumulative Gain}
+	\acro{nDCG}[\ensuremath{nDCG}]{Normalized Discounted Cumulative Gain}
+	\acro{PV}[\ensuremath{P_{v=0}}]{Anzahl von Posts ohne Betrachtungen}
+	\acro{T}[\ensuremath{T}]{Trapezregel}
+\end{acronym}
+
+\subsubsection*{Index}
+\begin{acronym}[LONGEST]
+\acro{N}[\ensuremath{N}]{Länge eines Vektors oder Dimension}
+\end{acronym}

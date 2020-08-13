@@ -1,114 +1,117 @@
-\chapter{Ergebnisse}
+\chapter{Simulationsergebnisse}
 
-In diesem Kapitel werden die Ergebnisse der agent*innenbasierten Modellierung vorgestellt.
+In diesem Kapitel werden die Ergebnisse der Simulation der agent*innenbasierten Modelle vorgestellt.
 
-Mit Blick auf die aufgestellten Kriterien einer fairen Bewertungsmetrik wird in der Auswertung der Koeffizient $\rho$ in Formel \ref{eq:rho} verwendet, welcher die relevanten aggregierten Evaluationsparameter $T(nDCG)$, den Gini-Koeffizienten $T(G)$ und den Anteil der nicht betrachteten Posts $P_{v=0}$ vereint. $\rho$ wird für faire Bewertungsmetriken minimiert.
+Mit Blick auf die aufgestellten Kriterien einer fairen Bewertungsmetrik wird in der Auswertung der Koeffizient $\rho$ in Formel \ref{eq:rho} verwendet, welcher die relevanten aggregierten Evaluationsparameter $T(nDCG)$, den Gini-Koeffizienten $T(G)$ und den Anteil der nicht betrachteten Posts $P_{v=0}$ vereint. Der Koeffizient wird für optimale Bewertungsmetriken minimiert und ist auf das Intervall $[0,1]$ beschränkt.
 
 \begin{equation}
-\rho =  1 - (\frac{nDCG}{2} - \frac{G}{4} - \frac{P_{v=0}}{4})
+\label{eq:rho}
+\rho =  \frac{1}{2} - (\frac{nDCG}{2} - \frac{G}{4} - \frac{P_{v=0}}{4})
 \end{equation}
 
-Voerst werden Modellkonfigurationen unter den vier Fällen mit jeweils der Relevanzgravität $G_R = {0,2} $ und den User*innenmeinungsfunktionen Konsens $R_K$ und Dissens $R_D$ ausgwertet. In Abbildung \ref{fig:cases} links sind $T(G)$, $T(nDCG)$, und $P_{v = 0}$ von Modellen nach der Konfiguration 1 in die vier Fälle eingeteilt. Grau  hinterlegt sind sämtliche Modelle, farblich hervorgehoben die Mittelwerte der unterschiedlichen Modellkonfigurationen. Farblich unterschieden wird zwischen den Bewertungsmetriken. Aus der Korrelationsmatrix rechts in der Abbildung geht hervor, dass $\rho$ der Modelle für die Fälle mit $G_R = 2$ und der Fall $R = R_K$ und $G_R = 2$ stark durch den Spearman-Koeffizienten korreliert sind. 
+Mit den Modellkonfigurationen \texttt{Überblick} werden eine Q\&A- ($R_\gamma = 0$) und eine Newsplattform ($R_\gamma = 2$) mit jeweils der User*innenmeinungsfunktion Konsens $R_K$, für eine technische Plattform und Dissens $R_D$, für eine Diskussionsplattform, simuliert.
 
-Im Folgenden werden nur noch die Fälle $R = R_K$ und $G_R = {0,2}$ betrachtet, die drei stark korrelierten Fällen müssen nicht einzeln untersucht werden.
+In Abbildung \ref{fig:cases} sind die Simulationsergebnisse dargestellt. Jeder graue Punkt in der linken Abbildung beschreibt ein Modell, farblich hervorgehoben sind die Mittelwerte jeder einzelnen Modellkonfiguration aus \texttt{Überblick}. Die Farbe gibt Aufschluss über die verwendete Bewertungsmetrik. Auf der $x$-Achse ist der aggregierte Gini-Koeffizient $T(G)$ angetragen, auf der $y$-Achse der aggregierte nDCG $T(nDCG)$. Über die Größe der Punkte wird die Anzahl der Posts ohne Betrachtungen $P_{v=0}$ beschrieben. Durch den Korrelationsplot wird deutlich, dass die beiden Newsplattformen insbesondere mit der Dissens-Q\&A-Plattform durch den Spearmankoeffizienten von $\rho$ korreliert sind.
+
 
 
 \begin{figure}[!h]
-	\label{fig:cases}	
 	\begin{subfigure}{0.5\textwidth}
 		\includegraphics[width=\textwidth]{"../plots/full_model_grouped_scatter.png"}
 	\end{subfigure}
 	\begin{subfigure}{0.5\textwidth}
 		\includegraphics[width=\textwidth]{"../plots/full_model_grouped_corr.png"}
 	\end{subfigure}
-	\caption{Fälle von Plattformen}
+	\caption{Simulationsergebnisse nach vier Plattformarten. Die beiden News-Plattformen und die Q\&A-Dissens-Plattform sind stark korreliert.}
+	\label{fig:cases}	
 \end{figure}
 
+Im Folgenden werden nur noch die beiden Plattformen auf denen Konsens herrscht betrachtet, die drei stark korrelierten Plattformen werden nicht einzeln betrachtet.
 
-%TODO update config
 
 \section{Größe des Bewertungsvektor}
 
-In Abbildung \ref{fig:bewertungvektor} ist die Modellsimulation mit Konfiguration 1 der Fälle $R = R_K$ und $G_R = {0,2}$ zu sehen . Farblich markiert ist die Größe des Bewertungsvektors. In 64.4\% der Konfigurationen wird mit $B_N = 2$ ein besseres $\rho$ erzielt.
+In Abbildung \ref{fig:bewertungsvektor} ist die Modellsimulation mit der Konfiguration \texttt{Überblick}  zu sehen. Farblich markiert ist die Größe des Bewertungsvektors. Die Achsen sind identisch wie im vorherigen Plot. Für die Q\&A-Plattform kann in 71.9\% der Konfigurationen mit $V_N = 2$ ein besseres, kleineres $\rho$ erzielt werden. Auf der News-Plattform nur in 65.6\% der Konfigurationen. Das besten Ergebnisparameter werden jedoch mit $V_N = 1$ auf der News-Plattform erzeugt.
 
-\begin{figure}[!h]
-	\label{fig:bewertungsvektor}	
+\begin{figure}[!h]	
 	\includegraphics[width=\textwidth]{"../plots/bewertungsvektor_all.png"}
-	\caption{Bewertungsvektor}
+	\caption{In der Mehrheit der Konfigurationen ist der größere Bewertungsvektor überlegen.}
+	\label{fig:bewertungsvektor}
 \end{figure}
 
 \section{Initialscore}
 
-Abbildung \ref{fig:initscore} zeigt $\rho$ der Konfiguration 1 der beiden beiden Fälle. Auf der x-Achse sind die Bewertungsmetriken aufgetragen, farblich markiert ist der Initalwert. $s_0 = 0$ ist für alle Modellkonfigurationen die schlechteste Wahl.
+Abbildung \ref{fig:initscore} zeigt $\rho$ der Konfiguration \texttt{Überblick} der beiden Konsens-Plattformen. Auf der $x$-Achse ist der Initalwert $\iota_0$, auf der $y$-Achse der $\rho$-Koeffizient aufgetragen. Farblich markiert ist die verwendete Bewertungsmetrik. Für alle Metriken ist auf beiden Plattformen $\iota_0 = 0$ die schlechteste Wahl, da $\rho$ am höchsten ausfällt.
 
 
 
 \begin{figure}[!h]
-	\label{fig:initscore}	
 	\includegraphics[width=\textwidth]{"../plots/init_score_boxplot.png"}
-	\caption{Initialscore}
+	\caption{Der Initialscore $0$ ist für jede Metrik die schlechteste Wahl}
+	\label{fig:initscore}
 \end{figure}
 
 
-Nach Konfiguration 3 ist der Einfluss auf die Bewertungsmetriken des Initialscores dargestellt. In der Konfiguration des  verallgemeinerten Hacker News Metrik wird durch die Erhöhung von $s_0$ $T(G)$ verringert und $T(nDCG)$ erhöht. Für $s_0 > 70$ verringert sich $T(nDCG)$ signifikant. Bei der Aktivitätsmetrik führt eine Erhöhung von $s_0$ zum Abnahme von $P_{v=0}$, $T(nDCG)$ und $T(G)$. In der Viewmetrik wird zwischen $s_0 \in [10,30]$ $T(G)$ und $P_{v=0}$ reduziert, für $s_0 > 30$ wird hauptsächlich $T(nDCG)$ reduziert. Für die Reddit Hot Metrik ist $s_0 = \{0,30000\}$. Für $s_0$ erhalten neue Posts einen höheren Initialscore, als jemals von der Metrik zugewiesen wird. Der hohe Initialwert liefert bessere kleinere $T(G)$, $T(nDCG)$ und $P_{v=0}$. 
+Nach Konfiguration \texttt{Initialscore} ist der Einfluss auf die Bewertungsmetriken des Initialscores $\iota_0$ farblich dargestellt. Die Veränderung von $\iota_0$ wirkt sich unterschiedlich auf die vier Metriken aus. 
 
-Die Variierung des Initialscores wirkt sich auf unterschiedliche Art auf die unterschiedlichen Bewertungsmetriken aus.
+In der Konfiguration des  verallgemeinerten Hacker News Metrik in Abbildung wird durch die Erhöhung von $\iota_0$ $T(G)$ und $P_{v=0}$ verringert und $T(nDCG)$ erhöht. Ab $\iota_0 > 70$ wird $T(nDCG)$ wieder verringert, während $T(G)$ und $P_{v=0}$ konstant bleiben. Bei der Aktivitätsmetrik führt eine Erhöhung von $\iota_0$ zur Abnahme von $P_{v=0}$, $T(nDCG)$ und $T(G)$. In der Viewmetrik wird zwischen $\iota_0 \in [10,30]$ $T(G)$ und $P_{v=0}$ reduziert, ab $\iota_0 > 30$ wird hauptsächlich $T(nDCG)$ reduziert. Es findet ein ähnlicher Knick wie in der Hacker News Metrik statt, jedoch ab einem anderen $\iota_0$. Für die Reddit Hot Metrik ist $\iota_0 = \{0,30000\}$. Für $\iota_0 = 30000$ erhalten neue Posts einen höheren Initialscore, als jemals von der Metrik zugewiesen wird. Der hohe Initialwert liefert bessere, kleinere $T(G)$, $T(nDCG)$ und $P_{v=0}$. 
 
 \begin{figure}[!htb]
 	\begin{subfigure}{0.5\textwidth}
 		\includegraphics[width=\textwidth]{"../plots/init_hn.png}%
+		\label{init_hn}
 	\end{subfigure}
 	\hfill
 	\begin{subfigure}{0.5\textwidth}
-		
-		
-		\includegraphics[width=\textwidth]{"../plots/init_akt.png"}%
+		\includegraphics[width=\textwidth]{"../plots/init_akt.png"}%
+		\label{init_akt}
 	\end{subfigure}
 	\begin{subfigure}{0.5\textwidth}
 		\includegraphics[width=\textwidth]{"../plots/init_view.png"}%
+		\label{init_view}
 	\end{subfigure}
 	\hfill
 	\begin{subfigure}{0.5\textwidth}
 		\includegraphics[width=\textwidth]{"../plots/init_reddit.png"}%
+		\label{init_reddit}
 	\end{subfigure}
-	\caption{Initialscore in Bewertungsmetriken}
+	\caption{Die Veränderung des Initialscores $\iota_0$ wirkt sich unterschiedlich auf die vier Bewertungsmetriken aus.}
 	\label{fig:init_scoring_functions}
 \end{figure}
 
 
 \section{Gravität}
 
-Der Einfluss der Gravität der drei Bewertungsmetriken mit Gravität wird nach Konfiguration 4 in Abbildung \ref{fig:grav} gezeigt. Die Aktivitätsmetrik besitzt bei $G_R = G=0$ den Wert $P_{v=0} = 0.84$. So wird bei der Akitvitätsmetrik das geringste $\rho$ mit $G=0$ erzielt. Für die View- und Hacker News Metrik steigt $\rho$ mit der Erhöhung von $G$ im Fall $G_R = 0$. Für den Fall $G_R = 2$ wird das kleinste $\rho$ mit $G = 0$ für die Bewertungsmetriken Aktivität und Verallgemeinertes Hacker News erzielt. Auf die Viewmetrik hat in diesem Fall die Variierung on $G$ keinen signifikanten Einfluss.
+Der Einfluss der Gravität der drei Bewertungsmetriken mit Gravität $G$ wird nach Konfiguration \texttt{Parametertest} in Abbildung \ref{fig:grav} gezeigt. Die Aktivitätsmetrik besitzt für die Q\&A-Plattform bei $\gamma = 0$ einen sehr schlechten Mittelwert von $P_{v=0} = 0.84$. Das beste $\rho$ wird bei $\gamma = 0.5$ erzielt. Auf der Q\&A-Plattform ist für die View- und Hacker News Metrik bei $\gamma = 0$ der $\rho$-Wert am geringsten. Dieser steigt mit steigendem $\gamma$ für alle drei Metriken an. Auf der News-Plattform hat die Gravität keinen signifikanten Einfluss auf die View Metrik. Für die beiden weiteren Metriken wird über $\gamma \in [0,2]$ der $\rho-Wert$ signifikant verringert, ab $\gamma > 2$ steigt $\rho$ wieder geringfügig an. 
 
 \begin{figure}[!h]
-	\label{fig:grav}	
 	\includegraphics[width=\textwidth]{"../plots/gravity_box.png"}
-	\caption{Gravität}
+	\caption{Die Variierung der Gravität beeinflusst insbesondere auf die Aktivitäts- und Hacker News Metrik.}
+	\label{fig:grav}
 \end{figure}
 
 \section{Bewertungstransformation}
 
-In Abbildung \ref{fig:trans} ist farblich die verwendete Bewertungstransformation gekennzeichnet. Ein Datenpunkt beschreibt den Mittelwert einer Modellkonfiguration. Es zeigt sich, dass $v_{diff}$ in den meisten Bewertungsmetrikfällen eine größere Varianz bezüglich $\rho$ als $v_{anteil}$ und $v_{wilson}$ Im Fall $R = R_K$ und $G_R = 0$ besitzt $v_{diff}$ jedoch einen geringeren Mittelwert. Im weiteren betrachteten Fall $R = R_K$ und $G_R = 0$ ist die Perfomance von $v_{anteil}$ und $v_{wilson}$ sehr ähnlich und meist besser als $v_{diff}$.  
+In Abbildung \ref{fig:trans} ist die verwendete Bewertungstransformation in der \texttt{Überblick}-Konfiguration gekennzeichnet. Ein Datenpunkt beschreibt den Mittelwert einer Modellkonfiguration. Die Verallgemeinerte Hacker News Metrik ist mit $VHN$, die Reddit Hot Metrik mit $RH$ abgekürzt. Es zeigt sich, dass $\tau_{diff}$ in den meisten Bewertungsmetrikfällen eine größere Varianz bezüglich $\rho$ als $v_{anteil}$ und $v_{wilson}$ aufweist. Auf der Q\&A-Plattform besitzt $\tau_{diff}$ aber stets einen geringeren Mittelwert. Auf der News-Plattform ist die Performance von $\tau_{anteil}$ und $\tau_{wilson}$ sehr ähnlich und meist besser als $\tau_{diff}$. 
 
 \begin{figure}[!h]
-	\label{fig:trans}	
 	\begin{subfigure}{0.5\textwidth}
 		\includegraphics[width=\textwidth]{"../plots/vote_eval_scatter.png"}
 	\end{subfigure}
 	\begin{subfigure}{0.5\textwidth}
 		\includegraphics[width=\textwidth]{"../plots/vote_eval_boxplot.png"}
 	\end{subfigure}
-	\caption{Bewertungstransformation}
+	\caption{Die Auswirkung der Bewertungstransformation. Auf einer Q\&A-Plattform empfiehlt sich die Wahl von $\tau_{diff}$}
+	\label{fig:trans}
 \end{figure}
 
 
-\section{Zufallsbewertung}
+\section{Zufallsabweichung}
 
 
-Die Boxplots in Abbildung \ref{fig:zufall} zeigen, dass eine zufällige Abweichung bei allen Metriken außer der verallgemeinerten Hacker News im Fall $G_R = 0$ , zu einer signifikanten Verkleinerung von $P_{v=0}$ und $T(G)$ führt. Dabei führt die $\sigma$-Abweichung zu einer stärkeren Reduktion. Auch $T(nDCG)$ wird bei $G_R = 0$ verringert, wieder stärker durch die $\sigma$-Abweichung. Die Hacker News Metrik reagiert in diesem Fall gering auf die Zufallsabweichung. Im Fall von $G_R = 2$ wirkt sich die Zufallsabweichung nicht signifikant aus.
+Die Boxplots in Abbildung \ref{fig:zufall} zeigen die Auswirkung der Zufallsabweichung in der Konfiguration \texttt{Parametertest} auf die einzelnen Evaluationsparameter für die vier Bewertungsmetriken. Auf einer Q\&A-Plattform führt die Anwendung einer Zufallsabweichung bei allen Metriken außer der Hacker News Metrik zu einer signifikanten Reduzierung von $P_{v=0}$ und $T(G)$, es wird jedoch auch $T(nDCG)$ reduziert, durch die $\sigma$-Abweichung etwas mehr. Durch eine Zufallsabweichung wird $P_{v=0}$ und $T(G)$ für die Hacker News Metrik erhöht. Für eine News-Plattform wird für alle Metriken $T(G)$ und $P_{v=0}$ signifikant reduziert, während $T(nDCG)$ stabil bleibt.
 
 \begin{figure}[!h]
-	\label{fig:zufall}	
 	\begin{subfigure}{0.5\textwidth}
 		\includegraphics[width=\textwidth]{"../plots/dev_pwnv.png"}
 	\end{subfigure}
@@ -118,7 +121,8 @@ Die Boxplots in Abbildung \ref{fig:zufall} zeigen, dass eine zufällige Abweichu
 	\begin{subfigure}{0.5\textwidth}
 		\includegraphics[width=\textwidth]{"../plots/dev_ndcg.png"}
 	\end{subfigure}
-	\caption{Zufallsbewertung mit Konfiguration 4}
+	\caption{Auf einer News-Plattform beeinflusst eine Zufallsabweichung die beobachteten Parameter positiv.}
+	\label{fig:zufall}	
 \end{figure}
 
 
@@ -126,7 +130,7 @@ Die Boxplots in Abbildung \ref{fig:zufall} zeigen, dass eine zufällige Abweichu
 
 \subsection{Iterationslänge}
 
-Wird die Iterationslänge $M_N$ varriert hat dies Einfluss auf das Ergebnis. In Abbildung \ref{fig:steps} links oben sind die vier Bewertungsmetriken nach Konfiguration 4 nach $G_R = {1,2}$ dargestellt. Im Fall $G_R = 2$ zeigt sich, dass durch Erhöhung der Iterationsanzahl $T(nDCG)$ und $P_{v=0}$ verkleinert wird. Für den Fall $G_R = 0$ zeigen die drei weiteren Plots die Entwicklung der drei Evaluationsparameter mit steigender Iterationslänge. $T(nDCG)$ wird für die View- und Aktivitätsmetrik größer. Die Varianz von $T(nDCG)$ verringert sich für alle Metriken außer der Hacker News Metrik. $P_{v=0}$ steigt für die Viewmetrik mit steigendem $M_N$. Bei den drei restlichen Metriken wird $P_{v=0}$ und dessen Varianz verringert. Das Ansteigen der Iterationszahl hat nur geringen Einfluss auf $T(G)$, für die Hacker News Metrik wird $T(G)$ geringfügig größer. 
+In Abbildung \ref{fig:steps} links oben sind die Simulationsergebnisse nach der Konfiguration \texttt{Parametertest} dargestellt. Die Iterationslänge $M_N$ wird varriert und ist farblich markiert. Für die News-Plattform führt die Erhöhung von $M_N$ zur einer Reduzierung von $T(nDCG)$ und $P_{v=0}$. Für die Q\&A-Plattform sind mit den Boxplots die Parameter $T(nDCGG)$,$P_{v=0}$ und $T(G)$. Auf der $x$-Achse ist $M_N$ aufgetragen, durch die Farbe sind hier die Bewertungsmetriken gekennzeichnet. $T(nDCG)$ wird für die View- und Aktivitätsmetrik größer. Die Varianz von $T(nDCG)$ verringert sich für alle Metriken. $P_{v=0}$ steigt für die Viewmetrik mit steigendem $M_N$. Bei den drei restlichen Metriken wird $P_{v=0}$ und dessen Varianz verringert. Das Ansteigen der Iterationszahl hat nur geringen Einfluss auf $T(G)$, für die Hacker News Metrik wird $T(G)$ geringfügig größer. 
 
 
 \begin{figure}[!htb]
@@ -135,9 +139,7 @@ Wird die Iterationslänge $M_N$ varriert hat dies Einfluss auf das Ergebnis. In 
 	\end{subfigure}
 	\hfill
 	\begin{subfigure}{0.5\textwidth}
-		
-		
-		\includegraphics[width=\textwidth]{"../plots/steps_ndcg.png"}%
+		\includegraphics[width=\textwidth]{"../plots/steps_ndcg.png"}%
 	\end{subfigure}
 	\begin{subfigure}{0.5\textwidth}
 		\includegraphics[width=\textwidth]{"../plots/steps_pwnv.png"}%
@@ -146,42 +148,43 @@ Wird die Iterationslänge $M_N$ varriert hat dies Einfluss auf das Ergebnis. In 
 	\begin{subfigure}{0.5\textwidth}
 		\includegraphics[width=\textwidth]{"../plots/steps_gini.png"}%
 	\end{subfigure}
-	\caption{Unterschiedliche Iterationslängen}
+	\caption{Der Einfluss der Iterationslänge ist für die News-Plattform für alle Metriken gleich. Auf der Q\&A-Plattform wirkt sich diese jedoch unterschiedlich aus.}
 	\label{fig:steps}
 \end{figure}
 
 \subsection{Qualitätsraum}
 
-Der Einfluss der Größe des Qualitätsraum $Q_N$ wird in Abbildung \ref{fig:qual} untersucht. 
-Auf den Fall $G_R = 0$ hat die Größe nur geringfügig Einfluss, wie auch der Boxplot rechts bestätigt. Im Fall $G_R = 2$ erhöht sich mit $Q_N$ $T(nDCG)$. Auch die Varianz von $T(nDCG)$ verringert sich.a
+Der Einfluss der Größe des Qualitätsraum $Q_N$ wird in Abbildung \ref{fig:qual} nach den Ergebnissen der Konfiguration \texttt{Parametertest} untersucht. Im linken Plot ist die Größe des Qualitätsraums farblich gekennzeichnet. Durch eine Erhöhung von $Q_N$ steigt $T(nDCG)$ auf der News-Plattform. Der Boxplot rechts zeigt, dass $\rho$ durch die unterschiedlichen $Q_N$ für die Q\&A-Plattform für alle Bewertungsmetriken keine signifikante Änderung erfährt. Keine Bewertungsmetrik wird durch die bestimmte Wahl von $N_Q$ bevorteiligt.
 
 \begin{figure}[!h]
-	\label{fig:qual}	
 	\begin{subfigure}{0.5\textwidth}
 		\includegraphics[width=\textwidth]{"../plots/dim_scatter.png"}
 	\end{subfigure}
 	\begin{subfigure}{0.5\textwidth}
 		\includegraphics[width=\textwidth]{"../plots/dims_box.png"}
 	\end{subfigure}
-	\caption{Qualitätsdimensionen}
+	\caption{Die Veränderung von $Q_N$ wirkt sich nur auf die News-Plattform aus.}
+	\label{fig:qual}	
 \end{figure}
+
+Wird die Qualitätsverteilung varriert, durch Änderung des Erwartungsvektor oder der Kovarianzmatrik ergibt sich ein ähnliches Bild wie in Abbildung \ref{fig:qual}. Die Veränderung wirkt sich nur gleichmäßig auf die News-Plattform aus. 
 
 
 \subsection{User*innen- und Postanzahl}
 
-In Abbildung \ref{fig:start_posts} ist der Einfluss der Anzahl der Startposts nach der \textit{speziellen Modellkonfiguration} dargestellt. Wird die Anzahl der Startposts erhöht, werden die Evaluationsparamater schlechter. Je mehr Posts von Anfang an existieren, desto kleiner ist der Teil den die User*innen schon zu Beginn erfassen können. Die Folge ist die markante Reduzierung von $T(G)$ und $T(nDCG)$. Die Ergebnisse mit unterschiedlicher Anzahl an Startposts sind stark miteinander korreliert. Die Bewertungsmetriken bleiben unabhängig von den Startposts vergleichbar, keine Bewertungsmetrik wird durch die bestimmte Wahl der Startposts bevorteiligt.
+In Abbildung \ref{fig:start_posts} ist der Einfluss der Anzahl der Startposts nach der \texttt{Parametertest}-Konfiguration dargestellt. Im Plot links ist farblich die Anzahl der Startposts ${P_{start}}_N$ gekennzeichnet. Wird die Anzahl der Startposts erhöht, werden die Evaluationsparameter schlechter. Je mehr Posts von Anfang existieren, desto kleiner ist der Teil den die User*innen zu Beginn erfassen können. Dadurch wird $T(G)$  und $P_{v=0}$ markant erhöht. Die Auswirkung auf $T(nDCG)$ fällt nicht so stark aus. Im Boxplot rechts ist auf der $x$-Achse die Anzahl der Startposts aufgetragen, farblich markiert ist die Bewertungsmetrik. Mit steigendem ${P_{start}}_N$ steigt $\rho$ an. Die Ergebnisse mit unterschiedlicher Anzahl an Startposts sind stark miteinander korreliert. Die Bewertungsmetriken bleiben unabhängig von den Startposts vergleichbar, keine Bewertungsmetrik wird durch die bestimmte Wahl der Startposts bevorteiligt.
 
-Wird die Anzahl der neuen Posts pro Iteration oder die der User*innen variiert, sind die Ergebnisse der unterschiedlichen Anzahlen ebenfalls stark korreliert. Trotzdem ist davon auszugehen, dass mit einer hohen Wahl der Parameter die Realität besser modelliert wird.
+Wird die Anzahl der neuen Posts pro Iteration oder die der User*innen variiert, sind die Ergebnisse der unterschiedlichen Anzahlen ebenfalls stark korreliert.
 
 \begin{figure}[!h]
-	\label{fig:start_posts}	
 	\begin{subfigure}{0.5\textwidth}
 		\includegraphics[width=\textwidth]{"../plots/start_posts_scatter.png"}
 	\end{subfigure}
 	\begin{subfigure}{0.5\textwidth}
 		\includegraphics[width=\textwidth]{"../plots/start_posts_box.png"}
 	\end{subfigure}
-	\caption{Startposts}
+	\caption{Durch die Erhöhung der Anzahl von Startposts werden die Evaluationsparameter schlechter}
+	\label{fig:start_posts}	
 \end{figure}
 
 
@@ -196,26 +199,26 @@ Wird die Anzahl der neuen Posts pro Iteration oder die der User*innen variiert, 
 
 \section{User*innenparameter}
 
-Nach der \textit{speziellen Modellkonfiguration} sind Simulationsergebnisse in Abbildung \ref{fig:user_params_a} dargestellt. Die Verteilungen der User*innenaktivität und der Bewertungszufriedenheit werden variiert. In Abbildung  \ref{fig:user_params_b} sind die Dichteverteilungen der vier verwendeten Verteilungen dargestellt. Wie an der Viewmetrik im Fall $G_R = 0$ zu sehen ist führt die Variierung der Verteilung der Bewertungsverteilung zur Verschiebung des Mittelwerts von $T(G)$, während die Variierung der Aktivitätsverteilung zur Verschiebung des Mittelwerts von $P_{v = 0}$ und $T(nDCG)$ führt. Für den Fall $G_R = 2$ hat die Variierung der Aktivitätsverteilung keinen signifikanten Einfluss. Die Simulationsergebnisse, welche durch die Verwendung unterschiedlicher Verteilungen enstanden sind stehen in starker Korrelation. Die Ergebnisse einzelner Modellkonfigurationen ist weitesgehend unabhängig von der Wahl der Verteilungen der Bewertungszufriedenheit und der Aktivität.
+Nach der \textit{Parametertest}-Konfiguration sind Simulationsergebnisse in Abbildung \ref{fig:user_params_a} dargestellt. Die Verteilungen der User*innenaktivität und der Bewertungszufriedenheit werden variiert und sind als unterschiedliche Symbole bzw. Farben im linken Plot für jede Bewertungsmetrik gekennzeichnet. In Abbildung  \ref{fig:user_params_b} sind die Dichteverteilungen der vier verwendeten Verteilungen dargestellt. Wie im besonderen an der Viewmetrik auf der Q\&A-Plattfom zu sehen ist, führt die Variierung Bewertungszufriedenheitsverteilung zur Verschiebung des Mittelwerts von $T(G)$, während die Variierung der Aktivitätsverteilung zur Verschiebung des Mittelwerts von $P_{v = 0}$ und $T(nDCG)$ führt. Auf der News-Plattform hat die Variierung der Aktivitätsverteilung keinen signifikanten Einfluss. Die Simulationsergebnisse, welche durch die Verwendung unterschiedlicher Verteilungen entstanden sind stehen in starker Korrelation. 
 
 \begin{figure}[!h]
-	\label{fig:user_params}	
 	\begin{subfigure}{0.5\textwidth}
 		\includegraphics[width=\textwidth]{"../plots/vote_prob_scatter.png"}
-		\caption{Variierung der Verteilung von Aktivität und Bewertungszufriedenheit}
+		\caption{Variierung der Verteilung von Aktivität\\ und Bewertungszufriedenheit}
 		\label{fig:user_params_a}
 	\end{subfigure}
 	\begin{subfigure}{0.5\textwidth}
 		\includegraphics[width=\textwidth]{"../plots/vote_prob_dists.png"}
-		\caption{Dichteverteilungen der verwendeten $\beta$-Verteilungen}
+		\caption{Dichteverteilungen der verwendeten \\ $\beta$-Verteilungen}
 		\label{fig:user_params_b}
 	\end{subfigure}
-	\caption{User*innenparameter}
+	\caption{}
+	\label{fig:user_params}	
 \end{figure}
 
-Für die Konzentrationsverteilung ergibt sich das gleiche Bild. Wird der Erwartungswert der Konzentrationsverteilung erhöht, so verringert sich $T(G)$. 
+Durch die Varrierung der Konzentration ergibt sich ein ähnliches Bild, wird der Erwartungswert der Konzentration erhöht, so verringern sicht $T(G)$ und $P_{v=0}$. Dies ist intuitiv, da User*innen mehr Posts betrachten und so auch diese sehen, welche von der Bewertungsmetrik schlechter bewertet wurden.
 
-Wird der Erwartungswert der poisson-verteilten Konzentration erhöht, so verringert sich $T(G)$ und $P_{v=0}$. Dies ist intuitiv, da User*innen mehr Posts betrachten und so auch diese sehen, welche von der Bewertungsmetrik schlechter bewertet wurden. Durch die Wahl der Konzentrationsverteilung wird ebenso wenig das Ergebnis einzelner Modellkonfigurationen beeinflusst.
+Somit hat die Wahl der User*innenparameter keinen signifikanten Einfluss auf die Vergleichbarkeit von Modellkonfiguration, weil keine einzelne Bewertungsmetrik von bestimmten User*innenparametern profitiert.
 
 
 

@@ -181,70 +181,105 @@
 \newcommand{\makeISWtitle}{%
 \begin{titlepage}
 
-	\hspace*{-1.6cm} \includegraphics[height=2cm]{images/logo-isw-uni-\IfLangGerman{de}{en}} 
-	\hfill
-	\raisebox{0.7\height}{\includegraphics[height = 1cm]{images/logo-isw.pdf}}\\[4em]
-
+%	\hspace*{-1.6cm} \includegraphics[height=2cm]{images/logo-isw-uni-\IfLangGerman{de}{en}} 
+%	\hfill
+%	\raisebox{0.7\height}{\includegraphics[height = 1cm]{images/logo-isw.pdf}}\\[4em]
+	\vspace*{0.5cm}
 	\centering
-	{\huge \iswt@thesisType\par}
-\vspace{4em}
-	{\Huge\bfseries\sffamily \@title\par}
+	%{\huge \iswt@thesisType\par}
+	{\LARGE\bfseries Fachhochschule Aachen, Campus Jülich\par}
+	{\Large\bfseries Fachbereich 09: Medizintechnik und Technomathematik\par}
+	{\large\bfseries Studiengang Scientific Programming, B. Sc.\par}
 \vspace{8em}
-\IfLangGerman{eingereicht von}{submitted by}\par
-	\vspace{0.45em}
-	{\Large\itshape \@author\par}
-	\vspace{0.55em}
-	\IfLangGerman{aus}{from} \iswt@placeOfBirth\par
-	 \vfill
+	{\huge\bfseries\sffamily \@title\par}
+	{\LARGE\bfseries\sffamily \@subtitle\par}
+\vspace{8em}
+	{\iswt@thesisType\par}
+\IfLangGerman{\textit{von}}{submitted by}\par
+	{\@author\par}
+	{Matr.-Nr.: 3169962\par}
+	\vspace{2em}
 	 
-	\begin{tabbing}
-		\IfLangGerman{Studiengang}{Degree program} \hspace*{2cm} \= \iswt@aimedDegree~\iswt@major \\
-		\IfLangGerman{Prüfer}{Examined by} \> \iswt@professor \\
-		\IfLangGerman{Betreuer}{Supervised by} \> \iswt@supervisor \\
-		\IfLangGerman{Eingereicht am}{Submitted on} \> \@date
-	\end{tabbing}
+	 {\textit{betreut von}\par}
+	 {1. Prüfer: Prof. Dr. Alexander Voß \par}
+	 {2. Prüfer: Dr. André Calero-Valdez\par}
+	 
+	 \vspace{4em}
+	 
+	 %\begin{table}[!htbp]
+	 %	\begin{tabularx}{\textwidth}{r}
+	 %		  Anzahl der User*innen\\
+	 %		 Anzahl der Posts zu Beginn der Simulation \\
+	 %		 Anzahl der neuen Posts pro Iteration\\ 
+	 %		%	${N_P}$ & Gesamtanzahl der Posts, $N_P = {N_P}_{start} + i_M * {N_P}_{iter}$
+	 %	\end{tabularx}
+	 %\end{table}
+	 %\begin{flushright}
+	 %Fachhochschule Aachen, Campus Jülich \\
+	 %Fachbereich Medizintechnik und Technomathematik \\
+	 %Scientific Programming, B. Sc.\\
+	 %\end{flushright}
+	 \vfill
+	 \centering
+	 Aachen, \today
+	 
+	%\begin{tabbing}
+	%	\IfLangGerman{}{Degree program} \hspace*{7cm} \= Fachhochschule Aachen, Campus Jülich \\
+	%	Fachebereich \> Medizintechnik und Technomathematik \\
+	%	Studiengang \> Scientific Programming B. Sc. \\
+	%	\IfLangGerman{Prüfer}{Examined by} \> \iswt@professor \\
+	%	\IfLangGerman{Betreuer}{Supervised by} \> \iswt@supervisor \\
+	%	\IfLangGerman{Eingereicht am}{Submitted on} \> \@date
+	%\end{tabbing}
 
 
 \end{titlepage}
 }%
 
 \newcommand{\declarationOfOriginality}{
-\chapter*{\IfLangGerman{Eigenständigkeitserklärung}{Declaration of Originality}}
+\chapter*{\IfLangGerman{Eidesstattliche Versicherung}{Declaration of Originality}}
 
-\iswt@thesisType{} \IfLangGerman{von}{of} \@author{}  (\iswt@aimedDegree{} \iswt@major{})
-\vspace*{1em}
+%\iswt@thesisType{} \IfLangGerman{von}{of} \@author{}  (\iswt@aimedDegree{} \iswt@major{})
+%\vspace*{1em}
 
-\noindent
-\begin{tabular}{@{}p{0.2\textwidth} p{0.78\textwidth}@{}}
-	\IfLangGerman{Anschrift}{Address} & \iswt@address{} \\
-	\IfLangGerman{Matrikelnummer}{Student number}   & \iswt@matrnr{} \\
-	\IfLangGerman{Deutscher Titel}{English title}   & \textit{\@title{}} \\
-	\IfLangGerman{Englischer Titel}{German title}   & \textit{\iswt@titleTranslated{}}
-\end{tabular}
-\vspace*{1em}
+%\noindent
+%\begin{tabular}{@{}p{0.2\textwidth} p{0.78\textwidth}@{}}
+%	\IfLangGerman{Anschrift}{Address} & \iswt@address{} \\
+%	\IfLangGerman{Matrikelnummer}{Student number}   & \iswt@matrnr{} \\
+%	\IfLangGerman{Deutscher Titel}{English title}   & \textit{\@title{}} \\
+%	\IfLangGerman{Englischer Titel}{German title}   & \textit{\iswt@titleTranslated{}}
+%\end{tabular}
+%\vspace*{1em}
 
-\IfLangGerman{
-	\noindent Hiermit erkläre ich,
-	\begin{itemize}
-	\item dass ich die vorliegende Arbeit selbstständig verfasst habe,
-	\item dass keine anderen als die angegebenen Quellen benutzt und alle wörtlich oder sinngemäß aus anderen Werken übernommenen Aussagen als solche gekennzeichnet sind,
-	\item dass die eingereichte Arbeit weder vollständig noch in wesentlichen Teilen Gegenstand eines anderen Prüfungsverfahrens gewesen ist,
-	\item dass ich die Arbeit weder vollständig noch in Teilen bereits veröffentlicht habe und 
-	\item dass ich mit der Arbeit keine Rechte Dritter verletze und die Universität von etwaigen Ansprüchen Dritter freistelle.
-	\end{itemize}
-}{
-\noindent I now declare,
-\begin{itemize}
-	\item that I wrote this work independently,
-	\item that no sources other than those stated are used and that all statements taken from other works---direcly or figuratively---are marked as such,
-	\item that the work submitted was not the subject of any other examination procedure, either in its entirety or in substantial parts,
-	\item that I have not published the work in whole or in part, and
-	\item  that my work does not violate any rights of third parties and that I excempt the University against any claims of third parties.
-\end{itemize}
-}
-\vfill
-\noindent\rule{6cm}{0.66pt}\\
-Stuttgart,\IfLangGerman{ den}{} \@date
+%\IfLangGerman{
+%	\noindent Hiermit erkläre ich,
+%	\begin{itemize}
+%	\item dass ich die vorliegende Arbeit selbstständig verfasst habe,
+%	\item dass keine anderen als die angegebenen Quellen benutzt und alle wörtlich oder sinngemäß aus anderen Werken übernommenen Aussagen als solche gekennzeichnet sind,
+%	\item dass die eingereichte Arbeit weder vollständig noch in wesentlichen Teilen Gegenstand eines anderen Prüfungsverfahrens gewesen ist,
+%	\item dass ich die Arbeit weder vollständig noch in Teilen bereits veröffentlicht habe und 
+%	\item dass ich mit der Arbeit keine Rechte Dritter verletze und die Universität von etwaigen Ansprüchen Dritter freistelle.
+%	\end{itemize}
+%}{
+%\noindent I now declare,
+%\begin{itemize}
+%	\item that I wrote this work independently,
+%	\item that no sources other than those stated are used and that all statements taken from other works---direcly or figuratively---are marked as such,
+%	\item that the work submitted was not the subject of any other examination procedure, either in its entirety or in substantial parts,
+%	\item that I have not published the work in whole or in part, and
+%	\item  that my work does not violate any rights of third parties and that I excempt the University against any claims of third parties.
+%\end{itemize}
+%}
+
+Diese Arbeit ist von mir selbständig angefertigt und verfasst. Es sind keine anderen als die angegeben Quellen und Hilfsmittel benutzt worden.
+
+Aachen, \today
+\hfill
+\noindent\rule{4cm}{0.66pt}\\
+\vspace{-3em}
+\begin{flushright}
+Felix Matuschka
+\end{flushright}
 
 }
 

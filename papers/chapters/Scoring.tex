@@ -5,28 +5,28 @@ Anhand von Bewertungsmetriken sollen Posts nach ihrer Relevanz sortiert werden. 
 
 
 Die nicht beobachtbaren Qualitätsparameter stehen in der Berechnung der Bewertungsmetrik nicht zur Verfügung, diese kann nur die beobachtbaren Parameter verwenden:
-%Die wahre Relevanz $R_P$ steht in der Berechnung der Bewertungsmetrik nicht zur Verfügung, daher müssen die "sichtbaren" Parameter von $P$ verwendet werden um die Relevanz anzunähern.
+
 
 \begin{itemize}
-	\item $a_P$, Veröffentlichungzeitpunkt
+	\item $a_P$, Veröffentlichungszeitpunkt
 	\item $b_P$, Bewertungsvektor
 	\item $s_P$, Score
-	\item $w_P$, Anzahl der Betrachtungen
+	\item $v_P$, Anzahl der Betrachtungen
 \end{itemize}
 
-Eine ideale Bewertungsmetrik ist fair, die folgenden Punkte sind erfüllt:
+In einer idealen Bewertungsmetrik $B$ werden die Matthäus-Effekte reduziert, sie ist fair, wenn die folgenden Punkte erfüllt sind:
 
 \begin{itemize}
-	\item für zwei Posts $P_1$ und $P_2$ mit $R_{P_1} > R_{P_2}$ ist $B(P_1) > B(P_2)$
-	\item Für jeden Post $P_i$ gilt $w_{P_i} > 1$, er wurde von mindestens eine*r User*in wahrgenommen
+	\item für zwei Posts $P_1$ und $P_2$ mit $r_{P_1} > r_{P_2}$ ist $B(P_1) > B(P_2)$
+	\item Für jeden Post $P_i$ gilt $v_{P_i} > 1$, wurde von mindestens eine*r User*in wahrgenommen
 \end{itemize}
 
 \section{Bewertungstransformation}
 \label{voteevaluation}
 
-Die Bewertungsvektoren liegen im $N_B$-dimensionalen Raum vor. Innerhalb von Bewertungsmetriken werden die $N_B$ dimensionalen Bewertungsvektoren von Posts auf einen Skalar transformiert. Dies geschieht mit einer Bewertungstransformationsfunktion $v: \mathbb{R}^{n} \rightarrow \mathbb{R}$.
+Die Bewertungsvektoren liegen im $V_N$-dimensionalen Raum vor. Innerhalb von Bewertungsmetriken werden die $V_N$ dimensionalen Bewertungsvektoren von Posts auf einen Skalar transformiert. Dies geschieht mit einer Bewertungstransformationsfunktion $\tau: \mathbb{R}^{V_N} \rightarrow \mathbb{R}$.
 
-Für den zweidimensionalen Fall mit Up- und Downvotes ($u_P$,$d_P$) werden im folgenden einige Bewertungstransformationen vorgestellt.
+Für den zweidimensionalen Fall mit Up- und Downvotes (${n_\uparrow}_P$,${n_\downarrow}_P$) werden im folgenden einige Bewertungstransformationen vorgestellt.
 
 \subsection{Differenz}
 
@@ -34,10 +34,10 @@ Es wird die Differenz aus Up- und Downvotes zu berechnet, so ergibt sich in Form
 
 \begin{equation}
 \label{diff}
-v_{diff}(b_P) = u_P - d_P
+\tau_{diff}(b_P) = {n_\uparrow}_P - {n_\downarrow}_P
 \end{equation}
 
-Die Differenz wird im Reddit Hot Ranking verwendet.
+Die Differenz wird in der Reddit Hot Metrik standardmäßig verwendet.
 
 \subsection{Anteil}
 
@@ -45,34 +45,34 @@ Berechnet wird der Anteil der Upvotes zur Gesamtzahl der Votes:
 
 \begin{equation}
 \label{anteil}
-v_{anteil}(b_P) = \frac{u_P}{u_P + d_P}
+\tau_{anteil}(b_P) = \frac{{n_\uparrow}_P}{{n_\uparrow}_P + {n_\downarrow}_P}
 \end{equation}
 
 
 \subsection{Wilson Score}
 
-Wie in [Online Paper über Wilson] erläutert wird, ist die Verwendung der beiden vorherig vorgestellten Metriken in bestimmten Konstellationen von Up- und Downvotes unintuitiv. Es wird  die untere Grenze des Wilson-Konfidenzintervall für die Erfolgswahrscheinlichkeit der Binomialverteilung für den Parameter $p$ als Metrik vorgeschlagen. Dabei ist $n$ die Gesamtanzahl an abgegeben Votes an einen Post, die Stichprobengröße, und $k$ die Anzahl an positiver Bewertungen eines Postes, die Anzahl an Erfolgen in der Stichprobe.
+Wie in \cite{miller} erläutert wird, ist die Verwendung der beiden vorherig vorgestellten Metriken in bestimmten Konstellationen von Up- und Downvotes unintuitiv. Es wird  die untere Grenze des Wilson-Konfidenzintervall für die Erfolgswahrscheinlichkeit der Binomialverteilung für den Parameter $p$ als Metrik vorgeschlagen. Dabei ist $n$ die Gesamtanzahl an abgegeben Votes an einen Post, die Stichprobengröße, und $k$ die Anzahl an positiver Bewertungen eines Postes, die Anzahl an Erfolgen in der Stichprobe.
 	
-Mit der Gesamtzahl der Bewertungen eines Posts $n_P = u_P + d_P$, dem Punktschätzer $\hat{p}_P = u_P + n_P$ und dem Quantil $c_{\alpha}$ der Normalverteilung zum Irrtumsniveau $\alpha$ ergibt sich in Formel \ref{wilson} der Wilson Score:
+Mit der Gesamtzahl der Bewertungen eines Posts $n_P = {n_\uparrow}_P + {n_\downarrow}_P$, dem Punktschätzer $\hat{p}_P = \tau_{anteil}(b_P)$ und dem Quantil $c_{\alpha}$ der Normalverteilung zum Irrtumsniveau $\alpha$ ergibt sich in Formel \ref{wilson} der Wilson Score:
 
 \begin{equation}
 \label{wilson}
- v_{wilson}(b_P) = \frac{1}{1+\frac{c_{\alpha}^2}{n_P}}(\hat{p}_P + \frac{c_{\alpha}^2}{2n_P} - c \sqrt{\frac{\hat{p}_P(1 - \hat{p}_P)}{n_P} + \frac{c_{\alpha}^2}{4n_P^2}})
+ \tau_{wilson}(b_P) = \frac{1}{1+\frac{c_{\alpha}^2}{n_P}}(\hat{p}_P + \frac{c_{\alpha}^2}{2n_P} - c \sqrt{\frac{\hat{p}_P(1 - \hat{p}_P)}{n_P} + \frac{c_{\alpha}^2}{4n_P^2}})
 \end{equation}
 	
 \section{Bewertungsmetriken}
 
-Bewertungsmetriken berechnen den Score $S_{P,t}$ für einen Post unter Betrachtung der Postparameter eines Postes $P$ zum Modellschritt $t$.
+Bewertungsmetriken berechnen den Score $B(P,i_M)$ für einen Post unter Betrachtung der Postparameter eines Postes $P$ zum Zeitpunkt bzw. Modellschritt $i_M$.
 	
 \subsection{Hacker News}
 \label{seqHackerNews}
 
-%TODO nochmal über die Notation S_{P,t} klar werden, vielleicht auch S_t(P) ??
-Hacker News verwendet eine Metrik, in der die Upvotes $u_{P}$ eines Postes ins Verhältnis zum Alter $a_{P}$ in Stunden zum Zeitpunkt $t$ setzt. Das Alter wird mit der Gravitätskonstanste $G = 1.8$ potenziert. Die Bewertungstransformation lautet $v(b_P) = u_P - 1$ so ergibt sich die Hacker News Bewertungsmetrik in Formel \ref{HackerNews}:
+%TODO Hacker News und Reddit verlinken
+Hacker News verwendet eine Metrik, in der die Upvotes ${n_\uparrow}_{P}$ eines Postes ins Verhältnis zum Alter $a_{P} = i_M - t_P$ setzt. Das Alter wird mit der Gravitätskonstante $\gamma = 1.8$ potenziert. Die Bewertungstransformation lautet $\tau(b_P) = u_P - 1$ so ergibt sich die Hacker News Bewertungsmetrik in Formel \ref{HackerNews}:
  
 \begin{equation}
 \label{HackerNews}
-S_{P,t} = \frac{u_{P,t} - 1}{(a_{P,t} + 2)^{G}}
+B_{HN}(P,i_M) = \frac{{n_\uparrow}_P - 1}{(a_P + 2)^{\gamma}}
 \end{equation}
 
 \section{Verallgemeinertes Hacker News}
@@ -81,64 +81,65 @@ Das verallgemeinerte Hacker News Ranking verwendet eine beliebige Bewertungstran
 
 \begin{equation}
 \label{vHackerNews}
-S_{P,t} = \frac{v(b_{P,t})}{(a_{P,t} + 2)^{G}}
+B_{vHN}(P,i_M) = \frac{\tau(b_P)}{(a_P + 2)^{\gamma}}
 \end{equation}
 
 
 \section{Reddit Hot}
 
-Im Reddit Hot Ranking fließt die evaluierte Voteanzahl $d_P$ eines Postes logarithmisch, und der Zeitpunkt der Veröffentlichung $r_P$ einfach ein. 
 
-Um den Veröffentlichungszeitpunkt $e_P$ zu messen, wird die Differenz in Sekunden von diesem zum Zeitpunkt $E$ am 8.12.2005 um 07:46:43 in Formel \ref{RedditHotT} berechnet.
+In der Reddit Hot Metrik wird ebenfalls die transformierte Bewertung $\tau{b_P}$ eines Posts mit dem Alter verrechnet.
+
+Der Zeitwert $e_P$ wird als Differenz in Sekunden von diesem Zeitpunkt $i_M$ zum Zeitpunkt $E$ am 8.12.2005 um 07:46:43 in Formel \ref{RedditHotT} berechnet.
 
 \begin{equation}
 \label{RedditHotT}
-e_{P} = r_{P} - E  
+e_{P} = i_{M} - E  
 \end{equation}
 
-Die Bewertungstransformation des Reddit Hot Ranking ist die Differenz aus Up- und Downvotes:
+Die Bewertungstransformation de Reddit Hot Metrik ist standardmäßig die  Differenz aus Up- und Downvotes, kann jedoch variiert werden:
 
 \begin{equation}
 \label{RedditHotD}
-v(b_{P}) = v_{diff}(b_{P})
+\tau(b_{P}) = \tau_{diff}(b_{P})
 \end{equation}
 \\
-Der Parameter $z$ wird in \ref{RedditHotZ} auf das Maximum des Betrages von $v(b_{P,t})$ aus Formel \ref{RedditHotD} und 1 gesetzt.
+Der Parameter $z$ wird in \ref{RedditHotZ} auf das Maximum des Betrages von $ \tau(b_{P})$ aus Formel \ref{RedditHotD} und 1 gesetzt.
 
 \begin{equation}
 \label{RedditHotZ}
-z_{P,t}  = \begin{cases}
-|v(b_{P,t})| &\text{falls $|v(b_{P,t})| \geq 1$}\\
+z_{P}  = \begin{cases}
+|\tau(b_{P})| &\text{falls $|\tau(b_{P})| \geq 1$}\\
 1 &\text{sonst}
 \end{cases}
 \end{equation}
 
-Es ergibt sich die Bewertungsmetrik des Reddit Hot Rankings in Formel \ref{RedditHot}:
+Es ergibt sich die Reddit Hot Metrik in Formel \ref{RedditHot}:
 
 \begin{equation}
 \label{RedditHot}
-S_{P,t} = sign(v(b_{P,t})) * log_{10}(z_{P,t}) + \frac{e_{P}}{4500}
+B_R(P,i_M) = sign(\tau(b_{P})) * log_{10}(z_{P}) + \frac{e_{P}}{4500}
 \end{equation}
 
-Somit werden Posts mit fortschreitender Zeit nicht schlechter bewertet, wie bei der Bewertungsmetrik von Hacker News. Neuere Posts erhalten durch das Ansteigen von $e_P$ eine höhere Bewertung, bei gleichem $v(b_P)$, als ältere Posts. 
+Somit werden Posts mit fortschreitender Zeit nicht schlechter bewertet, wie bei der Bewertungsmetrik von Hacker News. Neuere Posts erhalten durch das Ansteigen von $e_P$ eine höhere Bewertung, bei gleichem $\tau(b_P)$, als ältere Posts. 
  
 
 \section{View Bewertungsmetrik}
 
-Die View Bewertungsmetrik basiert auf der in Kapitel \ref{seqvHackerNews} beschriebenen Metrik. Es fließt die Anzahl der Betrachtungen des Posts $w$ mit ein. Daraus ergibt sich die Bewertungsmetrik in \ref{ViewScoring}:
+Die View Bewertungsmetrik basiert auf der in Kapitel \ref{seqvHackerNews} beschriebenen Metrik. Es fließt die Anzahl der Betrachtungen des Posts $v_P$ mit ein. Daraus ergibt sich mit dem gleichen $a_P$ wie in Abschnitt \ref{seqHackerNews}  die Bewertungsmetrik in Formel \ref{ViewScoring}:
 
 \begin{equation}
 \label{ViewScoring}
-S_{p,t} = \frac{\frac{b_{P,t}}{w_{p,t} + 1}}{(a_{p,t} + 2)^{G}}
+B_V(P,i_M) = \frac{\frac{\tau_{P}}{v_{P} + 1}}{(a_{P} + 2)^{\gamma}}
 \end{equation}
 
 \section{Aktivität}
 
-Die Bewertung des Posts wird der Bewertung der letzten Iteration verrechnet und durch das Alter skaliert. Mit fortschreitender Zeit verlieren Posts in dieser Metrik an Score, so ergibt sich in \ref{Activation}:
+Die Bewertung des Posts wird der Bewertung der letzten Iteration verrechnet und durch das Alter skaliert. Mit fortschreitender Zeit verlieren Posts in dieser Metrik an Score, es ergibt sich in Formel \ref{Activation}:
 
 \begin{equation}
 \label{Activation}
-S_{p,t} = \frac{v(b_{P,t})) - S_{p,t-1}}{(a_{p,t} + 2)^{G}}
+B_A(P, i_M) = \frac{\tau(b_{P})) - B_A(P,i_M-1}{(a_{P} + 2)^{\gamma}}
 \end{equation}
 
 
@@ -148,16 +149,16 @@ Nachdem Posts durch die Bewertungsmetrik bewertet wurden, kann die Bewertung dur
 
 \subsection{$\mu$-Abweichung}
 
-Sei $\mu_s$ der Mittelwert der Scores aller Posts. Für einen Post $p$ mit Score $s_p$ wird die Verunreinigung $d$ als Zufallszahl im Intervall $d_{\mu,p} \in [-|\mu_s - s_p|,|\mu_s - s_p|]$ definiert. So ergibt sich für den verunreinigten Score $\tilde{s}_p$ des Post in Formel \ref{mean_deviation}:
+Sei $\mu_s$ der Mittelwert der Scores aller Posts. Für einen Post $P$ mit Score $s_P$ wird die Verunreinigung $d$ als Zufallszahl im Intervall $d_{\mu,P} \in [-|\mu_s - s_P|,|\mu_s - s_p|]$ definiert. So ergibt sich für den verunreinigten Score $\tilde{s}_P$ des Post in Formel \ref{mean_deviation}:
 
 \begin{equation}
 \label{mean_deviation}
-\tilde{s}_{\mu,p} =  s_p + d_{\mu,p}
+\tilde{s}_{\mu,P} =  s_p + d_{\mu,P}
 \end{equation} 
 
 \subsection{$\sigma$-Abweichung}
 
-Für die Standardabweichung der Scores aller Posts $\sigma_s$ sei die Verunreinigung eine Zufallszahl im Intervall $d_{\sigma,p} \in [-\sigma_s,\sigma_s]$, sodass sich der verunreinigte Score eines Postes in Formel \ref{std_deviation} ergibt:
+Für die Standardabweichung der Scores aller Posts $\sigma_s$ sei die Verunreinigung eine Zufallszahl im Intervall $d_{\sigma,P} \in [-\sigma_s,\sigma_s]$, sodass sich der verunreinigte Score eines Postes in Formel \ref{std_deviation} ergibt:
 
 \begin{equation}
 \label{std_deviation}
