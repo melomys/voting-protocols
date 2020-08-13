@@ -58,7 +58,7 @@ function standard_model(;
     concentration_distribution = Poisson(50),
     deviation_function = no_deviation,
     equal_posts = false,
-    gravity = 1.8,
+    gravity = 0,
     init_score = 0,
     model_step! = model_step!,
     model_type = standard_model,
@@ -133,7 +133,7 @@ function standard_model(;
     tmp_ranking = sortperm(map(x -> s*x, scores))
     ranking = partial_shuffle(rng_model, tmp_ranking, 1 - abs(sorted))
 
-    
+
     # berechne Werte um beim Userrating das Quantil abzuleiten
     nn = 100
     p_qual = rand(rng_user_posts, quality_distribution, nn)
