@@ -4,7 +4,7 @@ df_full_model = combine_dfs("/home/ludwig/Bachelorarbeit/voting-protocols/data_c
 grouped_full_model = df_full_model %>% 
   mutate(scoring_function = factor(scoring_function)) %>%
   group_by(scoring_function, init_score, deviation_function, vote_evaluation,gravity, relevance_gravity, user_rating_function, model_type) %>% 
-  dplyr::summarise(area_under_gini = mean(area_under_gini), area_under_ndcg = mean(area_under_ndcg), posts_with_no_views = mean(posts_with_no_views),ρ = mean(ρ), n = n()) 
+  dplyr::summarise(area_under_gini = mean(area_under_gini), area_under_ndcg = mean(area_under_ndcg), posts_with_no_views = mean(posts_with_no_views),rho = mean(rho), n = n()) 
 
 
 df_specified_model = combine_dfs("/home/ludwig/Bachelorarbeit/voting-protocols/data_cluster/data_specified_model/data", "model_specified")
@@ -19,7 +19,7 @@ grouped_deviation = df_deviation %>%
   mutate(scoring_function = factor(scoring_function)) %>%
   #group_by(scoring_function, init_score, deviation_function, vote_evaluation, gravity)
   group_by(scoring_function, init_score, deviation_function, vote_evaluation,gravity, relevance_gravity, user_rating_function, model_type) %>% 
-  dplyr::summarise(area_under_gini = mean(area_under_gini), area_under_ndcg = mean(area_under_ndcg), posts_with_no_views = mean(posts_with_no_views),ρ = mean(ρ), n = n()) 
+  dplyr::summarise(area_under_gini = mean(area_under_gini), area_under_ndcg = mean(area_under_ndcg), posts_with_no_views = mean(posts_with_no_views),rho = mean(rho), n = n()) 
 
 
 df_conc = combine_dfs("/home/ludwig/Bachelorarbeit/voting-protocols/data_cluster/data_conc_per_step/data","concentration") %>% 
