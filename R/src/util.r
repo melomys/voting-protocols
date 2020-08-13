@@ -9,12 +9,16 @@ library(ggcorrplot)
 library(openssl)
 library(plyr)
 library(dplyr)
+library(extrafont)
 
+#font_import(pattern = "lmodern*")
+#loadfonts(device = "postscript")
+#par(family = "LM Roman 10")
 ggplot_cus = function(element)
 {
   element %>% 
   ggplot() + 
-  theme(text=element_text(family="Trebuchet MS")) + 
+  theme(text=element_text(family="Computer Modern")) + 
   scale_shape_manual(values=c(19,3,4,5))
     
 }
@@ -36,13 +40,13 @@ import_df = function(str)
     mutate(relevance_gravity = factor(relevance_gravity))
   df$user_rating_function = revalue(x = df$user_rating_function, c("user_rating_exp2" = "Konsens", "user_rating_dist2" = "Dissens"),warn_missing = FALSE)
   df$vote_evaluation = revalue(x = df$vote_evaluation, c("vote_difference" = "Differenz" , "vote_partition" = "Anteil", "wilson_score" = "Wilson Score"),warn_missing = FALSE)
-  df$scoring_function = revalue(x = df$scoring_function, c("scoring_activation" = "Aktivität","scoring_hacker_news"="Veralg. Hacker News", "scoring_view" = "View", "scoring_reddit_hot" = "Reddit Hot"),warn_missing = FALSE)
+  df$scoring_function = revalue(x = df$scoring_function, c("scoring_activation" = "Aktivität","scoring_hacker_news"="Verallg. Hacker News", "scoring_view" = "View", "scoring_reddit_hot" = "Reddit Hot"),warn_missing = FALSE)
   df$model_type = revalue(x = df$model_type, c("standard_model" = 1, "downvote_model" = 2),warn_missing = FALSE)
   df$deviation_function = revalue(x = df$deviation_function, c("no_deviation" = "0", "mean_deviation" = "μ", "std_deviation" = "σ"),warn_missing = FALSE)
   df$relevance_gravity = revalue(x = df$relevance_gravity, c("0" = "Q&A", "2" = "News"), warn_missing = FALSE)
   df %>% 
    # filter(user_rating_function == "Konsens") %>% 
-    mutate(ρ = 1 -(area_under_ndcg/2 - area_under_gini/4 - posts_with_no_views/4)) %>% 
+    mutate(ρ = 0.5 -(area_under_ndcg/2 - area_under_gini/4 - posts_with_no_views/4)) %>% 
     mutate(seed = factor(seed)) %>% 
     mutate(model_id = factor(model_id)) %>% 
     mutate(init_score = factor(init_score)) %>% 

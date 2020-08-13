@@ -90,13 +90,16 @@ ggcorrplot(cor(corr_full_model, method = "spearman"), ggtheme = theme(text=eleme
 ```
 ```{r}
 b1 = grouped_full_model %>% 
+  filter(user_rating_function == "Konsens") %>% 
+  filter(relevance_gravity == 2) %>% 
   filter(model_type == 1) %>% 
   filter(init_score != 0)
 
-grouped_by_model = 
 
 
 b2 = grouped_full_model %>% 
+  filter(user_rating_function == "Konsens") %>%
+  filter(relevance_gravity == 2) %>% 
   filter(model_type == 2) %>% 
   filter(init_score != 0)
 
@@ -104,13 +107,15 @@ b2 = grouped_full_model %>%
 by_model = tibble(ρ1= b1$ρ, ρ2 = b2$ρ, n1 = b1$area_under_ndcg, n2 = b2$area_under_ndcg, diffn = b1$area_under_ndcg - b2$area_under_ndcg, signn = sign(diffn), diffρ = b1$ρ - b2$ρ, sign = sign(diffρ))
  
 fil = by_model %>% 
-  filter(signn == 1) 
+  filter(sign == 1) 
 
 by_model %>% 
   ggplot_cus() + 
   aes(x = n1, y= n2) + 
   geom_point()
 
+
+nrow(fil)/nrow(by_model)
 #INTERESSANTE AUSWERTUNG
 #ggsave("/home/ludwig/Desktop/test.png", device="png")
 ```
@@ -132,6 +137,10 @@ df_full_model %>%
 
 ggsave("/home/ludwig/Bachelorarbeit/voting-protocols/plots/bewertungsvektor_all.png", plot = last_plot(), device = "png")
 ```
+```{r}
+
+```
+
 ```{r}
 s = TRUE
 ```

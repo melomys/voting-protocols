@@ -69,6 +69,12 @@ ggsave("/home/ludwig/Bachelorarbeit/voting-protocols/plots/full_model_grouped_co
 
 
 ```{r}
+ann_line<-data.frame(xend = 0.26, yend = 0.8, x = 0.3, y = 0.85, lab = "nuidtentraiunetriunednaiue" ,
+    relevance_gravity=factor("News",levels=c("Q&A", "News")))
+
+ann_text<-data.frame(x = 0.31, y = 0.85,
+                     relevance_gravity=factor("News",levels=c("Q&A", "News")))
+
 grouped_full_model %>% 
   filter(user_rating_function == "Konsens") %>% 
   #filter(scoring_function %in% c("Veralg. Hacker News", "Aktivität")) %>% 
@@ -76,10 +82,13 @@ grouped_full_model %>%
  # filter(init_score == 70) %>% 
   #filter(deviation_function == "μ") %>% 
   ggplot_cus() + 
-  aes(x = area_under_gini, y = area_under_ndcg,size = posts_with_no_views, color = model_type) + 
   theme(legend.position = "left") +
   labs(x = "T(G)", y = "T(nDCG)", size = expression(P["v=0"]), color = expression(B[N])) + 
-  geom_point(alpha = 0.5) + 
+  geom_point(aes(x = area_under_gini, y = area_under_ndcg,size = posts_with_no_views, color = model_type),alpha = 0.5) + 
+  geom_curve(data=ann_line, aes(xend=xend, yend=yend, x=x, y=y),
+    linejoin = "round", curvature = .45, arrow = arrow(length = unit(2, "mm"))
+  ) +
+  geom_text(data=ann_text, aes(x=x, y=y), hjust = "left",label = "Texteinet") + 
   facet_wrap(~relevance_gravity)
 if(s)
 {
@@ -107,7 +116,7 @@ init_hack = df_init %>%
   filter(user_rating_function == "Konsens") %>% 
   mutate(init_score = factor(init_score)) %>% 
   filter(gravity == 0) %>%
-  filter(relevance_gravity == 0) %>% 
+  filter(relevance_gravity == "Q&A") %>% 
   filter(scoring_function %in% c("Veralg. Hacker News")) %>% 
   filter(vote_evaluation == "Differenz") %>% 
  filter(deviation_function == "0")
@@ -116,7 +125,7 @@ init_akt = df_init %>%
   filter(user_rating_function == "Konsens") %>% 
   mutate(init_score = factor(init_score)) %>% 
   filter(gravity == 2) %>%
-  filter(relevance_gravity == 0) %>% 
+  filter(relevance_gravity == "Q&A") %>% 
   filter(vote_evaluation == "Differenz") %>% 
   filter(scoring_function %in% c("Aktivität")) %>% 
  filter(deviation_function == "0")
@@ -125,7 +134,7 @@ init_view = df_init %>%
   filter(user_rating_function == "Konsens") %>% 
   mutate(init_score = factor(init_score)) %>% 
   filter(gravity == 0) %>%
-  filter(relevance_gravity == 0) %>% 
+  filter(relevance_gravity == "Q&A") %>% 
   filter(scoring_function %in% c("View")) %>% 
  filter(deviation_function == "μ") %>% 
   filter(vote_evaluation == "Differenz") 
@@ -134,7 +143,7 @@ init_reddit = df_init %>%
   filter(user_rating_function == "Konsens") %>% 
   mutate(init_score = factor(init_score)) %>% 
   #filter(gravity == 0) %>%
-  filter(relevance_gravity == 0) %>% 
+  filter(relevance_gravity == "Q&A") %>% 
   filter(scoring_function %in% c("Reddit Hot")) %>% 
  filter(deviation_function == "μ") %>% 
   filter(vote_evaluation == "Differenz")
@@ -327,8 +336,8 @@ grouped_full_model %>%
   #filter(relevance_gravity == 2) %>% 
   filter(init_score != 0) %>% 
   ggplot_cus() + 
-  aes(y = ρ, x = vote_evaluation,fill = scoring_function)  + 
-  #scale_x_discrete(labels = c("Aktivität", "Reddit Hot", "Veralg. HN", "View")) + 
+  aes(y = ρ, fill = vote_evaluation,x = scoring_function)  + 
+  scale_x_discrete(labels = c("Aktivität", "RH", "VHN", "View")) + 
   theme(legend.position = "right") +
   labs(x = "Bewertungstransformation", fill = "Bewertungsmetrik") + 
   geom_boxplot(alpha = 1) + 
@@ -401,27 +410,60 @@ if(s)
 
 ```
 
+```{r}
+df_deviation %>% 
+ # filter(steps <= 100) %>% 
+  filter(user_rating_function == "Konsens") %>% 
+  #filter(relevance_gravity == 0) %>% 
+  #mutate(steps = factor(steps)) %>% 
+  ggplot_cus() +
+  aes(x = deviation_function,fill = scoring_function,y = ρ ) + 
+  theme(legend.position = "none") + 
+  labs(x = "Zufallsabweichung", y = "ρ") + 
+  geom_boxplot() +
+  #facet_wrap(~quality_dimensions, ncol = nrow(unique(df_dims[,"quality_dimensions"])))
+  facet_grid(~relevance_gravity)
 
+if(s)
+{
+  ggsave("/home/ludwig/Bachelorarbeit/voting-protocols/plots/dev_rho.png")
+}
+
+
+```
 ```{r}
 df_cus_steps <- df_steps %>% 
   filter(user_rating_function == "Konsens")
 
-df_cus_steps$scoring_function = revalue(x = df_cus_steps$scoring_function, c("Veralg. Hacker News" = "Veralg. HN"))
+df_cus_steps$scoring_function = revalue(x = df_cus_steps$scoring_function, c("Verallg. Hacker News" = "Verallg. HN"))
 
 df_cus_steps %>% 
   filter(user_rating_function == "Konsens") %>% 
   mutate(steps = factor(steps)) %>% 
   ggplot_cus() + 
   theme(legend.position = "left") + 
-  aes(x = area_under_gini, y = area_under_ndcg, size = posts_with_no_views, color = steps) + 
+  aes(x = area_under_gini, y = area_under_ndcg, size = posts_with_no_views, color = steps, group = seed) + 
   labs(x = "T(G)",color = "Iterationsschritte",size = expression(P["v=0"]), y = "T(nDCG)") + 
   geom_point(alpha = 0.5) + 
+#  geom_line() +
   facet_grid(relevance_gravity~scoring_function) 
   
 if(s)
 {
   ggsave("/home/ludwig/Bachelorarbeit/voting-protocols/plots/steps_scatter.png", device = "png")
 }
+```
+
+```{r}
+
+step100 = df_steps %>% 
+  filter(steps == 100)
+
+step500 = df_steps %>% 
+  filter(steps == 500)
+
+
+cor(step100$ρ, step500$ρ, method = "spearman")
 ```
 
 ```{r}
@@ -485,6 +527,11 @@ if(s)
 ```
 
 ```{r}
+cm = corr_matrix(df_steps, "steps")
+c = cor(cm, method = "spearman")
+```
+
+```{r}
 df_gravity %>% 
   #mutate(gravity = factor(gravity)) %>% 
   ggplot_cus() + 
@@ -507,7 +554,7 @@ df_dims %>%
   filter(user_rating_function == "Konsens") %>% 
   ggplot_cus() +
   aes(x = area_under_gini, y = area_under_ndcg, color = quality_dimensions,size= posts_with_no_views,group= seed) + # , color = vote_count, shape = user_rating_function, fill = init_score) + 
-  labs(x = "T(G)", y = "T(nDCG)", size = expression(P["v=0"]), color = expression(N[Q])) + 
+  labs(x = "T(G)", y = "T(nDCG)", size = expression(P["v=0"]), color = expression(Q[N])) + 
   theme(legend.position = "left") + 
   geom_point(alpha = 0.6) + 
   #geom_line(alpha = 0.4) +
@@ -542,7 +589,7 @@ if(s)
 df_userprob_cus = df_userprob %>% 
   filter(user_rating_function == "Konsens")
 
-df_userprob_cus$scoring_function = revalue(x=df_userprob_cus$scoring_function, c("Veralg. Hacker News" = "Veralg. HN"))
+df_userprob_cus$scoring_function = revalue(x=df_userprob_cus$scoring_function, c("Verallg. Hacker News" = "Verallg. HN"))
 
 df_userprob_cus %>% 
   filter(user_rating_function == "Konsens") %>% 
@@ -642,18 +689,24 @@ y1 = 0.9
 x2 = rating_dist$dist[match(y1,rating_dist$perc)]
 
 tib_l = tibble(a = c(rating_dist$dist[1],x2,x2), b = c(y1,y1,0))
+rib1 = rating_dist %>% 
+  filter(dist > x2)
 
 rating_dist %>% 
   mutate(v = factor(v)) %>% 
   ggplot_cus() + 
-  aes(x = dist, y = perc, color = v) + 
+  aes(x = dist, y = perc) + 
   labs(x = "x", y = "y") + 
-  scale_y_continuous(breaks = c(0,0.25,0.5,0.75,y1,1), labels = c(0,0.25,0.5,0.75,expression(Q[W]),1)) +
-  scale_x_continuous(breaks = c(0.5,0.6,0.7,x2,0.8), labels = c(0.5,0.6,0.7,expression(x[Q[W]]), 0.8)) +
-  theme(legend.position = c(0.9,0.8)) + 
-  geom_line() + 
+  scale_y_continuous(breaks = c(0,0.25,0.5,0.75,y1,1), labels = c(0,0.25,0.5,0.75,expression(Q[W] /0.9),1)) +
+  scale_x_continuous(breaks = c(0.5,0.6,0.7,x2,0.9), labels = c(0.5,0.6,0.7,expression(x[Q[W]]), 0.9)) +
+    geom_line(data = tib_l, aes(x = a, y = b), color = "red") + 
+  geom_ribbon(data = rib1, aes(ymax = perc),ymin = 0, alpha = 0.5, fill = "red") +
+  geom_line(aes(color = v)) +
+
   scale_color_manual("",labels = c(expression(F[W])), values = c("black")) + 
-  geom_line(data = tib_l, aes(x = a, y = b), color = "red")
+  theme(legend.position = c(0.9,0.8))
+
+
 
 if(s)
 {
@@ -661,7 +714,51 @@ if(s)
 }
 
 ```
+```{r}
+rating_dist = tibble(read_rds("/home/ludwig/Bachelorarbeit/voting-protocols/data_other_plots/distdf.rds"))
 
+rating_dist = add_column(rating_dist, v = expression(G[W]))
+
+y1 = 0.95
+x1 = rating_dist$dist[match(y1,rating_dist$perc)]
+
+tib_l = tibble(a = c(rating_dist$dist[1],x1,x1), b = c(y1,y1,0))
+
+y2 = 0.05
+x2 = rating_dist$dist[match(y2,rating_dist$perc)]
+
+tib_l2 = tibble(a = c(rating_dist$dist[1],x2,x2), b = c(y2,y2,0))
+
+rib1 = rating_dist %>% 
+  filter(dist > x1)
+  #mutate(dist = factor(dist))  %>% 
+  #mutate(perc = factor(perc)) %>% 
+  #mutate(v = factor(v))
+
+rib2 = rating_dist %>% 
+  filter(dist < x2)
+
+rating_dist %>% 
+  mutate(v = factor(v)) %>% 
+  ggplot_cus() + 
+  aes(x = dist, y = perc) + 
+  labs(x = "x", y = "y") + 
+  scale_y_continuous(breaks = c(0,y2,0.25,0.5,0.75,y1,1), labels = c(0,expression(Q1[W]/0.05),0.25,0.5,0.75,expression(Q2[W]/0.95),1)) +
+  scale_x_continuous(breaks = c(0.5,x2,0.7,x1,0.9), labels = c(0.5,expression(x[Q2[Wr]]),0.7,expression(x[Q2[W]]), 0.9)) +
+   scale_color_manual("",labels = c(expression(F[W])), values = c("black")) +
+  geom_line(data = tib_l, aes(x = a, y = b), color = "red") + 
+  geom_line(data = tib_l2, aes(x = a, y = b), color = "red") +
+  geom_ribbon(data = rib1, aes(ymax = perc),ymin = 0, alpha = 0.5, fill = "red") +
+  geom_ribbon(data = rib2, aes(ymax = perc),ymin = 0, alpha = 0.5, fill = "red") +
+  geom_line(aes(color = v)) + 
+  theme(legend.position = c(0.9,0.8))
+
+  
+if(s)
+{
+ ggsave("/home/ludwig/Bachelorarbeit/voting-protocols/plots/rating_dist1.png", device = "png")
+}
+```
 ```{r}
 user_posts = tibble(read_rds("/home/ludwig/Bachelorarbeit/voting-protocols/data_other_plots/user_posts.rds"))
 points = tibble(read_rds("/home/ludwig/Bachelorarbeit/voting-protocols/data_other_plots/point.rds"))
