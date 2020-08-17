@@ -5,9 +5,9 @@ println(nprocs())
 
 model_init_params = [
     (
-        [standard_model],
+        [upvote_system],
         Dict(
-            :scoring_function => [scoring_hacker_news,scoring_activation],
+            :rating_metric => [metric_hacker_news,metric_activation],
             :init_score => [-10, 0, 10, 20, 30],
             :steps => [5, 10, 30, 50, 100, 300, 500],
             :start_users => [50,100, 300],
@@ -18,4 +18,4 @@ model_init_params = [
     ),
 ]
 
-export_data(model_init_params,"hacker_news")
+export_data(model_init_params,"metric_hacker_news")

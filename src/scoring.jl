@@ -1,6 +1,6 @@
 using Dates
 
-function scoring_hacker_news(post, time, model)
+function metric_hacker_news(post, time, model)
     v = model.vote_evaluation(post) - 1
     if model.vote_evaluation !== vote_difference
         v = model.vote_evaluation(post)
@@ -11,7 +11,7 @@ end
 epoch = DateTime(1970,1,1)
 start_time = DateTime(2020,06,20)
 
-function scoring_reddit_hot(post, time, model)
+function metric_reddit_hot(post, time, model)
     seconds = Dates.value(start_time - epoch)/1000 - 1134028003 + post.timestamp * 60 * 30 # 60 Sekunden pro 30 Minuten!!
     order = log(10, max(abs(model.vote_evaluation(post
     )),1))
@@ -43,7 +43,7 @@ function scoring_worst(post, time, model)
 end
 
 
-function scoring_activation(post, time,model)
+function metric_activation(post, time,model)
     (model.vote_evaluation(post) - post.score) / (time -post.timestamp + 2)^(model.gravity)
 end
 
@@ -57,12 +57,12 @@ end
 
 
 # Scoring view
-function scoring_view(post, time, model)
+function metric_view(post, time, model)
     ((model.vote_evaluation(post) - 1) / (post.views + 1)) /
     (time - post.timestamp + 2)^model.gravity
 end
 
-function scoring_view_exp(post, time, model)
+function metric_view_exp(post, time, model)
     post.views^(model.vote_evaluation(post)) / (time - post.timestamp + 2)^model.gravity
 end
 
@@ -70,7 +70,7 @@ function scoring_unfair_view(post, time, model)
     (model.vote_evaluation(post)) / (time - post.timestamp + 1)^model.time_exp
 end
 
-function scoring_view_activation(post, time, model)
+function metric_view_metric_activation(post, time, model)
     ((model.vote_evaluation(post) - 1) / (post.views + 1) - post.score) / (time - post.timestamp + 2)^model.gravity
 end
 

@@ -1,11 +1,11 @@
 function view_model(;
     agent_step! = view_agent_step!,
-    scoring_function = scoring_view,
+    rating_metric = metric_view,
     qargs...,
 )
-    standard_model(;
+    upvote_system(;
         agent_step! = agent_step!,
-        scoring_function = scoring_function,
+        rating_metric = rating_metric,
         model_type = view_model,
         qargs...,
     )
@@ -35,7 +35,7 @@ function view_agent_step!(user, model)
     if rand(model.rng_user_posts) < user.activity_probability
         for i = 1:minimum([user.concentration, model.n])
             post = model.posts[model.ranking[i]]
-            if model.user_rating_function(
+            if model.user_opinion_function(
                 post.quality,
                 user.quality_perception,
             ) > rating_quantile(model,1 - user.vote_probability) && !in(post, user.voted_on)
@@ -44,7 +44,7 @@ function view_agent_step!(user, model)
 
                 push!(
                     model.user_ratings,
-                    model.user_rating_function(
+                    model.user_opinion_function(
                         post.quality,
                         user.quality_perception,
                     ),

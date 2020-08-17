@@ -14,7 +14,7 @@ include("../../src/models/model.jl")
 include("../../src/model_factory.jl")
 include("../../src/models/view_model.jl")
 include("../../src/models/random_model.jl")
-include("../../src/models/downvote_model.jl")
+include("../../src/models/up_and_downvote_system.jl")
 include("../../src/evaluation.jl")
 include("../../src/data_collection.jl")
 include("../../src/scoring.jl")
@@ -31,7 +31,7 @@ score_func = @post_property_function(:score)
     vote_count(model, model_df) = sum(map(x -> x.votes, model.posts))
 
     quality_sum(model, model_df) = sum(map(
-        x -> model.user_rating_function(x.quality, ones(quality_dimensions)),
+        x -> model.user_opinion_function(x.quality, ones(quality_dimensions)),
         model.posts,
     ))
 
@@ -52,8 +52,8 @@ score_func = @post_property_function(:score)
         @model_property_function(:votes_exp),
         @model_property_function(:time_exp),
         @model_property_function(:user_ratings),
-        @model_property_function(:user_rating_function),
-        @model_property_function(:scoring_function),
+        @model_property_function(:user_opinion_function),
+        @model_property_function(:rating_metric),
         @model_property_function(:model_type),
         @model_property_function(:seed),
         @rating_correlation(quality, end_position),
@@ -66,28 +66,28 @@ score_func = @post_property_function(:score)
         (
             view_model,
             Dict(
-                :scoring_function => [scoring_custom],
+                :rating_metric => [scoring_custom],
                 :rating_factor => [1:2:4...],
                 :votes_exp => [7:3:15...],
                 :time_exp => [0.3:0.3:1...],
-                :user_rating_function => user_rating,
+                :user_opinion_function => user_rating,
             ),
         ),
         (
             random_model,
-            Dict(:user_rating_function => [user_rating, user_rating_exp]),
+            Dict(:user_opinion_function => [user_rating, user_rating_exp]),
         ),
-        (downvote_model, Dict()),
-        (standard_model, Dict()),
+        (up_and_downvote_system, Dict()),
+        (upvote_system, Dict()),
     ]
 
     model_init_params2 = [(
-        standard_model,
+        upvote_system,
         Dict(
-            :scoring_function => [
-                scoring_activation,
+            :rating_metric => [
+                metric_activation,
                 scoring_reddit,
-                scoring_hacker_news,
+                metric_hacker_news,
                 scoring_best,
             ],
         ),

@@ -52,7 +52,7 @@ function User(
 end
 
 
-function standard_model(;
+function upvote_system(;
     activity_distribution = Beta(2.5,5),
     agent_step! = agent_step!,
     concentration_distribution = Poisson(50),
@@ -61,7 +61,7 @@ function standard_model(;
     gravity = 0,
     init_score = 0,
     model_step! = model_step!,
-    model_type = standard_model,
+    model_type = upvote_system,
     new_posts_per_step = 10,
     new_users_per_step = 0,
     PostType = Post,
@@ -71,7 +71,7 @@ function standard_model(;
         I(quality_dimensions),
     ),
     relevance_gravity = 0,
-    scoring_function = scoring,
+    rating_metric = scoring,
     seed = 0,
     sorted = 0,
     start_posts = 100,
@@ -79,7 +79,7 @@ function standard_model(;
     steps = 100,
     user = user(),
     UserType = User,
-    user_rating_function = user_rating_exp2,
+    user_opinion_function = consensus,
     vote_evaluation = vote_difference,
     voting_probability_distribution = Beta(2.5,5),
     qargs...,
@@ -120,7 +120,7 @@ function standard_model(;
     # Presorting posts
 
     user_ratings = []
-    tmp_properties = @dict(user_rating_function, time, quality_dimensions, relevance_gravity)
+    tmp_properties = @dict(user_opinion_function, time, quality_dimensions, relevance_gravity)
     tmp_model = ABM(UserType; properties = tmp_properties)
     scores = []
     for i = 1:start_posts
@@ -141,7 +141,7 @@ function standard_model(;
     rating_distribution = []
     for i in 1:length(p_qual[1,:])
         for j in 1:length(u_qual[1,:])
-            push!(rating_distribution, user_rating_function(p_qual[:,i],u_qual[:,j]))
+            push!(rating_distribution, user_opinion_function(p_qual[:,i],u_qual[:,j]))
         end
     end
 
@@ -172,7 +172,7 @@ function standard_model(;
         relevance_gravity,
         rng_model,
         rng_user_posts,
-        scoring_function,
+        rating_metric,
         seed,
         sorted,
         start_posts,
@@ -182,7 +182,7 @@ function standard_model(;
         user,
         UserType,
         user_ratings,
-        user_rating_function,
+        user_opinion_function,
         vote_evaluation,
         voting_probability_distribution,
     )
@@ -219,7 +219,7 @@ function agent_step!(user, model)
     if rand(model.rng_user_posts) < user.activity_probability
         for i = 1:minimum([user.concentration, model.n])
             post = model.posts[model.ranking[i]]
-            if model.user_rating_function(
+            if model.user_opinion_function(
                 post.quality,
                 user.quality_perception,
             ) > rating_quantile(model,1 - user.vote_probability) && !in(post, user.voted_on)
@@ -228,7 +228,7 @@ function agent_step!(user, model)
 
                 push!(
                     model.user_ratings,
-                    model.user_rating_function(
+                    model.user_opinion_function(
                         post.quality,
                         user.quality_perception,
                     ),
@@ -246,7 +246,7 @@ end
 function model_step!(model)
     for i = 1:model.n
         model.posts[i].score =
-            model.scoring_function(model.posts[i], model.time, model)
+            model.rating_metric(model.posts[i], model.time, model)
     end
 
     for i = 1:model.new_posts_per_step

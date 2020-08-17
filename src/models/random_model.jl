@@ -4,7 +4,7 @@ function random_model(;
     deviation_function = mean_deviation,
     qargs...,
 )
-    standard_model(;
+    upvote_system(;
         model_step! = model_step!,
         random_scoring_factor = random_scoring_factor,
         deviation_function = deviation_function,
@@ -16,7 +16,7 @@ end
 function random_model_step!(model)
     for i = 1:model.n
         model.posts[i].score =
-            model.scoring_function(model.posts[i], model.time, model)
+            model.rating_metric(model.posts[i], model.time, model)
     end
 
     for i = 1:model.new_posts_per_step

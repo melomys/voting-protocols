@@ -7,7 +7,7 @@ LogLevel(-1000)
 
 include("../src/models/model.jl")
 include("../src/model_factory.jl")
-include("../src/models/downvote_model.jl")
+include("../src/models/up_and_downvote_system.jl")
 include("../src/models/view_model.jl")
 include("../src/models/random_model.jl")
 include("../src/evaluation.jl")
@@ -27,12 +27,12 @@ model_params = [
     (
         view_model,
         Dict(
-            :scoring_function => [scoring_reddit],
+            :rating_metric => [scoring_reddit],
             :start_posts => start_posts,
             :start_users => start_users,
             :init_score => 0,
             :new_posts_per_step => [3,5],
-            :user_rating_function => [user_rating_exp],
+            :user_opinion_function => [user_rating_exp],
             :UserType => ViewUser,
             :sorted => 0,
             :equal_posts => false,
@@ -47,7 +47,7 @@ model_properties = [
     ranking_rating,
     ranking_rating_relative,
     @model_property_function(:model_id),
-    @model_property_function(:scoring_function),
+    @model_property_function(:rating_metric),
     @model_property_function(:seed),
     @get_post_data(:score, identity),
     @get_post_data(:votes, identity),
@@ -77,12 +77,12 @@ end
 
 
 colors = Dict(
-    "scoring_activation_agent_step!" => "blue",
+    "metric_activation_agent_step!" => "blue",
     "scoring_agent_step!" => "orange",
     "scoring_best_agent_step!" => "green",
-    "scoring_view_view_agent_step!" => "violet",
-    "scoring_view_agent_step!" => "cyan",
-    "scoring_view_no_time_view_agent_step!" => "red",
+    "metric_view_view_agent_step!" => "violet",
+    "metric_view_agent_step!" => "cyan",
+    "metric_view_no_time_view_agent_step!" => "red",
     "scoring_best_view_agent_step!" => "magenta",
     "scoring_worst_view_agent_step!" => "black",
 )
@@ -147,7 +147,7 @@ for model in models
         rp,
         model_df[!, :step],
         model_df[!, :ranking_rating],
-        label = string(model.scoring_function) *
+        label = string(model.rating_metric) *
                 "_" *
                 string(model.agent_step!),
     )

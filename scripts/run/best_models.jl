@@ -3,44 +3,44 @@ println(nprocs())
 @time @everywhere using VotingProtocols
 
 model_init_params = [(
-    [downvote_model],
+    [up_and_downvote_system],
     Dict(
-        :scoring_function => [scoring_hacker_news, scoring_view, scoring_activation],
+        :rating_metric => [metric_hacker_news, metric_view, metric_activation],
         :init_score => [10, 20,30,40],
         :gravity => [0,0.5],
         :deviation_function => [no_deviation, mean_deviation],
         :vote_evaluation => [vote_difference, wilson_score],
         :relevance_gravity => 0,
-        :user_rating_function => user_rating_exp2,
+        :user_opinion_function => consensus,
     )),(
-    [downvote_model],
+    [up_and_downvote_system],
     Dict(
-        :scoring_function => scoring_reddit_hot,
+        :rating_metric => metric_reddit_hot,
         :init_score => 30000,
         :deviation_function => [no_deviation, mean_deviation],
         :vote_evaluation => [vote_difference, wilson_score],
         :relevance_gravity => 0,
-        :user_rating_function => user_rating_exp2,
+        :user_opinion_function => consensus,
     )
     ),(
-    [downvote_model, standard_model],
+    [up_and_downvote_system, upvote_system],
     Dict(
-        :scoring_function => [scoring_hacker_news, scoring_view, scoring_activation],
+        :rating_metric => [metric_hacker_news, metric_view, metric_activation],
         :init_score => [10, 20,30,40],
         :gravity => [2],
         :deviation_function => [no_deviation, mean_deviation],
         :vote_evaluation => [vote_difference, wilson_score],
         :relevance_gravity => 2,
-        :user_rating_function => user_rating_exp2,
+        :user_opinion_function => consensus,
     )),(
-    [downvote_model,standard_model],
+    [up_and_downvote_system,upvote_system],
     Dict(
-        :scoring_function => scoring_reddit_hot,
+        :rating_metric => metric_reddit_hot,
         :init_score => 30000,
         :deviation_function => [no_deviation, mean_deviation],
         :vote_evaluation => [vote_difference, wilson_score],
         :relevance_gravity => 2,
-        :user_rating_function => user_rating_exp2,
+        :user_opinion_function => consensus,
     )
     ),
 ]
@@ -72,7 +72,7 @@ evaluation_functions = [
     @model_property_function(:model_id),
     @model_property_function(:model_type),
     @model_property_function(:quality_dimensions),
-    @model_property_function(:scoring_function),
+    @model_property_function(:rating_metric),
     @model_property_function(:seed),
     @model_property_function(:sorted),
     @model_property_function(:start_posts),
@@ -81,7 +81,7 @@ evaluation_functions = [
     @model_property_function(:gravity),
     @model_property_function(:relevance_gravity),
     @model_property_function(:user),
-    @model_property_function(:user_rating_function),
+    @model_property_function(:user_opinion_function),
     @model_property_function(:voting_probability_distribution),
     @model_property_function(:deviation_function),
     @model_property_function(:vote_evaluation),

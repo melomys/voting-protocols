@@ -29,88 +29,30 @@ include("../../src/export_r.jl")
 model_init_params = [
     (:all_models, Dict(
     :steps => 100,
-    :sorted => 1,
-    :relevance_gravity => [0, 1.8]
+    :relevance_gravity => [0],
+        :gravity => 1.8,
     #:user => [[(0.9, user()),(0.1, extreme_user(1))], [(0.9,user()),(0.1, extreme_user(-1))]]
     #:quality_distribution => MvNormal(zeros(3), I(3)*10.0)
     )),
     (
-        [downvote_model],
-        Dict(:scoring_function => [scoring_hacker_news],
+        [up_and_downvote_system],
+        Dict(:rating_metric => [metric_activation, metric_hacker_news, metric_view],
         :init_score => 30,
         :deviation_function => [no_deviation],
     )),
-    #(standard_model, Dict(
-#    :scoring_function => scoring_activation,
-#    :user_rating_function => [user_rating_exp2],
+    #(upvote_system, Dict(
+#    :rating_metric => metric_activation,
+#    :user_opinion_function => [consensus],
 #    :init_score => [30]
 #    ))
     ]
-
-
-model_init_params = [(
-        [standard_model,downvote_model],
-        Dict(
-            :scoring_function => [scoring_view, scoring_hacker_news, scoring_activation, scoring_reddit_hot],
-            :init_score => [0, 70, 30000],
-        ),
-
-    ),
-    (
-    :all_models, Dict(
-        :deviation_function => [no_deviation, mean_deviation],
-        :vote_evaluation => [vote_difference, vote_partition, wilson_score],
-        :relevance_gravity => [0,2],
-        :gravity => [0,2],
-        :user_rating_function => [user_rating_exp2, user_rating_dist2],
-    ),
-    )
-]
-
-model_init_params = [(
-        downvote_model,
-        Dict(
-            :scoring_function => [scoring_view],
-            :init_score => [3000000],
-            :gravity => [2],
-        ),
-
-    ),
-    (downvote_model,
-    Dict(
-        :scoring_function => scoring_reddit_hot,
-        :init_score => [0],
-    )
-    ),
-    (
-    :all_models, Dict(
-        :deviation_function => [no_deviation],
-    ),
-    )
-]
-
-
-d1 = MvNormal(ones(3), I(3))
-d2 = MvNormal([-4,0,5],[1 0.5 0.9; 0.5 1 0.1;0.9 0.1 1])
-d3 = MvNormal([-4,0,5],[1 0.1 0; 0.1 1 0; 0 0 1])
-d4 = MvNormal([0,0,0],[1 0.5 0.9; 0.5 1 0.1;0.9 0.1 1])
-
-model_init_params = [default_models...,
-    (
-        :all_models,
-        Dict(
-            :quality_distribution => [d1,d2,d3,d4],
-        ),
-    ),
-]
-
 
 seed_ = abs(rand(Int))
 
 seed_ = 3
 
-models = create_models(default_models;seed = seed_)
-
+models = create_models(model_init_params;seed = seed_)
+"""
 model_dfs, corr_df = collect_model_data(
 model_init_params,
 default_model_properties,
@@ -118,7 +60,7 @@ default_evaluation_functions,
 1)
 
 export_rds(corr_df, model_dfs, "metrics")
-
+"""
 data = []
 plots = []
 rp = Plots.plot()
@@ -177,7 +119,7 @@ for model in models
             rp,
             model_df[!, :step],
             model_df[!, :ndcg],
-            label = string(model.scoring_function) *
+            label = string(model.rating_metric) *
                     "_" *
                     string(model.agent_step!),
         )
@@ -190,8 +132,8 @@ for model in models
         )
 
         push!(data, (agent_df, model_df))
-        push!(plots, p)
-        push!(plots, vp)
+        push!(plots,p)
+        #push!(plots, vp)
 end
 
-plot(rpr,rp ,layout = (2, 1), legend = false)
+plot(plots...,layout = (length(plots), 1), legend = false)

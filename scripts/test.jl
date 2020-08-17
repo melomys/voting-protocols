@@ -7,7 +7,7 @@ LogLevel(-1000)
 
 include("../src/models/model.jl")
 include("../src/model_factory.jl")
-include("../src/models/downvote_model.jl")
+include("../src/models/up_and_downvote_system.jl")
 include("../src/models/view_model.jl")
 include("../src/models/random_model.jl")
 include("../src/evaluation.jl")
@@ -24,21 +24,21 @@ seed = abs(rand(Int))
 
 model_params3 = [
     (
-        standard_model,
+        upvote_system,
         Dict(
-            :scoring_function => [scoring],
+            :rating_metric => [scoring],
             :rating_factor => 2,
             :start_posts => start_posts,
             :start_users => start_users,
-            :user_rating_function => [user_rating_dist1],
+            :user_opinion_function => [user_rating_dist1],
             :user => extreme_user(-20),
             :init_score => 0,
             :sorted => [0,0.5,1]
         ),
     ),
     (
-        downvote_model,
-        Dict(:user_rating_function => user_rating,
+        up_and_downvote_system,
+        Dict(:user_opinion_function => user_rating,
 #        :model_step! => random_model_step!,
         :deviation_function => [mean_deviation, std_deviation],
         :rating_factor => 1,
@@ -78,12 +78,12 @@ end
 
 
 colors = Dict(
-    "scoring_activation_agent_step!" => "blue",
+    "metric_activation_agent_step!" => "blue",
     "scoring_agent_step!" => "orange",
     "scoring_best_agent_step!" => "green",
-    "scoring_view_view_agent_step!" => "violet",
-    "scoring_view_agent_step!" => "cyan",
-    "scoring_view_no_time_view_agent_step!" => "red",
+    "metric_view_view_agent_step!" => "violet",
+    "metric_view_agent_step!" => "cyan",
+    "metric_view_no_time_view_agent_step!" => "red",
     "scoring_best_view_agent_step!" => "magenta",
     "scoring_worst_view_agent_step!" => "black",
 )
@@ -158,7 +158,7 @@ for model in models3
         rp,
         model_df[!, :step],
         model_df[!, :ranking_rating],
-        label = string(model.scoring_function) *
+        label = string(model.rating_metric) *
                 "_" *
                 string(model.agent_step!),
     )
@@ -189,9 +189,9 @@ model_init_params = [
         ),
     ),
     (
-        standard_model,
+        upvote_system,
         Dict(
-            :scoring_function => [scoring_hacker_news, scoring_reddit],
+            :rating_metric => [metric_hacker_news, scoring_reddit],
             :rating_factor => rat_fac,
         ),
     ),

@@ -5,11 +5,11 @@ model_init_params = [
     (
         :all_models,
         Dict(
-            :user_rating_function => [
+            :user_opinion_function => [
                 user_rating_exp,
                 user_rating,
-                user_rating_exp2,
-                user_rating_dist2,
+                consensus,
+                dissent,
             ],
             #:activity_distribution => [Beta(2,5,5), Beta(1,5), Beta(1, 10), Beta(2.5,10, Beta(5,10), Beta(7.5,10))],
             #:voting_probability_distribution => [Beta(2,5,5), Beta(1,5), Beta(1, 10), Beta(2.5,10, Beta(5,10), Beta(7.5,10))]
@@ -24,9 +24,9 @@ model_init_params = [
         ),
     ),
     (
-        [standard_model, random_model],
+        [upvote_system, random_model],
         Dict(
-            :scoring_function => [scoring_activation, scoring_hacker_news],
+            :rating_metric => [metric_activation, metric_hacker_news],
             :init_score => [0:10:100... ],
             :deviation_function => [mean_deviation, std_deviation],
         ),
@@ -34,18 +34,18 @@ model_init_params = [
     (
         view_model,
         Dict(
-            :scoring_function =>
-                [scoring_view_activation, scoring_view, scoring_view_exp],
+            :rating_metric =>
+                [metric_view_metric_activation, metric_view, metric_view_exp],
         ),
     ),
     (
-        downvote_model,
-        Dict(:scoring_function => [scoring_reddit_hot, scoring_reddit_best]),
+        up_and_downvote_system,
+        Dict(:rating_metric => [metric_reddit_hot, scoring_reddit_best]),
     ),
     (
-        standard_model,
+        upvote_system,
         Dict(
-            :scoring_function => [scoring_best, scoring_worst, scoring_random],
+            :rating_metric => [scoring_best, scoring_worst, scoring_random],
         ),
     ),
 ]

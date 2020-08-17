@@ -109,7 +109,7 @@ function posts_with_no_views(model, model_df)
 end
 
 quality_sum(model, model_df) = sum(map(
-    x -> model.user_rating_function(x.quality, ones(model.quality_dimensions)),
+    x -> model.user_opinion_function(x.quality, ones(model.quality_dimensions)),
     model.posts,
 ))
 

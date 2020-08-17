@@ -14,7 +14,7 @@ include("../../src/models/model.jl")
 include("../../src/model_factory.jl")
 include("../../src/models/view_model.jl")
 include("../../src/models/random_model.jl")
-include("../../src/models/downvote_model.jl")
+include("../../src/models/up_and_downvote_system.jl")
 include("../../src/evaluation.jl")
 include("../../src/data_collection.jl")
 include("../../src/scoring.jl")
@@ -46,10 +46,10 @@ model_init_params2 = [
     (
         :all_models,
         Dict(
-            :user_rating_function => [
+            :user_opinion_function => [
                 user_rating_exp,
                 user_rating,
-                user_rating_exp2,
+                consensus,
                 user_rating_dist1,
             ],
             #:activity_distribution => [Beta(2,5,5), Beta(1,5), Beta(1, 10), Beta(2.5,10, Beta(5,10), Beta(7.5,10))],
@@ -65,9 +65,9 @@ model_init_params2 = [
         ),
     ),
     (
-        [standard_model, random_model],
+        [upvote_system, random_model],
         Dict(
-            :scoring_function => [scoring_activation, scoring_hacker_news],
+            :rating_metric => [metric_activation, metric_hacker_news],
             :init_score => [0:10:100],
             :deviation_function => [mean_deviation, std_deviation],
         ),
@@ -75,29 +75,29 @@ model_init_params2 = [
     (
         view_model,
         Dict(
-            :scoring_function =>
-                [scoring_view_activation, scoring_view, scoring_view_exp],
+            :rating_metric =>
+                [metric_view_metric_activation, metric_view, metric_view_exp],
         ),
     ),
     (
-        downvote_model,
-        Dict(:scoring_function => [scoring_reddit_hot, scoring_reddit_best]),
+        up_and_downvote_system,
+        Dict(:rating_metric => [metric_reddit_hot, scoring_reddit_best]),
     ),
     (
-        standard_model,
+        upvote_system,
         Dict(
-            :scoring_function => [scoring_best, scoring_worst, scoring_random],
+            :rating_metric => [scoring_best, scoring_worst, scoring_random],
         ),
     ),
 ]
 
 
 model_init_params_user = [(
-    standard_model,
+    upvote_system,
     Dict(
-    :scoring_function => scoring_activation,
+    :rating_metric => metric_activation,
     :init_score => 10,
-    :user_rating_function => [user_rating_exp, user_rating_exp2, user_rating_dist2],
+    :user_opinion_function => [user_rating_exp, consensus, dissent],
     :concentration_distribution => [Uniform(10,70), Uniform(10, 100), Uniform(30,70), Uniform(30,100), Uniform(70,100)],
     :activity_voting_probability_distribution => [MvLogNormal(MvNormal([-2, 0], [1.0 0.8; 0.8 1.0])),
     MvLogNormal(MvNormal([-2, 0], [1.0 0.8; 0.8 1.0])),MvLogNormal(MvNormal([-2, 0], [1.0 0.8; 0.8 1.0])),
@@ -109,17 +109,17 @@ model_init_params_user = [(
 )]
 
 model_init_params_rating_function = [(
-    downvote_model,
+    up_and_downvote_system,
     Dict(
-    :scoring_function => scoring_reddit_hot,
-    :user_rating_function => [user_rating, user_rating_exp, user_rating_exp2, user_rating_dist2]
+    :rating_metric => metric_reddit_hot,
+    :user_opinion_function => [user_rating, user_rating_exp, consensus, dissent]
     )
 )]
 
 model_init_params_concentration = [(
-    standard_model,
+    upvote_system,
     Dict(
-    :scoring_function => scoring_reddit_hot,
+    :rating_metric => metric_reddit_hot,
     :concentration_distribution => [Uniform(10,70), Uniform(10, 100), Uniform(30,70), Uniform(30,100), Uniform(70,100)],
     )
 )]

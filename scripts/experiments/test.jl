@@ -16,14 +16,14 @@ model_init_params = [
     #:quality_distribution => MvNormal(zeros(3), I(3)*10.0)
     )),
     (
-        [downvote_model],
-        Dict(:scoring_function => [scoring_hacker_news],
+        [up_and_downvote_system],
+        Dict(:rating_metric => [metric_hacker_news],
         :init_score => 30,
         :deviation_function => [no_deviation],
     )),
-    #(standard_model, Dict(
-#    :scoring_function => scoring_activation,
-#    :user_rating_function => [user_rating_exp2],
+    #(upvote_system, Dict(
+#    :rating_metric => metric_activation,
+#    :user_opinion_function => [consensus],
 #    :init_score => [30]
 #    ))
 ]
@@ -32,29 +32,29 @@ model_init_params = [
     (
         :all_models,
         Dict(
-            :user_rating_function => [user_rating_exp2, user_rating_dist2],
+            :user_opinion_function => [consensus, dissent],
             :relevance_gravity => [0, 1.8]
         ),
     ),
     (
-        standard_model,
+        upvote_system,
         Dict(
-            :scoring_function => [scoring_activation, scoring_hacker_news, scoring_view, scoring_view_activation],
+            :rating_metric => [metric_activation, metric_hacker_news, metric_view, metric_view_metric_activation],
             :init_score => [-10:10:30...],
             :deviation_function => [no_deviation, mean_deviation]
         ),
     ),
     (
-        downvote_model,
+        up_and_downvote_system,
         Dict(
-            :scoring_function => [scoring_reddit_hot, scoring_reddit_best],
+            :rating_metric => [metric_reddit_hot, scoring_reddit_best],
             :deviation_function => [no_deviation, mean_deviation]
         )
     ),
     (
-        standard_model,
+        upvote_system,
         Dict(
-            :scoring_function => [scoring_random],
+            :rating_metric => [scoring_random],
         ),
     ),
 ]

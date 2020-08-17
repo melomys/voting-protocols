@@ -1,26 +1,26 @@
 model_configs = [
     (
-        downvote_model,
+        up_and_downvote_system,
         &Dict&(
-            &:scoring_function& => scoring_reddit_hot,
+            &:rating_metric& => metric_reddit_hot,
             &:deviation_function& => [
                 no_deviation,
                 std_deviation],
         ),
     ),
     (
-        [standard_model, downvote_model],
+        [upvote_system, up_and_downvote_system],
         &Dict&(
-            &:scoring_function& => [
-                scoring_activation,
-                scoring_hacker_news],
+            &:rating_metric& => [
+                metric_activation,
+                metric_hacker_news],
             &:gravity& => [$0.5$, $1.0$, $1.5$, $2.0$],
         ),
     ),
     (
         &:all_models&,
         &Dict&(
-            &:user_rating_function& => user_rating_exp
+            &:user_opinion_function& => consensus
         ),
     ),
 ]

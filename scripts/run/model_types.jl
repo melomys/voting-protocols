@@ -4,12 +4,12 @@ println(nprocs())
 
 
 model_init_params = [(
-        [standard_model, downvote_model
+        [upvote_system, up_and_downvote_system
         Dict(
-            :scoring_function => [scoring_view, scoring_hacker_news, scoring_reddit]
+            :rating_metric => [metric_view, metric_hacker_news, scoring_reddit]
 # muss noch richtig gesetzt werden            :init_score => [0:10:70],
 # und gravität auch
-            :user_rating_function => user_rating_exp2,
+            :user_opinion_function => consensus,
         ),
     ),
 ]

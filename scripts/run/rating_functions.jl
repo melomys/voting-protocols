@@ -7,9 +7,9 @@ model_init_params = [default_models...,
     (
         :all_models,
         Dict(
-            :user_rating_function => [
-                user_rating_exp2,
-                user_rating_dist2
+            :user_opinion_function => [
+                consensus,
+                dissent
             ],
         ),
     ),

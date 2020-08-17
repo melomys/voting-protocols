@@ -6,23 +6,23 @@ println(nprocs())
 
 model_init_params = [
     (
-        standard_model,
+        upvote_system,
         Dict(
-            :scoring_function => [scoring_activation],
+            :rating_metric => [metric_activation],
             :init_score => [30],
         ),
     ),
     (
-        downvote_model,
+        up_and_downvote_system,
         Dict(
-            :scoring_function => [scoring_reddit_hot],
-            :user_rating_function => [user_rating_dist2],
+            :rating_metric => [metric_reddit_hot],
+            :user_opinion_function => [dissent],
         ),
     ),
     (
         random_model,
         Dict(
-            :scoring_function => [scoring_hacker_news],
+            :rating_metric => [metric_hacker_news],
         )
     ),
     (:all_models, Dict(:steps => [5, 10, 30, 50, 100, 300, 500])),

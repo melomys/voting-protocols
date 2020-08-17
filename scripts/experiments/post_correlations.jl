@@ -19,7 +19,7 @@ steps = 30
 
 
 function quality(post,model,model_df)
-    model.user_rating_function(post.quality, ones(model.quality_dimensions))
+    model.user_opinion_function(post.quality, ones(model.quality_dimensions))
 end
 
 function end_position(post, model, model_df)
@@ -43,9 +43,9 @@ sort!(evaluation_functions, by = x -> string(x))
 model_init_params = [(
     view_model,
     Dict(
-        :scoring_function => [scoring],
+        :rating_metric => [scoring],
         :agent_step! => view_agent_step!,
-        :user_rating_function => user_rating,
+        :user_opinion_function => user_rating,
         :rating_factor => [0],
         :init_score => [10]
     ),
