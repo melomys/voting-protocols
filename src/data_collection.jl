@@ -1,7 +1,21 @@
 import Base
 using Logging
 using Distributed
+"""
+    collect_model_data(
+        model_init_params,
+        model_properties,
+        evaluation_functions,
+        [iterations = 10]
 
+runs a simulation for all model defined in `model_init_params`.
+
+`model_properties`  : defines iteration evaluation functions
+`evaluation_functions`: defines model evaluation functions
+`iterations` : all models are simulated `iterations` times
+
+Returns evaluated dataframes for the simulated models
+"""
 function collect_model_data(
     model_init_params,
     model_properties,
@@ -10,8 +24,10 @@ function collect_model_data(
 )
 
     run_id = rand(1:2147483647)
+
+    #creation result dataframe
     models = create_models(model_init_params)
-    df = init_correlation_dataframe(
+    df = init_result_dataframe(
         evaluation_functions,
         models,
         model_properties,
@@ -27,6 +43,7 @@ function collect_model_data(
 
             for j = 1:length(models)
                 @info "Step $i: $j"
+                # run model
                 tmp_model = models[j]
                 agent_df, model_df = run!(
                     tmp_model,
@@ -43,12 +60,9 @@ function collect_model_data(
                 ab_model_df = model_df
                 push!(df, map(x -> x(ab_model, ab_model_df), evaluation_functions))
             end
-
-            if i%100 == 0
-                export_rds(df, model_dfs, "$(i)_$(run_id)_tmp")
-            end
         end
     catch e
+        # don't throw away the simulation results, when julia is interrupted
         if isa(e, InterruptException)
             @info "Interrupted"
         else
@@ -69,7 +83,9 @@ function Base.getproperty(value, name::Symbol, default_value)
 end
 
 """
-macro to create function, that collects post data over the given aggretation function
+    @get_post_data(property, func)
+
+macro to create function, that collects post data over the given aggregation function
     the name function is namend after the collected post property and the given aggregation function
         the returned function can be given to the run! function
 """
@@ -89,8 +105,10 @@ end
 
 
 """
+    @model_property_function(property,[func = identiy])
+
 macro to create a function to return the given property from a model,
-    the function is named after the porperty
+    the function is named after the property
 """
 macro model_property_function(property, func = identity)
     if eval(func) === identity
@@ -114,9 +132,12 @@ macro model_property_function(property, func = identity)
 end
 
 
-""" returns dataframe, each row holds the given parameter over time of one post.
-    time in the dataframe is relative to the creation of the post.
-    the dataframe is right-padded with the last value of each post/NaN.
+"""
+    relative_post_data(data)
+
+Returns dataframe, each row holds the given parameter over time of one post.
+time in the dataframe is relative to the creation of the post.
+the dataframe is right-padded with the last value of each post/NaN.
 """
 function relative_post_data(data)
     padding = NaN
@@ -138,8 +159,10 @@ function relative_post_data(data)
     DataFrame(right_padded)
 end
 
-""".
-returns dataframe, each column holds the given parameter over time of one post.
+"""
+    post_data(data)
+
+Returns dataframe, each column holds the given parameter over time of one post.
 the dataframe ist left-padded with NaN.
 """
 function post_data(data)
@@ -154,22 +177,12 @@ function post_data(data)
 end
 
 
+"""
+    init_result_dataframe(functions, models, model_properties)
 
-function columnname(model_params)
-    string(reduce(
-        (x, y) -> x * "_" * y,
-        map(x -> string(model_params[x]), collect(keys(model_params))),
-    ))
-end
-
-function init_result_dataframe(models_params)
-    DataFrame(Dict(map(
-        x -> (columnname(Dict(x)), []),
-        get_params(model_init_params),
-    )))
-end
-
-function init_correlation_dataframe(functions, models, model_properties)
+Returns initialized dataframe to collect data from the evaluation functions
+"""
+function init_result_dataframe(functions, models, model_properties)
     tmp_model = models[1]
     agent_df, model_df = run!(
         tmp_model,
@@ -196,43 +209,3 @@ function init_correlation_dataframe(functions, models, model_properties)
 
     return DataFrame(corr_dict)
 end
-
-macro post_property_function(property)
-    name = Symbol("", eval(property))
-    return :(function $name(post, model, model_df)
-        post.$name
-    end)
-end
-
-
-macro rating_correlation(function1, function2)
-    name = Symbol("corr_", eval(function1), "_", eval(function2))
-    return :(function $name(model, model_df)
-        v1 = []
-        v2 = []
-        for post in model.posts
-            push!(v1, $function1(post, model, model_df))
-            push!(v2, $function2(post, model, model_df))
-        end
-        return cor(v1, v2)
-    end)
-end
-
-macro model_df_column(col)
-    name = Symbol(eval(col), "_all")
-    return :(function $name(model, model_df)
-    model_df[!,$col]
-    end)
-end
-
-function unary_columns(df)
-    df[!, filter(x -> (typeof(df[1, x]) <: Union{Float64,Int,Bool}), names(df))]
-end
-
-
-"""
-Default Parameters
-"""
-
-timestamp_func = @post_property_function(:timestamp)
-score_func = @post_property_function(:score)

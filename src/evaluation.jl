@@ -1,6 +1,10 @@
 # Per iteration
-# parameters: model
 
+"""
+    dcg(model)
+
+Return the DCG of the rating metric
+"""
 function dcg(model)
     ord = zscore(map(post -> relevance(post, model), model.posts))
     dcg = 0
@@ -10,6 +14,11 @@ function dcg(model)
     dcg
 end
 
+"""
+    rdcg(model)
+
+Return the nDCG of the rating metric
+"""
 function ndcg(model)
     ord = zscore(map(post -> relevance(post,model), model.posts))
     by_quality = sortperm(ord, by= x -> -x)
@@ -20,17 +29,23 @@ function ndcg(model)
     dcg(model)/bdcg
 end
 
+"""
+    spearman(model)
+
+Return the spearman rho of the rating metric
+"""
 function spearman(model)
     ord = (map(post -> relevance(post, model), model.posts))
 
     by_quality = sortperm(ord, by= x -> -x)
-    if model.time < 3
-        @info "Ranking: $(model.ranking)"
-        @info "ByQualtiy: $by_quality"
-    end
     cor(model.ranking, by_quality)
 end
 
+"""
+    gini(model)
+
+Returns the gini-coefficient of the rating metric, calculated by the views of the posts
+"""
 function gini(model)
 
     posts = model.posts
@@ -53,7 +68,11 @@ function gini(model)
 
 end
 
+"""
+    @top_k_gini(k)
 
+Returns a function with the name top_<`k`>_gini, that calculates the gini-coefficient of the `k` best quality posts in the model
+"""
 macro top_k_gini(k)
     name = Symbol("gini_top_",eval(k))
     return :(function $name(model)
@@ -72,9 +91,15 @@ macro top_k_gini(k)
         s/(2*n*(length(posts)-1))
     end)
 end
-# per model
-# parameters: model, model_df
 
+# Model evaluation
+
+"""
+    @area_under(parameter)
+
+Returns a function with the signature area_under_<`parameter`>(model, model_df),
+that aggregates the given parmeter with the trapezoidial rule
+"""
 macro area_under(parameter)
     name = Symbol("area_under_", eval(parameter))
     return :(function $name(model,model_df)
@@ -82,119 +107,83 @@ macro area_under(parameter)
         end)
 end
 
+"""
+    posts_with_no_views(model, model_df)
 
-function area_under_curve(model, model_df)
-    trapezoidial_rule(model_df[!, :ndcg])/model.steps
-end
-
-function area_under_spearman(model,model_df)
-    trapezoidial_rule(model_df[!,:spearman])/model.steps
-end
-
-
-function area_under_gini(model, model_df)
-    trapezoidial_rule(model_df[!, :gini])/model.steps
-end
-
-macro area_under_gini_top_k(k)
-    name = Symbol("area_under_gini_top_",eval(k))
-    return :(function $name(model, model_df)
-        trapezoidial_rule(model_df[!, Symbol("gini_top_", $k)])/model.steps
-    end)
-end
-
+Returns the percentage of posts with no views in the model
+"""
 function posts_with_no_views(model, model_df)
     no_views = filter(x -> x.views == 0, model.posts)
     return length(no_views)/length(model.posts)
 end
 
+"""
+    quality_sum(model, model_df)
+
+Return the sum of all postquality in the model
+"""
 quality_sum(model, model_df) = sum(map(
     x -> model.user_opinion_function(x.quality, ones(model.quality_dimensions)),
     model.posts,
 ))
 
+"""
+    @model_df_column(col)
 
-function mean_user_view(model, model_df)
-    mean(x -> length(x.viewed)/model.n, allagents(model))
+Macro to create a function with the name `col`, to select evaluate a column of the iteration evaluation dataframe
+"""
+macro model_df_column(col)
+    name = Symbol(eval(col), "_all")
+    return :(function $name(model, model_df)
+    model_df[!,$col]
+    end)
 end
 
-function mean_user_vote(model, model_df)
-    mean(x -> length(x.voted_on)/model.n,allagents(model))
-end
+"""
+    post_views(model, model_df)
 
+Returns the sum of all views of all posts
+"""
 function post_views(model, model_df)
     views = map(x -> x.views, model.posts)
     return views
 end
 
-function post_scores(model, model_df)
-    scores = map(x -> x.score, model.posts)
-    return hist_dataframe(scores, model)
-end
+"""
+    vote_count(model, model_df)
 
+Returns the sum of all upvotes of all posts
+"""
 vote_count(model, model_df) = sum(map(x -> x.votes, model.posts))
 
 
-
-# per post in models
-# parameters: post, model, model_df
-
-function end_position(post, model, model_df)
-    index = findfirst(isequal(post), model.posts)
-    findfirst(isequal(index), model.ranking)
-end
-
-function quality(post,model,model_df)
-    relevance(post,model)
-end
-
 # Helpers
 
+"""
+    trapezoidial_rule(points)
 
+Returns the size under the area of the points calculated witth the trapezoidial rule
+"""
 function trapezoidial_rule(points)
     sum(points) - 1 / 2 * (points[1] + points[end])
 end
 
 
 """
-Sigmoid function
+    sigmoid(x [a=1,b=1,c=0]
+
+logistic sigmoid function
 """
 sigmoid(x; a = 1, b = 1, c = 0) = a/(1+ℯ^(-x*0.5*b)) - c
 
 
+"""
+    zscore(data)
+
+Returns zscored data
+"""
 function zscore(data)
     μ = mean(data)
     σ = std(data)
     map(x -> (x - μ)/σ, data)
-end
-
-function hist_dataframe(array, model)
-    dic = Dict()
-    for i in 0:length(allagents(model))
-        dic[i] = length(filter(x -> x == i, array))
-    end
-    return DataFrame(dic)
-end
-
-
-"""
-calculates the index when the maximum of the given parameter is reached
-"""
-function index_maximum_reached(arr)
-    arr = filter(!isnan,arr)
-    maximum = arr[end]
-    if maximum == 0
-        return 1
-    elseif arr[end-1] < arr[end]
-        return length(arr)
-    else
-        last = maximum
-        for i in length(arr):-1:1
-            if arr[i] < last
-                return i
-            else
-                last = arr[i]
-            end
-        end
-    end
 end

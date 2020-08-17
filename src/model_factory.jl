@@ -1,3 +1,9 @@
+
+"""
+    grid_paramas(model_params[; seed = 1])
+
+Returns an array of parameterdict for every model configuration given in `model_params`
+"""
 function grid_params(model_params; seed = 1)
         models = []
         function rec(rest_keys, values, dic, model)
@@ -33,12 +39,13 @@ function grid_params(model_params; seed = 1)
 
         model_params = filter(x -> !(typeof(x[1]) <: Symbol), model_params)
         for model in model_params
-
+                # multiple definition of parameters
                 if typeof(model[1]) <: Vector
                         for m in model[1]
                                 props = add_dicts(model[2], all_models)
                                 rec(collect(keys(props)), [], props, m)
                         end
+                # simple definition of parameters
                 else
                         props = add_dicts(model[2], all_models)
                         rec(collect(keys(props)), [], props, model[1])
@@ -49,29 +56,21 @@ end
 
 
 
+"""
+    create_models(model_params[; seed =  1])
 
+Returns a list of models, from the configuration in `model_params`
+"""
 create_models(model_params; seed = 1) = map(x -> x[1](; x[2]...), grid_params(model_params; seed = seed))
 
 get_params(model_params) = map(x -> x[2], grid_params(model_params))
 
 
+"""
+    add_dicts(d_model, d_default)
 
-function param_count(param)
-        if typeof(param) <: Vector
-                length(param)
-        else
-                1
-        end
-end
-
-function model_count(model_params)
-        sum(map(
-                x -> reduce(*, map(param_count, collect(values(x)))),
-                map(x -> x[2], model_params),
-        ))
-end
-
-
+adding `d_model` and `d_default` together, overwriting entries from `d_default`, if keys are defined in both dicts
+"""
 function add_dicts(d_model, d_default)
         d_ret = copy(d_default)
         for key in keys(d_model)

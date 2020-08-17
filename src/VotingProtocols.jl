@@ -8,8 +8,8 @@ using RCall
 
 include("user_creation.jl")
 
-include("models/model.jl")
-include("models/downvote_model.jl")
+include("models/upvote_system.jl")
+include("models/up_and_downvote_system.jl")
 include("models/random_model.jl")
 include("models/view_model.jl")
 
