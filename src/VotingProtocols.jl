@@ -11,7 +11,6 @@ include("user_creation.jl")
 include("models/upvote_system.jl")
 include("models/up_and_downvote_system.jl")
 include("models/random_model.jl")
-include("models/view_model.jl")
 
 
 include("model_factory.jl")
