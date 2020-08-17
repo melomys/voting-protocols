@@ -10,7 +10,7 @@ include("user_creation.jl")
 
 include("models/upvote_system.jl")
 include("models/up_and_downvote_system.jl")
-
+include("models/random_deviation.jl")
 
 include("model_factory.jl")
 include("user_opinion.jl")
