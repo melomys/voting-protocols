@@ -13,8 +13,8 @@ include("models/up_and_downvote_system.jl")
 
 
 include("model_factory.jl")
-include("rating.jl")
-include("scoring.jl")
+include("user_opinion.jl")
+include("metric.jl")
 include("evaluation.jl")
 include("data_collection.jl")
 
