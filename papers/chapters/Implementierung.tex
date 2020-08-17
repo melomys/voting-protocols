@@ -7,9 +7,16 @@ Sämtliche in dieser Arbeit entwickelte Funktionalität ist in dem Paket \texttt
 
 \section{agent*innenbasierte Modellierung von Votingsystemen}
 
-Die User*innen werden als Agent*innen des Modells modelliert. Posts und die weiteren in Kapitel \ref{chapter:modell} beschriebenen Parameter werden als Parameter des Modells von Agents.jl gespeichert. 
+Die User*innen werden als Agent*innen des Modells modelliert. Posts, und die weiteren in Kapitel \ref{chapter:modell} beschriebenen Parameter, werden als Parameter des Modells von Agents.jl gespeichert. In der Implementierung stehen zwei Votingsysteme zur Verfügung:
 
-Das Modell wird für eine festgelegte Anzahl an Iterationen berechnet. Der Ablauf einer Simulation ist in Algorithm \ref{alg:model} beschrieben. Das Modell wird mit $U_N$ User*innen und ${P_{start}}_{N}$ Posts und sämtlichen weiteren Modellparametern initialisiert. In jedem Iterationsschritt wird für alle User*innen die definierte Agent*innenschrittfunktion (Abschnitt \ref{agentstep}) ausgeführt. Diese legt das Bewertungsverhalten der User*innen fest. Nach der Berechnung der User*innenaktionen wird in jedem Iterationsschritt die Modellschrittfunktion(Abschnitt \ref{modelstep}) ausgeführt und die definierten Iterationsevaluationsfunktionen (Abschnitt \ref{sec:auswertung}) aufgerufen. In dieser Funktion wird die Bewertungsmetrik angewendet und die Posts entsprechend angeordnet. Nach dem Durchlauf aller Iterationen werden schließlich die definierten Modellevaluationsfunktionen (Abschnitt \ref{sec:auswertung}) aufgerufen.
+\begin{table}[!htbp]
+	\begin{tabularx}{\textwidth}{llX}
+		\texttt{upvote\_system}& erlaubt Upvotes & $V_N = 1$\\
+		\texttt{up\_and\_downvote\_system} & erlaubt Up- und Downvotes & $V_N =2$ \\
+	\end{tabularx}
+\end{table}
+
+Das Modell wird für eine festgelegte Anzahl an Iterationen berechnet. Der Ablauf einer Simulation ist in Algorithm \ref{alg:model} beschrieben. Das Modell wird mit $U_N$ User*innen und ${P_{start}}_{N}$ Posts und sämtlichen weiteren Modellparametern initialisiert. In jedem Iterationsschritt wird für alle User*innen die definierte Agent*innenschrittfunktion (Abschnitt \ref{agentstep}) ausgeführt. Diese legt das Bewertungsverhalten der User*innen fest und ist für jedes Votingsystem unterschiedlich. Nach der Berechnung der User*innenaktionen wird in jedem Iterationsschritt die Modellschrittfunktion (Abschnitt \ref{modelstep}) ausgeführt und die definierten Iterationsevaluationsfunktionen (Abschnitt \ref{sec:auswertung}) aufgerufen. In dieser Funktion wird die Bewertungsmetrik angewendet und die Posts entsprechend angeordnet. Nach dem Durchlauf aller Iterationen werden schließlich die definierten Modellevaluationsfunktionen (Abschnitt \ref{sec:auswertung}) aufgerufen.
 
 \captionsetup[figure]{name=Algorithmus}
 \begin{algorithm}
@@ -34,7 +41,7 @@ Das Modell wird für eine festgelegte Anzahl an Iterationen berechnet. Der Ablau
 \label{agentstep}
 
 Die Agent*innenschrittfunkion wird in Algorithm \ref{alg:agentstep} beschrieben. 
-Für ein*e User*in $U$ wird zuerst berechnet ob sie in der aktuellen Iteration aktiv ist. Dies wird anhand der Aktivitätswahrscheinlichkeit $a_U$ berechnet. Ist $U$ aktiv werden so viele Posts von $U$ auf der Plattform betrachtet wie durch die Konzentration $k_U$ vorgegeben sind. Für jeden Post $P$ bildet sich $U$ mit der User*innenmeinungsfunktion der Meinungswert $m_{P,U}$ und bewertet wenn die in Abschnitt \ref{bewertungszufriedenheit} beschrieben Bedingungen erfüllt sind.
+Für ein*e User*in $U$ wird zuerst berechnet, ob sie in der aktuellen Iteration aktiv ist. Dies wird anhand der Aktivitätswahrscheinlichkeit $a_U$ berechnet. Ist $U$ aktiv, werden so viele Posts von $U$ auf der Plattform betrachtet, wie durch die Konzentration $k_U$ vorgegeben sind. Für jeden Post $P$ bildet sich $U$ mit der User*innenmeinungsfunktion den Meinungswert $m_{P,U}$ und bewertet $P$, wenn die in Abschnitt \ref{bewertungszufriedenheit} beschrieben Bedingungen erfüllt sind.
 
 \begin{algorithm}
 	\caption{Agent*innenschritt}
@@ -52,14 +59,12 @@ Für ein*e User*in $U$ wird zuerst berechnet ob sie in der aktuellen Iteration a
 \label{modelstep}
 
 Der Ablauf der Modellschrittfunktion ist in Algorithm \ref{alg:modelstep} dargestellt.
-Für jeden Post $P$ wird mit der Bewertungsmetrik $s_P = B(P,i_M)$ berechnet. Anschließend werden ${P_N}_{iter}$ neue Posts dem Modell hinzugefügt. definiert. Falls es erwünscht ist werden im nächsten Schritt die Postscores mit zufälligem Lärm verunreinigt. Nun können die Posts nach ihren Scores sortiert werden und die Modelliteration ist abgeschlossen.
+Für jeden Post $P$ wird mit der Bewertungsmetrik $s_P = B(P,i_M)$ berechnet. Anschließend werden ${P_N}_{iter}$ neue Posts dem Modell hinzugefügt. Falls es erwünscht ist, werden im nächsten Schritt die Postscores mit zufälligem Lärm verunreinigt. Nun können die Posts nach ihren Scores sortiert werden und die Modelliteration ist abgeschlossen.
 
 %\newenvironment{malgorithm}[1][htb]
 %{\renewcommand{\algorithmcfname}{Algorithmus}% Update algorithm name
 %	\begin{algorithm}[#1]%
 %	}{\end{algorithm}}
-
-
 
 \begin{algorithm}
 	\caption{Modellschritt}
@@ -92,7 +97,7 @@ Für jeden Post $P$ wird mit der Bewertungsmetrik $s_P = B(P,i_M)$ berechnet. An
 \section{Erstellung von Modellkonfigurationen}
 %TODO anpassen auf die aktuellen Namen
 
-Um unterschiedliche Modellkonfigurationen zu testen und zu vergleichen wurde ein Framework entwickelt, welches es ermöglicht modular Modellparameter zu Modellkonfigurationen zusammenzustellen. Die Modellkonfigurationen werden über eine Liste von Tupeln in Julia definiert.
+Um unterschiedliche Modellkonfigurationen zu testen und zu vergleichen wurde in dieser Arbeit ein Framework entwickelt, das es ermöglicht, modular Modellparameter zu Modellkonfigurationen zusammenzustellen. Die Modellkonfigurationen werden über eine Liste von Tupeln in Julia definiert.
 
 Eine bespielhafte Konfiguration ist im Listing \ref{conf} in der Liste \texttt{model\_configs} zu sehen.
 
@@ -107,20 +112,20 @@ Eine bespielhafte Konfiguration ist im Listing \ref{conf} in der Liste \texttt{m
 \captionsetup[figure]{name=Listing}
 
 \begin{figure}[!h]
-	\caption{Definition von Modellkonfigurationen in Julia}
+
 	\lstinputlisting{../scripts/experiments/example.jl}
+		\caption{Definition von Modellkonfigurationen in Julia}
 	\label{conf}
 \end{figure}
 
+Der erste Eintrag der Tupel definiert das Votingsystem. Durch ein Votingsystem wird ebenfalls eine Grundkonfiguration \ref{fig:grundconfig} definiert, diese stellt sicher, dass alle in der Simulation notwendigen Parameter gesetzt sind. In Zeile 3 wird das \texttt{up\_and\_downvote\_system} ausgewählt. Im zweiten Eintrag können über ein Dictionary einzelne Modellparameter der Grundkonfiguration überschrieben werden. In den Zeilen 5 bis 8 werden einzelne Modellparameter überschrieben. Die Modellparameter werden als Symbole angesteuert. Der Modellparameter \texttt{deviation\_function} wird mehrdeutig überschrieben, indem er durch eine Liste angegeben wird. Für jeden überschreibenden Wert wird eine eigene Modellkonfiguration angelegt. Das erste Tupel definiert somit zwei Modellkonfigurationen, die sich nur in \texttt{deviation\_function} unterscheiden. 
 
-Der erste Eintrag der Tupels definiert die Grundkonfiguration, diese stellt sicher, dass alle in der Simulation notwendigen Parameter gesetzt sind. Außerdem wird über die Grundkonfiguration das Votingsystem festgelegt. Im zweiten Eintrag können über ein Dictionary einzelne Modellparameter überschrieben werden. In Zeile 3 wird das \texttt{downvote\_model} ausgewählt. In den Zeilen 5 bis 7 werden einzelne Modellparameter überschrieben. Die Modellparameter werden als Symbole angesteuert. Der Modellparameter \texttt{deviation\_function} wird mehrdeutig überschrieben, indem er durch eine Liste angegeben wird. Für jeden überschreibenden Wert wird eine eigene Modellkonfiguration angelegt. Das erste Tupel definiert somit zwei Modellkonfigurationen, welche sich nur in \texttt{deviation\_function} unterscheiden. 
+Der erste Eintrag des zweiten Tupels in Zeile 12 ist eine Liste aus Votingsystemen. Für jede der angegebenen Votingsysteme werden die im zweiten Eintrag des Tupels definierten Modellparameter überschrieben. Die in Zeile 14 bis 17 angegeben Modellparameter werden mehrdeutig überschrieben. Der Parameter \texttt{rating\_metric} wird doppelt definiert und \texttt{gravity} vierfach. Dadurch werden pro Votingsystem $2 * 4 = 8$ Modellkonfigurationen erstellt. Da zwei Votingsysteme angegeben sind, werden durch das zweite Tupel insgesamt $2 * (2* 4) = 16$ Modellkonfigurationen festgelegt. 
 
-Der erste Eintrag des zweiten Tupels in Zeile 13 ist eine Liste von Grundkonfigurationen. Für jede der angegebenen Grundkonfigurationen werden die im zweiten Eintrag des Tupels definierten Modellparameter überschrieben. Die in Zeile 15 bis 18 angegeben Modellparameter werden mehrdeutig überschrieben. \texttt{scoring\_function} wird doppelt definiert und \texttt{gravity} vierfach. Dadurch werden pro Grundkonfiguration $2 * 4 = 8$ Modellkonfigurationen erstellt. Da zwei Grundkonfigurationen angegeben sind werden durch das zweite Tupel insgesamt $2 * (2* 4) = 16$ Modellkonfigurationen festgelegt. 
+Das dritte Tupel in Zeile 21 besitzt als ersten Eintrag das Symbol \texttt{:all\_models}. Damit wird festgelegt, dass die im zweiten Eintrag des Tupels überschriebenen Modellparameter auf alle definierten Modellkonfigurationen angewendet werden.
+Somit erhalten alle bereits definierten Modellkonfigurationen den Parameter \texttt{user\_opinion\_function} mit \texttt{consensus} zugewiesen.
 
-Das dritte Tupel besitzt als ersten Eintrag das Symbol \texttt{:all\_models}. Damit wird festgelegt, dass die im zweiten Eintrag des Tupels überschriebenen Modellparameter auf alle definierten Modellkonfigurationen angewendet werden.
-Somit erhalten alle bereits definierten Modellkonfigurationen den Parameter \texttt{user\_rating\_function} mit \texttt{user\_rating\_exp} zugewiesen.
-
-Insgesamt wurden durch \texttt{model\_configs} 18 Modellkonfigurationen festgelegt. Zwei im ersten Tupel und 16 im zweiten Tupel.
+Insgesamt wurden durch \texttt{model\_config} 18 Modellkonfigurationen festgelegt. Zwei im ersten Tupel und 16 im zweiten Tupel.
 
 
 \section{Auswertung der Modelle}
@@ -128,20 +133,21 @@ Insgesamt wurden durch \texttt{model\_configs} 18 Modellkonfigurationen festgele
 
 Die Modelle werden durch die Angabe von Evaluationsmethoden aus Kapitel \ref{chap:evaluationsmethode} ausgewertet.
 
-Die Iterations- und Modellevaluationsfunktionen werden über zwei Arrays festgelegt. Die Evaluationsergebnisse werden analog in zwei Dataframes gespeichert und sind unter dem Namen der jeweiligen Evaluationsfunktion aufrufbar.
+Die Iterations- und Modellevaluationsfunktionen werden über zwei Listen festgelegt. Die Evaluationsergebnisse werden analog in zwei Dataframes unter dem jeweiligen Namen der Evaluationsfunktion gespeichert.
 
-Modellevaluationsmethoden haben Zugriff auf das berechnete Datenstruktur der Iterationsevaluationsmethoden.
+Modellevaluationsmethoden haben Zugriff auf das berechnete Dataframe der Iterationsevaluationsmethoden.
 
 Beispielhafte Konfigurationen der beiden Listen sind in Listing \ref{lst:eval_param} zu sehen. 
 
 Die Iterationsevaluationsfunktionen \texttt{ndcg} und \texttt{gini} berechnen für jede Modelliteration den $nDCG$ bzw. Gini-Koeffizienten $G$ der Bewertungsmetrik. 
 
-Die Funktion \texttt{posts\_with\_no\_views} berechnet $P_{v = 0}$ des Models. Das Macro \texttt{@area\_under} aggregiert die übergeben Iterationsevaluationparameter mit der Trapezregel. Die durch das Macro erzeugte Funktion besitzt den Namen \texttt{area\_under\_<param>} In diesem Beispiel wird so über alle Iterationsevaluationsparameter aggregiert. Mit \texttt{@model\_parameter} können Modellparameter ausgewertet werden. Die erzeugte Funktion erhält den Namen des übergebenen Modellparameters. Hier werden der Initalscore der Posts, die Bewertungsmetrik, die Relevanzgravität und die User*innenmeinungsfunktion ausgewertet.
+
+In der Liste \texttt{iter\_eval\_functions} sind die Iterationsevaluationsfunktionen festgelegt. Die Funktion \texttt{posts\_with\_no\_views} berechnet $P_{v = 0}$ des Models. Die Liste \texttt{model\_eval\_functions} definiert die Modellevaluationsparameter. Das Macro \texttt{@area\_under} aggregiert die übergeben Iterationsevaluationparameter mit der Trapezregel. Die durch das Macro erzeugte Funktion besitzt den Namen \texttt{area\_under\_<param>} In diesem Beispiel wird so über alle Iterationsevaluationsparameter aggregiert. Mit \texttt{@model\_parameter} können Modellparameter ausgewertet werden. Die erzeugte Funktion erhält den Namen des übergebenen Modellparameters. Hier werden der Initalscore der Posts, die Bewertungsmetrik, die Relevanzgravität und die User*innenmeinungsfunktion ausgewertet.
 
 
 \begin{figure}[!h]
-	\caption{Definition der Evaluationfunktionen}
 	\lstinputlisting{../scripts/experiments/eval.jl}
+		\caption{Definition der Evaluationfunktionen}
 	\label{lst:eval_param}
 \end{figure}
 

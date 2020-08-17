@@ -2,7 +2,7 @@
 \label{chapter:bewertungsfunktionen}
 
 
-Für eine User*in $U$ die einen Post $P$ betrachtet ist die Meinungsfunktion $R(P,U): \R^{N_Q} \rightarrow \R$, welche die beiden $N_Q$-dimensionalen Vektoren der Postqualität und Qualitätsperzeption auf den skalaren Meinungswert $m_{P,U} = R(P,U)$ reduziert. Dieser drückt aus wie gut die User*in den betrachteten Post empfindet. Dabei soll gelten:
+Für ein*e User*in $U$ die einen Post $P$ betrachtet ist die Meinungsfunktion $O(P,U): \R^{N_Q} \rightarrow \R$, welche die beiden $N_Q$-dimensionalen Vektoren der Postqualität und Qualitätsperzeption auf den skalaren Meinungswert $m_{P,U} = O(P,U)$ reduziert. Dieser drückt aus wie gut die User*in den betrachteten Post empfindet. Dabei soll gelten:
 
 \begin{enumerate}
 	\item $m_{P,U} \in [0,1]$
@@ -12,7 +12,7 @@ Für eine User*in $U$ die einen Post $P$ betrachtet ist die Meinungsfunktion $R(
 
 \section{Transformation der Qualitätsparameter}
 
-Um die Intervallgrenzen der genannten Kriterien zu erfüllen wird eine Transformation der Qualitätsparameter vollzogen, welche diese auf das Intervall $[0,1]$ begrenzen. Die Transformation wird durch die logistische Funktion $l$ in Formel \ref{sigmoid} vollzogen:
+Um die Intervallgrenzen der genannten Kriterien zu erfüllen, wird eine Transformation der Qualitätsparameter vollzogen, die diese auf das Intervall $[0,1]$ begrenzen. Die Transformation wird durch die logistische Funktion $l$ in Formel \ref{sigmoid} vollzogen:
 
 
 
@@ -32,11 +32,11 @@ Somit ergeben sich die transformierten Qualitäts- bzw. Qualitätsperzeptionsvek
 
 
 Die reale User*innenmeinungsfunktion ist hoch komplex und kann nur sehr vereinfacht modelliert werden.
-Im folgenden werden zwei Ansätze eingeführt um die User*innenmeinungsfunktion $R(P,U)$ zu approximieren.
+Im folgenden werden zwei Ansätze eingeführt, um die User*innenmeinungsfunktion $O(P,U)$ zu approximieren.
  
 \subsection{Meinung im Konsens}
 
-Im Konsens wird davon ausgegangen, dass alle User*innen "gute" Posts mit hohen Qualitätsmerkmalwerten eher als gut empfinden und Posts mit niedrigen Qualitätsmerkmalwerten eher als schlecht empfunden werden.
+Im Konsens wird davon ausgegangen, dass alle User*innen gute Posts mit hohen Qualitätsmerkmalwerten eher als gut empfinden und Posts mit niedrigen Qualitätsmerkmalwerten eher als schlecht wahrnehmen.
 
 Der Konsens ist auf technischen und wissenschaftlichen Plattformen, zum Beispiel Hacker News, denkbar. Konstruktive Beiträge sind eher von destruktiven zu unterscheiden. Trotzdem können User*innen unterschiedlich viel Wissen in einzelnen Fachgebieten und dadurch einen höheren Anspruch an Posts in diesem Bereich haben.  
 
@@ -44,7 +44,7 @@ In Formel \ref{konsensexp2} wird der Konsens ausgedrückt:
 
 \begin{equation}
 \label{konsensexp2}
-R_K(P,U) = \frac{1}{Q_N}\sum_{i = 1}^{Q_N}\tilde{q}_{P}^{\tilde{q}_{U}}
+O_K(P,U) = \frac{1}{Q_N}\sum_{i = 1}^{Q_N}\tilde{q}_{P}^{\tilde{q}_{U}}
 \end{equation}
 
 Der transformierte Qualitätsvektor $\tilde{q}_P$ des Posts wird komponentenweise mit der transformierten Qualitätsperzeption der User*in $\tilde{q}_U$ exponiert und aufsummiert. Die Summe wird durch die Anzahl der Qualitätsmerkmale $Q_N$ geteilt.
@@ -52,20 +52,20 @@ Der transformierte Qualitätsvektor $\tilde{q}_P$ des Posts wird komponentenweis
 
 \subsection{Meinung im Dissens}
 
-User*innen empfinden Posts als "gut", die nah an ihrer eigenen Qualitätsperzeption liegen. Dadurch sind sich User*innen bei vielen Posts uneinig.
+User*innen empfinden Posts als gut, die nah an ihrer eigenen Qualitätsperzeption liegen. Dadurch sind sich User*innen bei vielen Posts uneinig.
 
-Im Dissens ist auf einer Diskussionsplattform denkbar. Dort können die Meinungen über Beiträge stark auseinander. User*innen wollen Beiträge, welche ihre eigene Meinung wiedergeben für andere User*innen sichtbar machen.
+Der Dissens ist auf einer Diskussionsplattform denkbar. Dort können die Meinungen über Beiträge stark auseinander gehen. User*innen wollen Beiträge, welche ihre eigene Meinung wiedergeben für andere User*innen sichtbar machen.
 
 In Formel \ref{dissens} wird der Dissens mithilfe der euklidischen Distanz beschrieben. Es wird die euklidische Distanz aus $\tilde{q}_P$ und $\tilde{q}_U$ gebildet und durch $\sqrt{Q_N}$ geteilt. Dieser Term wird von $1$ abgezogen. Eine User*in findet für $\tilde{q}_P = \tilde{q}_U$ einen Post maximal gut.
 
 
 \begin{equation}
 \label{dissens}
-R_D(P,U) = 1 - \frac{||(\tilde{q}_P - \tilde{q}_U)||_2}{\sqrt{Q_N}}
+O_D(P,U) = 1 - \frac{||\tilde{q}_P - \tilde{q}_U||_2}{\sqrt{Q_N}}
 \end{equation}
 
 \cleardoublepage
-In Abbildung \ref{fig:vergleichmeinung} werden anhand von jeweils zwei Beispielposts, $P1$ und $P2$, und -user*innen, $U1$ und $U2$, die beiden Meinungsfunktionen mit zwei Qualitätsmerkmalen $x$ und $y$ verglichen. Die Posts werden nach Farbe unterschieden, während die User*innen nach dem Symbol unterschieden werden. In der linken Abbildung sind die User*innen nach ihren transformierten Qualitätsmerkmalen dargestellt. Rechts ist der Meinungswert aus den beiden Meinungsfunktionen dargestellt. Herrscht Dissens sind sich beide User*innen uneinig welchen Post sie besser finden. Im Konsens sind sich die User*innen einig, dass $P2$ besser ist. Trotzdem empfindet $U2$ den Post $P1$ deutlich schlechter als $U1$.
+In Abbildung \ref{fig:vergleichmeinung} werden anhand von jeweils zwei Beispielposts, $P1$ und $P2$, und -user*innen, $U1$ und $U2$, die beiden Meinungsfunktionen mit zwei Qualitätsmerkmalen $x$ und $y$ verglichen. Die Posts werden nach Farbe unterschieden, während die User*innen nach dem Symbol unterschieden werden. In der linken Abbildung sind die User*innen nach ihren transformierten Qualitätsmerkmalen dargestellt. Rechts ist der Meinungswert aus den beiden Meinungsfunktionen dargestellt. Herrscht Dissens, sind sich beide User*innen uneinig welchen Post sie besser finden. Im Konsens sind sich die User*innen einig, dass $P2$ besser ist. Trotzdem empfindet $U2$ den Post $P1$ deutlich schlechter als $U1$.
 
 \begin{figure}[!h]
 	\begin{subfigure}{0.6\textwidth}

@@ -1,7 +1,7 @@
-\chapter{Modell eines Votingsystems}
+\chapter{Modell von Votingsystemen}
 \label{chapter:modell}
 
-In diesem Modell eines Votingsystems können User*innen Posts veröffentlichen. Diese sind für alle anderen User*innen sichtbar und können bewertet werden. Die Posts werden nach einer Bewertungsmetrik unter Betrachtung der Postparameter, wie die Anzahl und Art der Bewertungen, Betrachtungen und Zeitpunkt der Veröffentlichung bewertet. Auf der Startseite der Plattform werden die Posts absteigend nach ihrer Bewertung sortiert in einer vertikalen Liste angezeigt. Je weiter ein*e User*in auf der Seite herunter scrollt, desto mehr Posts werden angezeigt. Die Posts sind nicht auf Seiten aufgeteilt, sondern befinden sich in einer kontinuierlichen Liste. Die Liste der Posts ist für alle User*innen, die die Plattform zum gleichen Zeitpunkt besuchen identisch und nicht personalisiert.
+In dem für diese Arbeit entwickeltem Model von Votingsystemen können User*innen Posts veröffentlichen. Diese sind für alle anderen User*innen sichtbar und können bewertet werden. Die Posts werden durch eine Bewertungsmetrik, unter Betrachtung verschiedener Postparameter, wie der Anzahl und Art der Bewertungen oder dem Zeitpunkt der Veröffentlichung, bewertet. Auf der Plattform werden die Posts absteigend nach ihrer Bewertung sortiert und in einer vertikalen Liste angezeigt. Je weiter ein*e User*in auf der Seite herunter scrollt, desto mehr Posts werden angezeigt. Die Posts sind nicht auf Seiten aufgeteilt, sondern befinden sich in einer kontinuierlichen Liste. Die Liste der Posts ist für alle User*innen, die die Plattform zum gleichen Zeitpunkt besuchen identisch und nicht personalisiert.
 
 Im Laufe der Modellierung erhält die Plattform keine neue User*innen, es werden jedoch neue Posts erstellt und hinzugefügt.
 Das agent*innenbasierte Modell wird für eine festgelegte Anzahl Iterationsschritte $M_N$ simuliert. Für jeden Iterationsschritt $i_M$ werden bestimmte Aktionen durchgeführt. Die User*innen interagieren in jedem Schritt mit dem Modell.
@@ -10,22 +10,21 @@ In diesem Kapitel werden die in der Simulation benötigten Modellparameter besch
 
 \section{Definition der Qualität}
 
-Posts in sozialen Medien besitzen eine Qualität, welche User*innen wahrnehmen. Die Postqualität besitzt mehrere Merkmale, wie zum Beispiel den Informationsgehalt, die Originalität oder die Richtigkeit der Grammatik und Rechtschreibung. User*innen nehmen die bestimmten Qualitätsmerkmale unterschiedlich wahr. Manchen User*innen erachten den Informationsgehalt eines Posts als wichtig, während andere eher auf die Originalität eines Beitrages achten.
+Posts in sozialen Medien besitzen eine Qualität, die von User*innen wahrgenommen wird. Die Postqualität besitzt mehrere Merkmale, wie zum Beispiel den Informationsgehalt, die Originalität oder die Richtigkeit der Grammatik und Rechtschreibung. User*innen nehmen die bestimmten Qualitätsmerkmale unterschiedlich wahr. Manchen User*innen erachten den Informationsgehalt eines Posts als wichtig, während andere eher auf die Originalität eines Beitrages achten.
 
-Welche und wie viele Qualitätsmerkmale in der Realität existieren kann nicht ermittelt werden, daher wird die Qualität künstlich durch Vektoren der Dimension $Q_N$ modelliert. Jeder Eintrag eines Qualitätsvektors beschreibt die Ausprägung der Qualität in einem Qualitätsmerkmal. Ein Qualitätsvektor der Dimension $Q_N$ beschreibt somit ein Objekt mit $Q_N$ Qualitätsmerkmalen. 
+Welche und wie viele Qualitätsmerkmale in der Realität existieren, kann nicht ermittelt werden, daher wird die Qualität künstlich durch Vektoren der Dimension $Q_N$ modelliert. Jeder Eintrag eines Qualitätsvektors beschreibt die Ausprägung der Qualität in einem Qualitätsmerkmal. Ein Qualitätsvektor der Dimension $Q_N$ beschreibt somit ein Objekt mit $Q_N$ Qualitätsmerkmalen. 
 
 In einem Modell besitzen sämtliche Qualitätsvektoren die gleiche Dimension. Sie werden über eine kontinuierliche $Q_N$-dimensionale Verteilung $Q$ erzeugt. Es bietet sich die Verwendung einer $Q_N$-dimensionalen Normalverteilung an. Einzelne Qualitätsmerkmale können so einfach in Korrelation gesetzt werden. 
 
 \section{Bewertungsraum des Votingsystems}
 
-Ein Votingsystem kann einen Bewertungsraum $V$ mit beliebiger Dimension $V_N$ zur Verfügung stellen um Posts von User*innen bewerten zu lassen. Sind nur Upvotes, wie bei Hacker News, erlaubt, so handelt es sich um einen eindimensionalen Bewertungsraum, In der Reddit Hot Metrik sind auch Downvotes erlaubt, ein Bewertungsraum mit $V_N = 2$. Viele Onlineshops lassen in einem fünfdimensionalem Raum Artikel mit 1 bis 5 Sternen bewerten.
+Ein Votingsystem kann einen Bewertungsraum $V$ mit beliebiger Dimension $V_N$ zur Verfügung stellen um Posts von User*innen bewerten zu lassen. Sind nur Upvotes, wie bei Hacker News, erlaubt, so handelt es sich um einen eindimensionalen Bewertungsraum. Auf Reddit sind auch Downvotes erlaubt, ein Bewertungsraum mit $V_N = 2$. Viele Onlineshops lassen in einem fünfdimensionalem Raum Artikel mit 1 bis 5 Sternen bewerten.
 
-Diese Arbeit ist beschränkt auf $V_N = \{1,2\}$. 
+Diese Arbeit ist beschränkt auf $V_N = \{1,2\}$, wobei bei $V_N = 1$ Upvotes, und bei $V_N = 2$ Up- und Downvotes betrachtet werden. 
 
 \section{Posts}
 
-Posts besitzen beobachtbare Parameter, welche durch die User*inneninteraktion mit der Plattform entstehen und verändert werden. Diese Parameter sind auf einer produktiven Social Media Plattform üblicherweise in einer Datenbank gespeichert. Die beobachtbaren Parameter können in den Bewertungsmetriken verwendet werden.
-Außerdem besitzen Posts nicht beobachtbare Parameter, welche von der Umwelt abhängig sind und artifiziell durch die Modellierung erzeugt werden.
+Posts besitzen beobachtbare Parameter, welche durch die User*inneninteraktion mit der Plattform entstehen und verändert werden. Diese Parameter sind auf einer produktiven Social Media Plattform üblicherweise in einer Datenbank gespeichert. Außerdem besitzen Posts nicht beobachtbare Parameter, welche von der Umwelt abhängig sind und artifiziell durch die Modellierung erzeugt werden.
 
 \subsection{Beobachtbare Parameter}
 
@@ -47,9 +46,9 @@ Dabei ist ${n_\uparrow}_P$ die Anzahl der Upvotes und ${n_\downarrow}_P$ die Anz
 
 \paragraph{Score}
 
-Der Score $s_P$ eines Posts enthält den Wert, welcher dem Post durch eine Bewertungsmetrik (Abschnitt \ref{chapter:bewertungsmetriken} zugeordnet wurde.
+Der Score $s_P$ eines Posts enthält den Wert, welcher dem Post durch eine Bewertungsmetrik (Abschnitt \ref{chapter:bewertungsmetriken}) zugeordnet wurde.
 
-Der Initialscore $\iota_{0}$ aller Posts kann variiert werden.
+Der Initialsore $\iota_{0}$, den die Posts zu Beginn ihrer Lebenszeit erhalten, kann variiert werden.
 
 \paragraph{Betrachtungen}
 
@@ -70,16 +69,16 @@ Je größer einzelne Einträge in $q_P$ sind, desto besser ist die Qualität ein
 
 Die Relevanz gibt an, wie interessant ein Post ist. Relevante Posts sollen auf einer Kommunikationsplattform weit oben angezeigt werden.
 
-Die Relevanz eines Posts hängt von der Qualität ab, kann sich aber mit der Zeit ändern. Auf ein News-Plattform spielt Aktualität eine wichtige Rolle, Posts welche gerade erst veröffentlicht wurden besitzen meist eine höhere Relevanz als Posts, welche vor langer Zeit veröffentlicht wurden. Auf eine Q\&A-Seite verlieren Beiträge mit verstreichender Zeit weniger an Relevanz. Die beste Antwort auf eine Frage bleibt dies meistens auch für längere Zeit.
+Die Relevanz eines Posts hängt von der Qualität ab und kann sich aber mit der Zeit ändern. Auf einer News-Plattform spielt Aktualität eine wichtige Rolle. Posts, die gerade erst veröffentlicht wurden besitzen meist eine höhere Relevanz als Posts, die vor langer Zeit veröffentlicht wurden. Auf einer Q\&A-Seite verlieren Beiträge mit verstreichender Zeit weniger an Relevanz. Die beste Antwort auf eine Frage bleibt dies meist auch für längere Zeit.
 
-Die Relevanz $r_P$ eines Posts in Formel \ref{eq:gesqualitaet} ergibt sich somit durch die Summe aller Einträge vo $q_P$ dividiert durch das in Gravität gesetzte Alter des Posts. Durch die Gravität $R_\gamma$ wird festgelegt wie schnell die Posts an Relevanz verlieren:
+Die Relevanz $r_P$ eines Posts in Formel \ref{eq:gesqualitaet} ergibt sich somit durch die Summe aller Einträge vo $q_P$ dividiert durch das in Relevanzgravität $R_\gamma$ gesetzte Alter des Posts. Durch die Relevanzgravität wird festgelegt wie schnell die Posts an Relevanz verlieren. Die Relevanz ist abhängig vom Modellschritt $i_M$:
 
 \begin{equation}
 \label{eq:gesqualitaet}
-{r_P} = \frac{1}{(i_M - t_P)^{G_R}}\sum_{i=1}^{Q_N} {q_P}_i
+{r_P} = \frac{1}{(i_M - t_P)^{R_\gamma}}\sum_{i=1}^{Q_N} {q_P}_i
 \end{equation}
 
-Für eine Q\&A-Seite ist $G_R = 0$ anzunehmen, da so die Relevanz über die Zeit konstant bleibt, während für eine News-Plattform $G_R = 2$ gewählt werden kann.
+Für eine Q\&A-Seite ist $R_\gamma = 0$ anzunehmen, da so die Relevanz über die Zeit konstant bleibt, während für eine News-Plattform $R_\gamma = 2$ gewählt werden kann.
 
 \section{Bewertungsmetriken}
 \label{sec:bewertungsmetrik}
@@ -101,12 +100,12 @@ Das Kapitel \ref{chapter:bewertungsmetriken} beschäftigt sich ausführlich mit 
 
 Um ein agent*innenbasiertes Modell einer Onlinekommunikationsplattform zu entwickeln ist es elementar das User*innenverhalten zu beschreiben. Die Parameter werden artifiziell durch das Modell definiert.
 
-\subsection{Aktivität}
+\paragraph{Aktivität}
 
 
-Die Aktivität $a_U$ beschreibt, wie oft User*innen aktiv sind, die Kommunikationsplattform besuchen und Posts betrachten. Dabei sind weder alle User*innen durchgehend noch gleichzeitig online.  
+Die Aktivität $a_U$ beschreibt, wie oft User*innen aktiv sind, die Kommunikationsplattform besuchen und Posts betrachten. Dabei sind weder alle User*innen durchgehend noch gleichzeitig aktiv.  
 
-Die Aktivität wird als Wahrscheinlichkeit modelliert. Sie beschreibt wie wahrscheinlich es ist, dass ein*e User*in in einem Iterationsschritt aktiv ist. Die Aktivität ist über die User*innen als $\beta$-verteilt angenommen. Einige denkbare $\beta$-Verteilungen sind in Abbildung \ref{fig:betas} zu sehen. Da sie auf das Intervall $[0,1]$ beschränkt sind, sind $\beta$-Verteilungen zur Modellierung von Wahrscheinlichkeiten geeignet. Mit ihnen lässt sich eine große Menge an User*innen beschreiben, welche wenig aktiv sind und eine kleine Menge, welche sehr aktiv ist.
+Die Aktivität wird als Wahrscheinlichkeit modelliert. Sie beschreibt, wie wahrscheinlich es ist, dass ein*e User*in in einem Iterationsschritt aktiv ist. Die Aktivität wird über die User*innen als $\beta$-verteilt angenommen. Einige denkbare $\beta$-Verteilungen sind in Abbildung \ref{fig:betas} zu sehen. Da sie auf das Intervall $[0,1]$ beschränkt sind, sind $\beta$-Verteilungen zur Modellierung von Wahrscheinlichkeiten geeignet. Mit ihnen lässt sich eine große Menge an User*innen beschreiben, die wenig aktiv sind und eine kleine Menge, welche sehr aktiv ist.
 
 \begin{figure}[!h]
 	\includegraphics[width=\textwidth]{"../plots/vote_prob_dists.png}
@@ -117,26 +116,26 @@ Die Aktivität wird als Wahrscheinlichkeit modelliert. Sie beschreibt wie wahrsc
 %In dem implementierten Modell beschreibt jede Iteration das Verstreichen eines Zeitschrittes (30 Minuten). Wie in \cite{Hogg20121} beschrieben sind nicht alle User*innen zu jedem Zeitpunkt aktiv. Die Aktivität von User*innen lässt sich durch eine logarithmische Normalverteilung
 %beschreiben. In diesem Modell wird die Aktivität über eine Wahrscheinlichkeit modelliert,  mit welcher ein*e User*in in einem Modellschritt aktiv ist. Da sich die logarithmische Normalverteilung nicht zufriedenstellend auf das Intervall $ [0,1]$ begrenzt werden kann, wird eine $\beta$-Verteilung zur Approximation verwendet.
 
-\subsection{Konzentration}
+\paragraph{Konzentration}
 
-Wenn ein*e User*in aktiv ist wird sie nicht alle Posts der Plattform anschauen. Einerseits weil die Plattform dazu zu viele Posts besitzt und andererseits, weil die Konzentration von User*innen auf der Plattform nicht unendlich ist. Wenn User*innen auf der Plattform aktiv sind werden sie stets eine endliche Anzahl an Posts betrachten. Diese Anzahl wird durch die Konzentration definiert.
+Wenn ein*e User*in aktiv ist wird sie nicht alle Posts der Plattform anschauen. Einerseits weil die Plattform dazu zu viele Posts besitzt und andererseits, weil die Konzentration von User*innen auf der Plattform nicht unendlich ist. Wenn User*innen auf der Plattform aktiv sind, werden sie stets eine endliche Anzahl an Posts betrachten. Diese Anzahl wird durch die Konzentration definiert.
 
 Die Konzentration $k_U$ ist über die User*innen diskret-positiv verteilt. Es bietet sich die Modellierung mit einer Poisson-Verteilung an, da sich für diese ein diskreter Mittelwert definiert definiert wird, um welchen die Konzentrationswerte abweichen.
 
-\subsection{Qualitätsperzeption}
+\paragraph{Qualitätsperzeption}
 \label{uqualitaet}
 
 Durch die Qualitätsperzeption wird festgelegt wie User*innen Qualität wahrnehmen und wie stark ihre Qualitätswahrnehmung ausgeprägt ist. Die Qualitätsperzeption wird durch einen Vektor $q_U$ mit $Q_N$  Einträgen beschrieben. Jeder Eintrag beschreibt die Qualitätswahrnehmung in dem entsprechenden Qualitätsmerkmal. Je größer ein Eintrag im Qualitätsvektor ist, desto höher ist die Fähigkeit der User*in die wahre Qualität des Posts in diesem Merkmal zu beurteilen.
 
 $q_U$ wird als Zufallswert aus der Qualitätsverteilung erzeugt.
 
-\subsection{Meinungsfunktion}
+\paragraph{Meinungsfunktion}
 
-Wenn eine User*in $U$ einen Post $P$ betrachtet, bildet sie sich über den Post anhand der Postqualität und ihrer eigenen Qualitätsperzeption eine Meinung. Die Meinungsbildung wird durch die User*innenmeinungsfunktion modelliert. Durch diese Funktion $R(P,U): \R^{Q_N} \rightarrow \R $ werden die beiden $Q_N$-dimensionalen Vektoren der Postqualität und Qualitätsperzeption auf einen skalaren Meinungswert $m_{P,U} = R(P,U)$ reduziert. Dieser drückt aus, wie gut die User*in den betrachteten Post empfindet. Je größer der Meinungswert ist, desto besser empfindet die User*in den Post.
+Wenn eine User*in $U$ einen Post $P$ betrachtet, bildet sie sich über den Post anhand der Postqualität und ihrer eigenen Qualitätsperzeption eine Meinung. Die Meinungsbildung wird durch die User*innenmeinungsfunktion modelliert. Durch diese Funktion $O(P,U): \R^{Q_N} \rightarrow \R $ werden die beiden $Q_N$-dimensionalen Vektoren der Postqualität und Qualitätsperzeption auf einen skalaren Meinungswert $m_{P,U} = O(P,U)$ reduziert. Dieser drückt aus, wie gut die User*in den betrachteten Post empfindet. Je größer der Meinungswert ist, desto besser empfindet die User*in den Post.
 
 Weitere Überlegungen zur User*innenmeinungsfunktion befinden sich Kapitel \ref{chapter:bewertungsfunktionen}.
 
-\subsection{Meinungsverteilung}
+\paragraph{Meinungsverteilung}
 
 Die Verteilung der Meinungswerte $W$ wird zur Hilfe gezogen, um zu entscheiden ob Posts von User*innen bewertet werden. (Siehe dazu Abschnitt \ref{bewertungszufriedenheit}).
 
@@ -147,16 +146,17 @@ Zur Berechnung der empirischen Verteilungsfunktion von $W$ werden $n$ Posts und 
 F_W(x) = \frac{1}{n^2}\sum_{i,j = 1}^{n} 1_{\{x \leq m_{P_j, U_i}\}}
 \end{equation}
 
-Dabei ist  $1_{\{x \leq R(P_i,U_j)\}} = 1$ für $x \leq R(P_i,U_j)$ und sonst $0$.
+Dabei ist  $1_{\{x \leq O(P_i,U_j)\}} = 1$ für $x \leq O(P_i,U_j)$ und sonst $0$.
 
 
-\subsection{Bewertungszufriedenheit}
+\paragraph{Bewertungszufriedenheit}
 \label{bewertungszufriedenheit}
 
-Es wird angenommen, dass User*innen einen Post nur bewerten, wenn sie ausreichend (un)zufrieden mit diesem sind. Der berechnete Meinungswert muss dazu kleiner bzw. größer ein bestimmtes Quantil der empirischen Dichteverteilung von $W$ sein. Dieses $Q_W$-Quantil wird mit der Bewertungszufriedenheit $z_U$ eine*r User*in definiert und hängt von der Dimension $V_N$ des Bewertungsraumes ab. Für einen eindimensionalen Bewertungsraum ist $Q_W = 1 - z_U$. Für einen zweidimensionalen Bewertungsraum ist $Q1_W = \frac{z_U}{2}$ und $Q2_W = 1 - \frac{z_U}{2}$.
+Es wird angenommen, dass User*innen einen Post nur bewerten, wenn sie ausreichend (un)zufrieden mit diesem sind. Der berechnete Meinungswert muss dazu kleiner bzw. größer als ein bestimmtes Quantil der empirischen Dichteverteilung von $W$ sein. Dieses $Q_W$-Quantil wird mit der Bewertungszufriedenheit $z_U$ eine*r User*in definiert und hängt von der Dimension $V_N$ des Bewertungsraumes ab. Für einen eindimensionalen Bewertungsraum ist $Q_W = 1 - z_U$. Für einen zweidimensionalen Bewertungsraum ist $Q1_W = \frac{z_U}{2}$ und $Q2_W = 1 - \frac{z_U}{2}$.
 
 In Abbildung \ref{fig:bewzuf} sind beispielhafte Meinungsverteilungen in schwarz dargestellt. Die Quantile sind für eine User*in $U$ mit $z_U = 0.1$ eingezeichnet. Auf der linken Seite ist $Q_W$ für $V_N = 1$, auf der rechten Seite sind $Q1_W$ und $Q2_W$ für $V_N = 2$ rot auf der $y$-Achse eingezeichnet. Die $Q_W$-Quantile $x_{Q_W}$ sind auf der $x$-Achse eingezeichnet. Um eine Bewertung eines Posts $P$ von $U$ hervorzurufen muss der Meinungswert $m_{P,U}$ in einen der rot markierten Bereiche fallen. Im Fall $V_N = 1$ muss $m_{P,U} > x_{Q_W}$ sein. Für $V_N = 2$, muss $m_{P,U} < x_{Q1_W}$ für eine negative Bewertung und $m_{P,U} > x_{Q2_W}$ für eine positive Bewertung sein.
 
+%TODO vielleicht noch mehr zu den Abbildungen schreiben
 \begin{figure}
 	\begin{subfigure}{0.5\textwidth}
 		\includegraphics[width=\textwidth]{../plots/rating_dist.png}
@@ -166,7 +166,7 @@ In Abbildung \ref{fig:bewzuf} sind beispielhafte Meinungsverteilungen in schwarz
 		\includegraphics[width=\textwidth]{../plots/rating_dist1.png}
 		\caption{$V_N = 2$}
 	\end{subfigure}
-	\caption{Um eine Bewertung des Posts auszulösen muss der Meinungswert einer User*in in den roten Bereich fallen}
+	\caption{Um eine Bewertung des Posts auszulösen, muss der Meinungswert einer User*in in den roten Bereich fallen}
 	\label{fig:bewzuf}
 \end{figure}
 
@@ -193,7 +193,7 @@ Die Bewertungszufriedenheit ist kontinuierlich auf dem Intervall $[0,1]$ verteil
 
 %In der ersten Spalte befindet sich der Anteil an der gesamten User*innenzahl mit dem $E$-Wert in der zweiten Spalte. In diesem Beispiel sind 2\% extreme User*innen mit $E=20$ und 5\% extreme User*innen mit $E = -10$. Die restlichen 93\% User*innen sind "normal".
 
-\section{User*innen und Postanzahl}
+\section{User*innen- und Postanzahl}
 
 In der folgenden Tabelle sind die Modellparameter der User*innen- und Postanzahl angegeben, sämtliche dieser Parameter können variiert werden:
 

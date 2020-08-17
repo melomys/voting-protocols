@@ -1,7 +1,7 @@
 \chapter{Bewertungsmetriken}
 \label{chapter:bewertungsmetriken}
 
-Anhand von Bewertungsmetriken sollen Posts nach ihrer Relevanz sortiert werden. Ein Post $P$ erhält durch eine Bewertungsmetrik den Score $s_P = B(P)$ zugewiesen. Mit diesem zugewiesenen Score werden die Posts sortiert und auf der Plattform zur Verfügung gestellt.
+Anhand von Bewertungsmetriken sollen Posts nach ihrer Relevanz sortiert werden. Ein Post $P$ erhält durch eine Bewertungsmetrik den Score $s_P = B(P,i_M)$ zum Zeitpunkt $i_M$ zugewiesen. Mit diesem zugewiesenen Score werden die Posts sortiert und auf der Plattform zur Verfügung gestellt.
 
 
 Die nicht beobachtbaren Qualitätsparameter stehen in der Berechnung der Bewertungsmetrik nicht zur Verfügung, diese kann nur die beobachtbaren Parameter verwenden:
@@ -17,8 +17,8 @@ Die nicht beobachtbaren Qualitätsparameter stehen in der Berechnung der Bewertu
 In einer idealen Bewertungsmetrik $B$ werden die Matthäus-Effekte reduziert, sie ist fair, wenn die folgenden Punkte erfüllt sind:
 
 \begin{itemize}
-	\item für zwei Posts $P_1$ und $P_2$ mit $r_{P_1} > r_{P_2}$ ist $B(P_1) > B(P_2)$
-	\item Für jeden Post $P_i$ gilt $v_{P_i} > 1$, wurde von mindestens eine*r User*in wahrgenommen
+	\item für zwei Posts $P_1$ und $P_2$ mit $r_{P_1} > r_{P_2}$ ist $B(P_1,i_M) > B(P_2,i_M)$, zum Zeitpunkt $i_M$
+	\item Für jeden Post $P_i$ gilt $v_{P_i} > 1$, er wurde von mindestens eine*r User*in wahrgenommen
 \end{itemize}
 
 \section{Bewertungstransformation}
@@ -26,7 +26,7 @@ In einer idealen Bewertungsmetrik $B$ werden die Matthäus-Effekte reduziert, si
 
 Die Bewertungsvektoren liegen im $V_N$-dimensionalen Raum vor. Innerhalb von Bewertungsmetriken werden die $V_N$ dimensionalen Bewertungsvektoren von Posts auf einen Skalar transformiert. Dies geschieht mit einer Bewertungstransformationsfunktion $\tau: \mathbb{R}^{V_N} \rightarrow \mathbb{R}$.
 
-Für den zweidimensionalen Fall mit Up- und Downvotes (${n_\uparrow}_P$,${n_\downarrow}_P$) werden im folgenden einige Bewertungstransformationen vorgestellt.
+Für den zweidimensionalen Fall mit Up- und Downvotes (${n_\uparrow}_P$, ${n_\downarrow}_P$) werden im folgenden einige Bewertungstransformationen vorgestellt.
 
 \subsection{Differenz}
 
@@ -51,7 +51,7 @@ Berechnet wird der Anteil der Upvotes zur Gesamtzahl der Votes:
 
 \subsection{Wilson Score}
 
-Wie in \cite{miller} erläutert wird, ist die Verwendung der beiden vorherig vorgestellten Metriken in bestimmten Konstellationen von Up- und Downvotes unintuitiv. Es wird  die untere Grenze des Wilson-Konfidenzintervall für die Erfolgswahrscheinlichkeit der Binomialverteilung für den Parameter $p$ als Metrik vorgeschlagen. Dabei ist $n$ die Gesamtanzahl an abgegeben Votes an einen Post, die Stichprobengröße, und $k$ die Anzahl an positiver Bewertungen eines Postes, die Anzahl an Erfolgen in der Stichprobe.
+Wie in \cite{miller} erläutert wird, ist die Verwendung der beiden vorherig vorgestellten Bewertungstransformationen in bestimmten Konstellationen von Up- und Downvotes nicht sinnvoll. Es wird  die untere Grenze des Wilson-Konfidenzintervall für die Erfolgswahrscheinlichkeit $p$ der Binomialverteilung $p$ vorgeschlagen.% Dabei ist $n$ die Gesamtanzahl an abgegeben Votes an einen Post, die Stichprobengröße, und $k$ die Anzahl an positiver Bewertungen eines Postes, die Anzahl an Erfolgen in der Stichprobe.
 	
 Mit der Gesamtzahl der Bewertungen eines Posts $n_P = {n_\uparrow}_P + {n_\downarrow}_P$, dem Punktschätzer $\hat{p}_P = \tau_{anteil}(b_P)$ und dem Quantil $c_{\alpha}$ der Normalverteilung zum Irrtumsniveau $\alpha$ ergibt sich in Formel \ref{wilson} der Wilson Score:
 
@@ -64,18 +64,17 @@ Mit der Gesamtzahl der Bewertungen eines Posts $n_P = {n_\uparrow}_P + {n_\downa
 
 Bewertungsmetriken berechnen den Score $B(P,i_M)$ für einen Post unter Betrachtung der Postparameter eines Postes $P$ zum Zeitpunkt bzw. Modellschritt $i_M$.
 	
-\subsection{Hacker News}
+\subsection{Hacker News Metrik}
 \label{seqHackerNews}
 
-%TODO Hacker News und Reddit verlinken
-Hacker News verwendet eine Metrik, in der die Upvotes ${n_\uparrow}_{P}$ eines Postes ins Verhältnis zum Alter $a_{P} = i_M - t_P$ setzt. Das Alter wird mit der Gravitätskonstante $\gamma = 1.8$ potenziert. Die Bewertungstransformation lautet $\tau(b_P) = u_P - 1$ so ergibt sich die Hacker News Bewertungsmetrik in Formel \ref{HackerNews}:
+In \cite{SalihefendicHN} wird die Hacker News Metrik beschrieben. Die Upvotes ${n_\uparrow}_{P}$ eines Postes werden ins Verhältnis zum Alter $a_{P} = i_M - t_P$ gesetzt. Das Alter wird mit der Gravitätskonstante $\gamma = 1.8$ potenziert. Die Bewertungstransformation lautet $\tau(b_P) = {n_{\uparrow}}_P - 1$, so ergibt sich die Hacker News Bewertungsmetrik in Formel \ref{HackerNews}:
  
 \begin{equation}
 \label{HackerNews}
 B_{HN}(P,i_M) = \frac{{n_\uparrow}_P - 1}{(a_P + 2)^{\gamma}}
 \end{equation}
 
-\section{Verallgemeinertes Hacker News}
+\subsection{Verallgemeinerte Hacker News Metrik}
 \label{seqvHackerNews}
 Das verallgemeinerte Hacker News Ranking verwendet eine beliebige Bewertungstransformation $v$ und lässt sich somit auch auf höhere Bewertungsräume anwenden:
 
@@ -85,10 +84,9 @@ B_{vHN}(P,i_M) = \frac{\tau(b_P)}{(a_P + 2)^{\gamma}}
 \end{equation}
 
 
-\section{Reddit Hot}
+\subsection{Reddit Hot Metrik}
 
-
-In der Reddit Hot Metrik wird ebenfalls die transformierte Bewertung $\tau{b_P}$ eines Posts mit dem Alter verrechnet.
+Die Reddit Hot Metrik wird in \cite{SalihefendicR} beschrieben, hier wird ebenfalls die transformierte Bewertung $\tau{b_P}$ eines Posts mit dem Alter verrechnet.
 
 Der Zeitwert $e_P$ wird als Differenz in Sekunden von diesem Zeitpunkt $i_M$ zum Zeitpunkt $E$ am 8.12.2005 um 07:46:43 in Formel \ref{RedditHotT} berechnet.
 
@@ -124,36 +122,37 @@ B_R(P,i_M) = sign(\tau(b_{P})) * log_{10}(z_{P}) + \frac{e_{P}}{4500}
 Somit werden Posts mit fortschreitender Zeit nicht schlechter bewertet, wie bei der Bewertungsmetrik von Hacker News. Neuere Posts erhalten durch das Ansteigen von $e_P$ eine höhere Bewertung, bei gleichem $\tau(b_P)$, als ältere Posts. 
  
 
-\section{View Bewertungsmetrik}
+\subsection{Viewmetrik}
 
-Die View Bewertungsmetrik basiert auf der in Kapitel \ref{seqvHackerNews} beschriebenen Metrik. Es fließt die Anzahl der Betrachtungen des Posts $v_P$ mit ein. Daraus ergibt sich mit dem gleichen $a_P$ wie in Abschnitt \ref{seqHackerNews}  die Bewertungsmetrik in Formel \ref{ViewScoring}:
+Die Viewmetrik wurde in dieser Arbeit entwickelt und basiert auf der in Abschnitt \ref{seqvHackerNews} beschriebenen Metrik. Es fließt die Anzahl der Betrachtungen des Posts $v_P$ mit ein. Je weniger Betrachtungen für ein gleiches $\tau(b_P)$ benötigt sind, desto besser bewertet die Viewmetrik. Daraus ergibt sich mit dem gleichen $a_P$ wie in Abschnitt \ref{seqHackerNews}  die Bewertungsmetrik in Formel \ref{ViewScoring}:
 
 \begin{equation}
 \label{ViewScoring}
-B_V(P,i_M) = \frac{\frac{\tau_{P}}{v_{P} + 1}}{(a_{P} + 2)^{\gamma}}
+B_V(P,i_M) = \frac{\frac{\tau_{P}(b_P)}{v_{P} + 1}}{(a_{P} + 2)^{\gamma}}
 \end{equation}
 
-\section{Aktivität}
-
-Die Bewertung des Posts wird der Bewertung der letzten Iteration verrechnet und durch das Alter skaliert. Mit fortschreitender Zeit verlieren Posts in dieser Metrik an Score, es ergibt sich in Formel \ref{Activation}:
+\subsection{Aktivitätsmetrik}
+%TODO genauer beschreiben
+Diese Metrik basiert ebenfalls auf der verallgemeinerten Hacker News Metrik in Abschnitt \ref{seqvHackerNews} und wurde in dieser Arbeit entwickelt.
+Die Bewertungstransformation des Posts wird mit dem Score der letzten Iteration verrechnet und durch das Alter skaliert. Die Aktivitätsmetrik wird in Formel \ref{Activation}
 
 \begin{equation}
 \label{Activation}
-B_A(P, i_M) = \frac{\tau(b_{P})) - B_A(P,i_M-1}{(a_{P} + 2)^{\gamma}}
+B_A(P, i_M) = \frac{\tau(b_{P}) - B_A(P,i_M-1)}{(a_{P} + 2)^{\gamma}}
 \end{equation}
 
 
 \section{Zufallsbewertung}
 
-Nachdem Posts durch die Bewertungsmetrik bewertet wurden, kann die Bewertung durch Zufall verunreinigt werden um den in \cite{Luu} vorgeschlagenen Lärm zur Bewertung hinzuzufügen. In dieser Arbeit wurden zwei unterschiedliche Ansätze zur zufälligen Verunreinigung gewählt.
+Nachdem Posts durch die Bewertungsmetrik bewertet wurden, kann der Score durch Zufall verunreinigt werden um den in \cite{Luu} vorgeschlagenen Lärm zur Bewertung hinzuzufügen. In dieser Arbeit wurden zwei unterschiedliche Ansätze zur zufälligen Verunreinigung gewählt.
 
 \subsection{$\mu$-Abweichung}
 
-Sei $\mu_s$ der Mittelwert der Scores aller Posts. Für einen Post $P$ mit Score $s_P$ wird die Verunreinigung $d$ als Zufallszahl im Intervall $d_{\mu,P} \in [-|\mu_s - s_P|,|\mu_s - s_p|]$ definiert. So ergibt sich für den verunreinigten Score $\tilde{s}_P$ des Post in Formel \ref{mean_deviation}:
+Sei $\mu_s$ der Mittelwert der Scores aller Posts. Für einen Post $P$ mit Score $s_P$ wird die Verunreinigung $d$ als Zufallszahl im Intervall $d_{\mu,P} \in [-|\mu_s - s_P|,|\mu_s - s_P|]$ definiert. So ergibt sich für den verunreinigten Score $\tilde{s}_P$ des Post in Formel \ref{mean_deviation}:
 
 \begin{equation}
 \label{mean_deviation}
-\tilde{s}_{\mu,P} =  s_p + d_{\mu,P}
+\tilde{s}_{\mu,P} =  s_P + d_{\mu,P}
 \end{equation} 
 
 \subsection{$\sigma$-Abweichung}

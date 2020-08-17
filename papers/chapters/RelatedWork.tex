@@ -2,24 +2,24 @@
 
 %Soziale Medien erfreuen sich immer größer User*innenzahlen, die Anzahl der Nutzung steigt und damit auch die Anzahl der geposteten Beiträge. Die Beiträge müssen, durch Bewertungsmetriken vorsortiert, den User*innen angezeigt werden um eine Grundqualität der Seiten zu wahren. Ausgewählte Arbeiten, die sich mit der Fairness von Bewertungsmetriken beschäftigen werden vorgestellt. Agentenbasierte Modellierung findet viel in der Modellierung von Meinungsdynamiken Anwendung. Interessante Arbeiten aus diesem Bereich werden ebenfalls vorgestellt.
 
-In dieser Arbeit wird ein agent*innenbasiertes Modell eines sozialen Mediums erstellt. Dafür ist es interessant die bisherigen verwandten Anwendungen von agent*innenbasierte Modellierung zu überblicken. Es zeigt sich, dass diese Art der Modellierung viel Anwendung in der Simulation von Meinungsbildungsprozessen und Meinungsdynamiken findet.
+In dieser Arbeit wird ein agent*innenbasiertes Modell eines sozialen Mediums erstellt. Dafür ist es interessant, die bisherigen verwandten Anwendungen von agent*innenbasierte Modellierung zu überblicken. Es zeigt sich, dass diese Art der Modellierung viel Anwendung in der Simulation von Meinungsbildungsprozessen und Meinungsdynamiken findet.
 
-Viele Arbeiten beschäftigen sich mit der Fairness von Rankings in sozialen Medien. Einige Erkenntnisse und Ideen dieser Arbeiten können zur Untersuchung der Bewertungsmetriken in dieser Arbeit verwendet werden und und in diesem Kapitel vorgestellt.
+Viele Arbeiten beschäftigen sich mit der Fairness von Sortierungen in sozialen Medien. Einige Erkenntnisse und Ideen der Arbeiten können zur Untersuchung der Bewertungsmetriken in dieser Arbeit verwendet werden und in diesem Kapitel vorgestellt.
 
 \section{agent*innenbasierte Modellierung von Meinungsdynamiken}
 
-Um Meingungsdynamiken und Meinungsbildungsprozesse zu modellieren werden häufig agent*innenbasierte Modelle verwendet. Dabei werden Agent*innen als meinungshabende Individuen modelliert, welche andere Agent*innen in ihrer Meinung beeinflussen und von anderen selbst beeinflusst werden. \cite{Mastroeni201958836} ist eine bibliographische Übersicht, welche die wichtigsten Charakteristiken solcher Modelle herausarbeitet.
+Um Meingungsdynamiken und Meinungsbildungsprozesse zu modellieren werden häufig agent*innenbasierte Modelle verwendet. Dabei werden Agent*innen als meinungshabende Individuen modelliert, die andere Agent*innen in ihrer Meinung beeinflussen und von anderen selbst beeinflusst werden. \cite{Mastroeni201958836} ist eine bibliographische Übersicht, in der die wichtigsten Charakteristiken solcher Modelle herausarbeitet werden.
 
 %Die Autor*innen von [Mixing beliefs among interacting agents] untersuchen das Verhalten von Individuen, welche eine Meinung aus einem kontinuierlichem Raum besitzen. Es wird ein Modell vorgestellt um Meinungsbildung zu simulieren.
 
-Für eine Gruppe aus Individuen, welche alle eine eigene subjektive Meinung besitzen wird von \cite{Degroot1974118} ein Modell vorgeschlagen, welches die unterschiedlichen Meinungen zu einem Konsens zusammenführen kann.
+Für eine Gruppe aus Individuen mit eigener subjektiver Wahrnehmung wird von \cite{Degroot1974118} ein Modell vorgeschlagen, das die unterschiedlichen Meinungen zu einem Konsens zusammenführen kann.
 
 %TODO Tsang paper austauschen
-In \cite{Tsang2014277} wird ein agentenbasiertes Modell vorgestellt, welches skeptizistische Agent*innen gegenüber anderen Meinungen beinhaltet. Es wird gezeigt, dass auch in solchen Konstellationen ein Konsens gefunden werden kann.
+In \cite{Tsang2014277} wird ein agentenbasiertes Modell mit skeptizistischen Agent*innen gegenüber anderen Meinungen vorgestellt. Es wird gezeigt, dass auch in solchen Konstellationen ein Konsens gefunden werden kann.
 
 \section{Bewertungsmetriken und Fairness}
 
-Einige Arbeiten beschäftigen sich mit Fairness zwischen \textit{beschützten} Gruppen, Minderheiten, und \textit{nicht geschützten} Gruppen, den Mehrheiten. Es wird versucht eine Benachteiligung der \textit{geschützten} Gruppen zu vermeiden. Anhand von Experimenten wird erforscht wie sich sozialer Einfluss auf individuelle Fairness in Bewertungsmetriken auswirkt. Für bekannte soziale Medien werden die Bewertungsmetriken analysiert.
+Einige Arbeiten beschäftigen sich mit Fairness zwischen \textit{beschützten} Gruppen, den Minderheiten, und \textit{nicht geschützten} Gruppen, den Mehrheiten. Es wird versucht eine Benachteiligung der \textit{geschützten} Gruppen zu vermeiden. Anhand von Experimenten wird erforscht wie sich sozialer Einfluss auf individuelle Fairness in Bewertungsmetriken auswirkt. Für bekannte soziale Medien werden die Bewertungsmetriken analysiert.
 
 %In [Fairness and Transparency in Ranking (nicht in Scopus)] stellen die Autor*innen fest, dass Fairness zwischen Gruppen hergestellt ist, wenn der Quotient aus Sichtbarkeit und Relevanz von Elementen der beiden Gruppen gleich ist. Es werden Kriterien für ein faires Ranking definiert:
 
@@ -34,28 +34,30 @@ Einige Arbeiten beschäftigen sich mit Fairness zwischen \textit{beschützten} G
 
 \subsection{Fairness mit Gruppen}
 
-In \cite{castillo} stellen die Autor*innen fest, dass Fairness zwischen Gruppen hergestellt ist, wenn der Quotient aus Sichtbarkeit und Qualität von Elementen der beiden Gruppen gleich ist.
+In \cite{castillo} stellen die Autor*innen fest, dass Fairness zwischen Gruppen hergestellt ist, wenn der Quotient aus Sichtbarkeit und Qualität von Elementen der Gruppen gleich ist.
 
-\cite{Singh20182219} und \cite{Yang2017} betrachten Fairness in Rankings unter Einbeziehung von \textit{beschützten} und \textit{nicht beschützten} Objekten. Es werden Messfunktionen für Fairness eingeführt um die Benachteiligung von \textit{beschützten} Objekten systematisch auszuwerten.
+\cite{Singh20182219} und \cite{Yang2017} betrachten Fairness in Sortierungen unter Einbeziehung von \textit{beschützten} und \textit{nicht beschützten} Objekten. Es werden Messfunktionen für Fairness eingeführt, um die Benachteiligung von \textit{beschützten} Objekten systematisch auszuwerten.
 
-Ein Algorithmus, welcher aus einer Menge von \textit{beschützten} und \textit{nicht beschützten} Objekten die qualitativsten $k$ Objekte sucht wird in \cite{Zehlike20171569} Für diese $k$ Objekte sind \textit{nicht beschützte} Objekte nicht benachteiligt.
+Ein Algorithmus, der aus einer Menge von \textit{beschützten} und \textit{nicht beschützten} Objekten die qualitativsten $k$ Objekte sucht wird, in \cite{Zehlike20171569} beschrieben. Für diese $k$ Objekte sind \textit{nicht beschützte} Objekte nicht benachteiligt.
 
-Gruppenbezogene Fairness wird in \cite{Biega2018405} nur als Spezialfall von individueller Fairness betrachtet. Es wird der \textit{Discounted Cumulative Gain}-Koeffizient ($DCG$) zur Messung der Fairness der Rankings verwendet. Die Autor*innen stellen fest, dass sich der $DCG$ mit einer einzelnen Bewertungsmetrik nicht optimieren lässt. Sie stellen ein Optimierungsproblem auf, welches durch die Anwendung von unterschiedlichen Bewertungsmetriken Fairness amortisiert.
+Gruppenbezogene Fairness wird in \cite{Biega2018405} nur als Spezialfall von individueller Fairness betrachtet. Es wird der \textit{Discounted Cumulative Gain}-Koeffizient ($DCG$) zur Messung der Fairness der Bewertungsmetriken verwendet. Die Autor*innen stellen fest, dass sich der $DCG$ mit einer einzelnen Bewertungsmetrik nicht optimieren lässt. Sie stellen ein Optimierungsproblem auf, welches durch die mehrfache Anwendung von unterschiedlichen Bewertungsmetriken Fairness herstellt.
 
 \subsection{Individuelle Fairness in sozialen Medien}
 
-In \cite{Salganik2006854} und \cite{Abeliuk} wird ein Experiment durchgeführt in dem Testpersonen unbekannte Lieder bewerten. Die Testpersonen werden in zwei Gruppen aufgeteilt. Eine \textit{unabhängige} Gruppe und eine unter \textit{sozialem Einfluss}. Testpersonen der Gruppe mit sozialem Einfluss werden zusätzlich in acht Welten eingeteilt und erhalten die Lieder nach der Downloadzahl sortiert mit angezeigter Downloadzahl zu sehen, während die Personen aus der unabhängigen Gruppe jeweils eine zufällige Liste ohne Information über die Downloadzahl angezeigt. Durch die Ergebnisse zeigen die Autor*innen, dass unter sozialem Einfluss Ungleichheit und Unvorhersehbarkeit bezüglich der Popularität der Lieder besteht.
+Die Autoren von \cite{Celis2018} argumentieren, dass viele Bewertungsmetriken die Diversität verringern und Stereotypen reproduzieren, die Bewertungsmetriken jedoch nicht darauf geprüft werden und die Stereotypen sich dadurch verstärken. Es wird ein Algorithmus vorgeschlagen, welcher Elemente nach bestimmten Fairnessbedingungen anordnet.
 
-\citeauthor{Muchnik2013647} findet in \cite{Muchnik2013647} heraus, dass sozialer Einfluss Bewertungsdynamiken verzerrt und zur Bildung von Bewertungsblasen führen kann.
-Negativer sozialer Einfluss kann durch die Gruppenintelligenz wieder ausgeglichen werden.
+In \cite{Salganik2006854} und \cite{Abeliuk} wird ein Experiment durchgeführt, in dem Testpersonen unbekannte Lieder bewerten. Die Testpersonen werden in zwei Gruppen aufgeteilt. Eine \textit{unabhängige} Gruppe und eine unter \textit{sozialem Einfluss}. Testpersonen der Gruppe mit sozialem Einfluss werden zusätzlich in acht Welten eingeteilt und bekommen die Lieder nach der Downloadzahl sortiert und mit angezeigter Downloadzahl zu sehen, während den Personen aus der unabhängigen Gruppe jeweils eine zufällige Liste ohne Information über die Downloadzahl angezeigt wird. Durch die Ergebnisse zeigen die Autor*innen, dass unter sozialem Einfluss Ungleichheit und Unvorhersehbarkeit bezüglich der Popularität der Lieder besteht.
+
+Munchnik et al. findet in \cite{Muchnik2013647} heraus, dass sozialer Einfluss Bewertungsdynamiken verzerrt und zur Bildung von Filterblasen führen kann.
+Negativer sozialer Einfluss kann durch die Gruppenintelligenz jedoch wieder ausgeglichen werden.
 
 In \cite{Lerman2014} wurde ein Experiment durchgeführt, bei dem Proband*innen Posts anderen Proband*innen empfehlen können, welche schließlich nach 5 unterschiedlichen Bewertungsmetriken sortiert werden: 
 
 \begin{table}[!htbp]
 	\begin{tabularx}{\textwidth}{lX}
 		1. Zufall &in zufälliger Reihenfolge\\
-		2. Popularität&nach der Anzahl der Likes sortiert \\
-		3. Aktivität &nach der Zeit des letzten Likes sortiert\\ 
+		2. Popularität&nach der Anzahl der Empfehlungen sortiert \\
+		3. Aktivität &nach der Zeit des letzten Empfehlungen sortiert\\ 
 		4. Fixierung&stets in gleicher fixierter Reihenfolge\\
 		5. Fixierung invertiert &stets in umgekehrter fixierter Reihenfolge
 	\end{tabularx}
@@ -63,20 +65,16 @@ In \cite{Lerman2014} wurde ein Experiment durchgeführt, bei dem Proband*innen P
 
 Die Bewertungsmetriken werden mit dem \textit{Gini}-Koeffizienten ausgewertet. Dabei schneidet die Zufallsmetrik, gefolgt von der Aktivitätsmetrik am besten, die fixierten Metriken am schlechtesten ab.
 
-Für Votingsysteme mit den Bewertungsmöglichkeiten Up- und Downvotes eines Beitrages wird in \cite{miller} der \textit{Wilson}-Score zur Verrechnung der Up- und Downvotes vorgeschlagen. Es wird gezeigt, weshalb andere Methoden schlechter geeignet sind. Der \textit{Wilson}-Score findet im Reddit-"Best"-Kommentarranking Anwendung. \citeauthor{Zhang2011238} stellt intuitive Axiome vor, welche ein Verrechnung der Bewertungen erfüllen sollte. Bekannte Methoden wie der \textit{Wilson}-Score werden auf die Axiome geprüft.
+Für Votingsysteme mit den Bewertungsmöglichkeiten Up- und Downvotes eines Beitrages wird in \cite{miller} der \textit{Wilson}-Score zur Verrechnung der Up- und Downvotes vorgeschlagen. Miller zeigt, weshalb andere Methoden schlechter geeignet sind. Der \textit{Wilson}-Score findet im Reddit-Best-Kommentarranking Anwendung. Zhang stellt in \cite{Zhang2011238} intuitive Axiome vor, welche eine Verrechnung der Bewertungen erfüllen sollte. Auch der \textit{Wilson}-Score wird auf die Axiome geprüft.
 
-Die Autor*innen von \cite{Hogg20121} und \cite{Lerman2010621} stellen ein stochastisches Modell auf um die Popularität von Beiträgen auf der Plattform Digg\footnote{\texttt{https://digg.com/}} vorherzusagen. Modellparameter, wie die Aktivitätsverteilung von User*innen wird durch einen Datensatz von Digg gefittet. Das Modell wird validiert und erfasst die Hauptkomponenten der Bewertungsdynamiken von Digg
+Die Autor*innen von \cite{Hogg20121} und \cite{Lerman2010621} stellen ein stochastisches Modell auf, um die Popularität von Beiträgen auf der Plattform Digg\footnote{\texttt{https://digg.com/}} vorherzusagen. Modellparameter, wie die Aktivitätsverteilung von User*innen, wird durch einen Datensatz von Digg gefittet. Das Modell wird validiert und erfasst die Hauptkomponenten der Bewertungsdynamiken von Digg.
 
-\cite{Stoddard2015416} untersucht die Korrelation zwischen Qualität von Posts und die Anzahl und Art der Bewertungen auf Hacker News und Reddit. Die Qualität eines Posts wird als die Bewertung beschrieben, welche ein Post unter absolut fairen Bedingungen erhalten würde. \citeauthor{Stoddard2015416} entwickelt eine Methode um die Qualität von Posts auf den Plattformen abzuschätzen.
+\cite{Stoddard2015416} untersucht die Korrelation zwischen Qualität und der Anzahl und Art der Bewertungen von Posts auf Hacker News und Reddit. Die Qualität eines Posts wird als die Bewertung beschrieben, die ein Post unter absolut fairen Bedingungen erhalten würde. \citeauthor{Stoddard2015416} entwickelt eine Methode, um die Qualität von Posts auf den Plattformen abzuschätzen.
 
-\citeauthor{Kaltenbrunner200757} versucht in \cite{Kaltenbrunner200757} die Aktivität die ein Post auf der Plattform Slashdot\footnote{\texttt{}} insgesamt erzeugt auf Grundlage der erzeugten Aktivität in den ersten Minuten/Stunden nach Veröffentlichung des Posts vorherzusagen. 
+Kaltenbrunner et al. versucht in \cite{Kaltenbrunner200757} die User*inneninteraktionen, die ein Post auf der Plattform Slashdot\footnote{\texttt{https://slashdot.org/}} insgesamt erzeugt, auf Grundlage der erzeugten Interaktion in den ersten Minuten bzw. Stunden nach Veröffentlichung des Posts vorherzusagen. 
 
-In \cite{Wu2008334} wird gezeigt, dass die Popularität von Beiträgen Einfluss auf das Bewertungsverhalten hat. So sammeln populäre, gute bewertete Beiträge, zunehmend auch schlechte Bewertungen.
+In \cite{Wu2008334} wird gezeigt, dass die Popularität von Beiträgen Einfluss auf das Bewertungsverhalten hat. So sammeln populäre, gut bewertete Beiträge, zunehmend auch schlechte Bewertungen.
 
-In \cite{Diakopoulos2011133}  werden Kommentarsysteme von Nachrichtenagenturen und die Wirkung von Beiträgen mit niedriger Qualität auf Nutzer*innen und Journalist*innen untersucht. Es wird gezeigt, wie die individuelle Lesemotivation Einfluss auf die Qualitätswahrnehmung hat. Um die Qualität zu verbessern werden unter anderem Moderations- und Markierungsmethoden vorgeschlagen.
+In \cite{Diakopoulos2011133}  werden Kommentarsysteme von Nachrichtenagenturen auf die Wirkung von Beiträgen mit niedriger Qualität auf Nutzer*innen und Journalist*innen untersucht. Es wird gezeigt, wie die individuelle Lesemotivation Einfluss auf die Qualitätswahrnehmung hat. Um die Qualität zu verbessern, werden unter anderem Moderations- und Markierungsmethoden vorgeschlagen.
 
-\citeauthor{Luu} schlägt in \cite{Luu} vor etwas zufälligen Lärm in das Ranking von Hacker News einzufügen, um die scharfe Aufmerksamkeitskante zwischen Posts die auf der Startseite landen und denen auf  den hinteren Seiten auszuglätten.
-
-
-%TODO Dieses Paper verstehen
-Die Autoren von \cite{Celis2018} argumentieren, dass viele Bewertungsmetriken die Diversität verringern und Stereotypen reproduzieren, die Bewertungsmetriken jedoch nicht darauf geprüft werden. Es wird ein Algorithmus vorgeschlagen, welcher eine Optimierung zur Bestimmung einer Bewertungsmetrik unter bestimmten Fairnessbedingungen vornimmt.
+\citeauthor{Luu} schlägt in \cite{Luu} vor, etwas zufälligen Lärm in die Bewertungsmetrik von Hacker News einzufügen, um die scharfe Aufmerksamkeitskante zwischen Posts, die auf der Startseite und denen, die auf den hinteren Seiten landen, auszuglätten.

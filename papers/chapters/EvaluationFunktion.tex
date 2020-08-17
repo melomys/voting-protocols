@@ -1,7 +1,7 @@
 \chapter{Evaluationmethode}
 \label{chap:evaluationsmethode}
 
-Um die Modelle statistisch auszuwerten werden Evaluationsfunktionen erstellt. Evaluationsfunktionen können Modell-  und User*innenparameter auswerten oder auch Funktionen auf ausgewerteten Parametern ausführen.
+Um die Modelle statistisch auszuwerten werden Evaluationsfunktionen erstellt. Evaluationsfunktionen können Modell-  und User*innenparameter auswerten oder auch Funktionen auf ausgewerteten Parametern ausführen. In den Evaluationsmethoden stehen sämtliche, auch die beobachtbaren, Parameter zur Verfügung.
 Es gibt zwei unterschiedliche Arten von Evaluationsfunktionen:
 
 \begin{table}[!htbp]
@@ -19,7 +19,7 @@ Iterationsevaluationsfunktionen werden nach jeder Iteration des Modells ausgefü
 
 \subsection{Discounted Cumulative Gain}
 
-Der \textit{Discounted Cumulative Gain}-Koeffizient ($DCG$) in \cite{Biega2018405} dient zur Berechnung der Güte von Bewertungsmetriken. Der $DCG$ in Formel \ref{dcg} bestraft Bewertungsmetriken, welche Posts mit hoher Relevanz wenig Score gutschreibt. Die standardisierte Relevanz eines Posts ${\tilde{r}}_{P}$ wird durch den Logarithmus der Position in der Sortierung des Posts ins Verhältnis gesetzt.
+Der \textit{Discounted Cumulative Gain}-Koeffizient ($DCG$) in \cite{Biega2018405} dient zur Berechnung der Güte von Bewertungsmetriken. Der $DCG$ misst, wie gut eine Bewertungsmetrik darin ist, relevante Posts für viele User*innen sichtbar zu machen. Er bestraft Bewertungsmetriken, welche Posts mit hoher Relevanz wenig Score gutschreiben. Die Posts werden nach ihrer Sortierung durchgegangen. Die standardisierte Relevanz eines Posts ${\tilde{r}}_{P}$ wird durch den Logarithmus der Position in der Sortierung des Posts ins Verhältnis gesetzt. $P_N$ ist die Anzahl der Posts:
 
 \begin{equation}
 \label{dcg}
@@ -54,11 +54,11 @@ Eine optimale Bewertungsmetrik erhält damit den Maximalwert $nDCG = 1$.
 \subsection{Gini-Koeffizient}
 
 In \cite{Lerman2014} und \cite{Salganik2006854} gibt der Gini-Koeffizient $G$ an, wie gerecht Aufmerksamkeit der User*innen auf die Posts verteilt ist.
-Um die Aufmerksamkeit zu messen, wird die Anzahl der User*innen die einen Post $v_P$ betrachtet haben verwendet. Je größer der Gini-Koeffizient ist, desto ungerechter ist die Verteilung der Views. Je größer $G$ desto stärker sind die Matthäus-Effekte in dieser Bewertungsmetrik ausgeprägt.
-Bei $G = 0$ ist die Aufmerksamkeit gerecht verteilt. Alle Posts wurden von der gleichen Anzahl User*innen gesehen. Wenn ein Post von allen User*innen gesehen wurde, alle andere Posts hingegen von keine*r einzige*n User*in ist $G \approx 1$ maximal. Der Gini-Koeffizient wird beschrieben durch:
+Um die Aufmerksamkeit zu messen, wird die Anzahl der User*innen die einen Post $v_P$ betrachtet haben verwendet. Je größer der Gini-Koeffizient ist, desto ungerechter ist die Verteilung der Views. Je größer $G$, desto stärker sind die Matthäus-Effekte in dieser Bewertungsmetrik ausgeprägt.
+Bei $G = 0$ ist die Aufmerksamkeit gerecht verteilt. Alle Posts wurden von der gleichen Anzahl User*innen gesehen. Wenn ein Post von allen User*innen gesehen wurde, alle andere Posts hingegen von keine*r einzige*n User*in, ist $G \approx 1$ maximal. Der Gini-Koeffizient wird beschrieben durch:
 
 \begin{equation}
-G = \frac{1}{2S\sum_{i = 1}^{N}v_{P_i}}\sum_{i,j}^{P_N}|v_{P_i} - v_{P_j} |
+G = \frac{1}{2P_N\sum_{i = 1}^{P_N}v_{P_i}}\sum_{i,j}^{P_N}|v_{P_i} - v_{P_j} |
 \end{equation}
 
 %\section{Postevaluation}
@@ -73,19 +73,19 @@ Da sich Modell- und User*innenparameter im Laufe der Simulation nicht ändern k�
 
 \subsection{Aggregation von Iterationsevaluationsfunktionen}
 
-Für ein Modell mit $i_M$ Iterationsschritten können 
-Modellevaluationsfunktionen über den von Iterationsevaluationsfunktionen erzeugten Datenvektor $x$ aggregieren. 
+Für ein Modell mit $M_N$ Iterationsschritten können 
+Modellevaluationsfunktionen über den von Iterationsevaluationsfunktionen erzeugten Datenvektor $x \in \R^{M_N}$ aggregieren, welcher für jede Iteration den Wert der Evaluationsfunktion enthält.
 
 Die im vorherigen Abschnitt vorgestellten Iterationsevaluationsfunktionen werden durch die Trapezregel in Formel \ref{trapezoidial} aggregiert normalisiert:
 
 \begin{equation}
 \label{trapezoidial}
-T(x) = \frac{1}{i_M}\sum_{i = 1}^{i_M}x_i - \frac{1}{2}(x_1 + x_{i_M})
+T(x) = \frac{1}{M_N}\sum_{i = 1}^{M_N}x_i - \frac{1}{2}(x_1 + x_{i_M})
 \end{equation}
 
 \subsection{Posts ohne Betrachtungen}
 
-Der Prozentsatz an Posts welche von keine*r einzig*en User*in betrachtet wurden werden durch die Funktion in Formel \ref{eq:PoB} gezählt,  $P_N = {P_{start}}_{N} + M_N {P_{iter}}_N$ ist die Gesamtzahl der Posts.
+Der Prozentsatz an Posts, die von keine*r einzig*en User*in betrachtet wurden, werden durch die Funktion in Formel \ref{eq:PoB} gezählt. Je kleiner $P_{v = 0}$, desto fairer ist die Metrik
 
 \begin{equation}
 \label{eq:PoB}
