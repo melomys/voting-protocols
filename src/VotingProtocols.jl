@@ -10,11 +10,12 @@ include("user_creation.jl")
 
 include("models/upvote_system.jl")
 include("models/up_and_downvote_system.jl")
-include("models/random_deviation.jl")
+include("models/random_model.jl")
+
 
 include("model_factory.jl")
-include("user_opinion.jl")
-include("metric.jl")
+include("rating.jl")
+include("scoring.jl")
 include("evaluation.jl")
 include("data_collection.jl")
 

@@ -1,10 +1,3 @@
-"""
-    up_and_downvote_system(;[...])
-
-Creates a up and downvote system, agent-based model, and intializes all necessary parameters.
-The up and downvote system allows users to upvote and downvote posts, it uses a different agent_step! function,
-but takes all parameters from the upvote system
-"""
 function up_and_downvote_system(;
     user_opinion_function = consensus,
     agent_step! = downvote_agent_step!,
@@ -18,15 +11,14 @@ function up_and_downvote_system(;
     )
 end
 
+function downvote_user_rating(post_quality, user_quality_perception)
+    dim = length(post_quality)
+    1 - sqrt(sum(((post_quality) - (user_quality_perception)) .^ 2)) / sqrt(dim)
+end
+
 vals = []
 
 
-
-"""
-    downvote_agent_step!(user, model)
-
-Executes the agents/user actions for a model iteration in a up and downvote system
-"""
 function downvote_agent_step!(user, model)
     if rand(model.rng_user_posts) < user.activity_probability
         for i = 1:minimum([user.concentration, model.n])
@@ -59,6 +51,32 @@ function downvote_agent_step!(user, model)
                 end
 
             end
+        end
+    end
+end
+
+
+function pseudo_downvote_agent_step!(user, model)
+    for i = 1:minimum([user.concentration, model.n])
+        post = model.posts[model.ranking[i]]
+        if model.user_opinion_function(post.quality, user.quality_perception) >
+           user.vote_probability && !in(post, user.voted_on)
+            push!(
+                vals,
+                model.user_opinion_function(
+                    post.quality,
+                    user.quality_perception,
+                ),
+            )
+            if model.user_opinion_function(
+                post.quality,
+                user.quality_perception,
+            ) > 0.35
+                #post.votes += 1
+            else
+                post.votes -= 1
+            end
+            push!(user.voted_on, post)
         end
     end
 end
