@@ -1,3 +1,40 @@
+"""
+    no_deviation(model)
+
+Returns post score without deviation
+"""
+function no_deviation(model)
+    zeros(length(model.posts))
+end
+
+"""
+    mean_deviation(model)
+
+Returns post score with mean deviation
+"""
+function mean_deviation(model)
+    mean_scores = mean(map(x -> x.score, model.posts))
+    function to_map(post)
+        dist = abs(mean_scores - post.score)
+        rand(model.rng_model,-dist:0.01:dist)
+    end
+    map(to_map, model.posts)
+end
+
+"""
+    std_deviation(model)
+
+Returns post score with std deviation
+"""
+function std_deviation(model)
+    std_scores = std(map(x -> x.score, model.posts))
+    map(x -> rand(model.rng_model,-std_scores:0.01:std_scores), model.posts)
+end
+
+
+
+
+
 function random_model(;
     random_scoring_factor = 0.5,
     model_step! = random_model_step!,
@@ -45,22 +82,4 @@ function random_model_step!(model)
     model.ranking = sortperm(map(x -> -x.score, model.posts))
     model.time += 1
 
-end
-
-function no_deviation(model)
-    zeros(length(model.posts))
-end
-
-function mean_deviation(model)
-    mean_scores = mean(map(x -> x.score, model.posts))
-    function to_map(post)
-        dist = abs(mean_scores - post.score)
-        rand(model.rng_model,-dist:0.01:dist)
-    end
-    map(to_map, model.posts)
-end
-
-function std_deviation(model)
-    std_scores = std(map(x -> x.score, model.posts))
-    map(x -> rand(model.rng_model,-std_scores:0.01:std_scores), model.posts)
 end
