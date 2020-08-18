@@ -19,6 +19,12 @@ mutable struct Post <: AbstractPost
     score::Float64
 end
 
+"""
+    Post(rng::MersenneTwister, quality_distribution, time, [init_score = 0])
+
+Creates a post with the given parameters
+
+"""
 function Post(rng::MersenneTwister, quality_distribution, time, init_score = 0)
     Post(rand(rng, quality_distribution), 0, 0,0, time, init_score)
 end
@@ -32,7 +38,18 @@ mutable struct User <: AbstractUser
     voted_on::Set{AbstractPost}
     viewed::Set{AbstractPost}
 end
+"""
+    User(
+        id::Int,
+        quality_perception::Array{Float64},
+        vote_probability::Float64,
+        activity_probability::Float64,
+        concentration::Int64,
+    )
 
+Creates a user with given parameters. It is called only by Agents.jl
+
+"""
 function User(
     id::Int,
     quality_perception::Array{Float64},
@@ -52,6 +69,12 @@ function User(
 end
 
 
+"""
+    upvote_system(;[...])
+
+Creates a upvote system, agent-based model, and intializes all necessary parameters.
+The upvote system allows users to upvote posts only
+"""
 function upvote_system(;
     activity_distribution = Beta(2.5,5),
     agent_step! = agent_step!,
@@ -85,9 +108,9 @@ function upvote_system(;
     qargs...,
 )
 
-
-    rng_user_posts = MersenneTwister(seed - 1) # nur für user und post generierung
-    rng_model = MersenneTwister(seed) # für alles andere
+    # Initializing random generators
+    rng_user_posts = MersenneTwister(seed - 1) # for user and post generation
+    rng_model = MersenneTwister(seed) # für everything else
 
 
     posts = PostType[]
@@ -134,7 +157,7 @@ function upvote_system(;
     ranking = partial_shuffle(rng_model, tmp_ranking, 1 - abs(sorted))
 
 
-    # berechne Werte um beim Userrating das Quantil abzuleiten
+    # calculate the distribution of user opinion
     nn = 100
     p_qual = rand(rng_user_posts, quality_distribution, nn)
     u_qual = rand(rng_user_posts, quality_distribution, nn)
@@ -191,7 +214,7 @@ function upvote_system(;
         properties[qarg[1]] = qarg[2]
     end
 
-
+    # Creation of the agent based model
     model = ABM(UserType; properties = properties)
 
 
@@ -212,13 +235,18 @@ function upvote_system(;
     return model
 end
 
+"""
+    agent_step!(user, model)
 
-# < user.activity
-# und > 1 - user.vote_probability. Bsp vp = 0.3, dann muss urf > 0.7 sein
+Executes the agents/user actions for a model iteration in a upvote system
+"""
 function agent_step!(user, model)
+    # Check if user is active
     if rand(model.rng_user_posts) < user.activity_probability
+        # Check concentration
         for i = 1:minimum([user.concentration, model.n])
             post = model.posts[model.ranking[i]]
+            # Check if user votes on post
             if model.user_opinion_function(
                 post.quality,
                 user.quality_perception,
@@ -243,12 +271,21 @@ function agent_step!(user, model)
     end
 end
 
+
+
+"""
+    model_step!(model)
+
+Executes the rating metric, adds new posts und sorts the posts with their score
+"""
 function model_step!(model)
+    # Calculate scores
     for i = 1:model.n
         model.posts[i].score =
             model.rating_metric(model.posts[i], model.time, model)
     end
 
+    # Add posts
     for i = 1:model.new_posts_per_step
         push!(
             model.posts,
@@ -262,22 +299,29 @@ function model_step!(model)
         model.n += 1
     end
 
+    # Add users
     for i = 1:model.new_users_per_step
         model.user()(model)
     end
 
+    # Add random noise to posts
     random_deviation = model.deviation_function(model)
 
     for (index,post) in enumerate(model.posts)
         post.score += random_deviation[index]
     end
 
+    # Sort by score
     model.ranking = sortperm(map(x -> -x.score, model.posts))
     model.time += 1
 
 end
 
+"""
+    partial_shuffle(rng, v::AbstractArray, percent)
 
+shuffles `v` by ca. `percent` percent
+"""
 function partial_shuffle(rng, v::AbstractArray, percent)
     amount = round(Int, length(v) * percent)
     indeces = [1:length(v)...]
@@ -297,14 +341,31 @@ function partial_shuffle(rng, v::AbstractArray, percent)
     ret
 end
 
+
+"""
+    relevance(post, model)
+
+Returns the relevance of a post
+"""
 function relevance(post, model)
     sum(sigmoid.(post.quality))/(maximum([model.time-post.timestamp,1]))^(model.relevance_gravity)
 end
 
+"""
+    scoring_best(post, time, model)
+
+Returns the relevance of `post`, the best rating metric
+"""
 function scoring_best(post, time, model)
     relevance(post,model)
 end
 
+
+"""
+    rating_quantile(model, quantile)
+
+Returns the quantile value  of `quantile`  of the rating distribution
+"""
 function rating_quantile(model, quantile)
     model.rating_distribution[maximum([1,Int64(round(length(model.rating_distribution)*quantile))])]
 end
