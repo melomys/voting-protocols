@@ -301,6 +301,9 @@ function relevance(post, model)
     sum(sigmoid.(post.quality))/(maximum([model.time-post.timestamp,1]))^(model.relevance_gravity)
 end
 
+function scoring_best(post, time, model)
+    relevance(post,model)
+end
 
 function rating_quantile(model, quantile)
     model.rating_distribution[maximum([1,Int64(round(length(model.rating_distribution)*quantile))])]
