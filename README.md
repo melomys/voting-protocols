@@ -1,2 +1,1 @@
-This is an awesome new scientific project that uses `DrWatson`!
-
+Agent based model of voting systems in online communication
